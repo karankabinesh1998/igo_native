@@ -39,13 +39,13 @@ export default function RegisterScreen({ navigation }) {
     const formData=new FormData();
 
     formData.append("username",name.value)
-    formData.append("name",name.value)
+    // formData.append("name",name.value)
     formData.append("mobile",mobile.value)
     formData.append("email_id",email.value)
     formData.append("password",password.value)
     formData.append("userType",3)
     formData.append("login_status",1)
-    formData.append("status","active")
+    formData.append("status",1)
 
     // console.log([...formData]);
     let URL =
@@ -64,7 +64,7 @@ export default function RegisterScreen({ navigation }) {
       .then(response => response.json())
       .then(async responseJson => {
         if(responseJson){
-            // console.log(responseJson,"hello")
+            console.log(responseJson,"hello")
             let data = JSON.stringify(responseJson)
              await AsyncStorage.setItem(Stored.userDetail,data);  
             // AsyncStorage.setItem("Userdetail",JSON.stringify(responseJson))  

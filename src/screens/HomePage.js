@@ -1,21 +1,23 @@
 import { View , Text , StyleSheet , BackHandler , TouchableOpacity , Alert , Linking , Image, Platform } from 'react-native'
 import React , { useEffect } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Header } from 'react-native-elements';
-import theme from '../core/theme';
-import Logo from '../components/Logo'
 import CardView from 'react-native-cardview'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwsome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
+import AsyncStorage from "@react-native-community/async-storage";
 
 
 
+export default  function HomePage({ navigation , userDetail  }) {
 
-export default function HomePage({ navigation }) {
+  // console.log(userDetail.userDetail,"14th homepage");
+  // await AsyncStorage.getItem(Stored.userDetail)
+  let wallet = userDetail.userDetail.length ? userDetail.userDetail[0].wallet : null ;
 
-// console.log("Hello world");
+  if(wallet == null){
+    wallet = 0
+  }
 
   useEffect(() => {
     const backAction = () => {
@@ -37,6 +39,7 @@ export default function HomePage({ navigation }) {
 
     return () => backHandler.remove();
   }, []);
+
 
 
 
@@ -99,7 +102,7 @@ export default function HomePage({ navigation }) {
 
          <View style={styles.IconTopView}> 
           <TouchableOpacity style={{alignItems:"center"}}  >
-          <MaterialCommunityIcons name="bank-transfer" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={38} />   
+          <MaterialCommunityIcons name="bank-transfer" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={39} />   
           <Text style={styles.topNav} >Transaction</Text>
           </TouchableOpacity>
            </View>   
@@ -129,7 +132,7 @@ export default function HomePage({ navigation }) {
      </View>
 
         <View style={styles.BalanceText}>
-          <Text style={styles.BalText}>Balance in the Wallet :         Rs.250.00</Text>
+          <Text style={styles.BalText}>Balance in the Wallet :         Rs.{wallet}</Text>
         </View>
            
 

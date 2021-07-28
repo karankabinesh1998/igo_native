@@ -7,5 +7,6 @@ module.exports = {
   duplicate: "duplicate",
   seen: "seen",
   downloaded: "downloaded",
-  serviceid: "serviceid"
+  serviceid: "serviceid",
+  wallet:"wallet"
 };
