@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import  NewTrips from '../screens/NewTrips';
+import  AccountandWallet from '../screens/AccountandWallet';
 import HomePage from '../screens/HomePage';
 import ProfileSCreen from '../screens/ProfileScreen'; 
 import LoginScreen from '../screens/LoginScreen'
@@ -10,7 +10,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Header } from 'react-native-elements';
 import Logo from '../components/Logo';
-import LogoutScreen from '../components/Logout';
+import WhatsappandCall from '../components/WhatsappandCall';
 import AsyncStorage from "@react-native-community/async-storage";
 import Stored from '../configuration/storageDetails';
 import  Config from '../configuration/config';
@@ -22,7 +22,7 @@ import { TripsJsons } from '../configuration/functional';
 const Tab = createBottomTabNavigator();
 
  function MyTabs(userDetail,navigation) {
-  console.log(userDetail.navigation,23);
+  console.log(userDetail.TripsJson,23);
   return (
     <Tab.Navigator
       initialRouteName="Feed"
@@ -32,7 +32,7 @@ const Tab = createBottomTabNavigator();
     >
       <Tab.Screen
         name="Home"
-        children={()=><HomePage userDetail={userDetail} navigation={userDetail.navigation} />}
+        children={()=><HomePage userDetail={userDetail} navigation={userDetail.navigation} TripsJson={userDetail.TripsJson}/>}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color , size }) => (
@@ -52,7 +52,7 @@ const Tab = createBottomTabNavigator();
       /> */}
       <Tab.Screen
         name="Account"
-        component={NewTrips}
+        children={()=><AccountandWallet  userDetail={userDetail} navigation={userDetail.navigation}/>}
 
         options={{
           tabBarLabel: 'Account',
@@ -97,13 +97,18 @@ export default class Dashboard extends Component {
     // console.log(this.props.navigation.navigate,"Dashboard page 80");
     // await AsyncStorage.removeItem(Stored.userDetail);
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
-    let data = Stored_Data !== null ? JSON.parse(Stored_Data) : []
+    let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
 
-    
+    await AsyncStorage.getItem(Stored.TripsJsob);
+    let Stored_Data1 = await AsyncStorage.getItem(Stored.TripsJsob);
+    let data2 = Stored_Data1 !== null ? JSON.parse(Stored_Data1) : [];
+
+    // console.log(data2,"datadatadata");
    
     if(data.length){
       this.setState({
-        userDetail : data
+        userDetail : data,
+        TripsJson : data2
       })
     }
 
@@ -158,7 +163,7 @@ export default class Dashboard extends Component {
       barStyle="light-content"
       leftComponent={<Logo STYLE={ { width:110 , height: 100, marginBottom: 8, } } />}
       centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
-      rightComponent={ <LogoutScreen  navigation ={this.props.navigation}   /> }
+      rightComponent={ <WhatsappandCall  navigation ={this.props.navigation}   /> }
       containerStyle={{
           backgroundColor: 'white',
           justifyContent: 'space-around',
@@ -170,7 +175,7 @@ export default class Dashboard extends Component {
     
 
       <NavigationContainer independent={true}>
-         <MyTabs userDetail={this.state.userDetail} navigation ={this.props.navigation} />
+         <MyTabs userDetail={this.state.userDetail} navigation ={this.props.navigation} TripsJson={this.state.TripsJson} />
       </NavigationContainer>
       </SafeAreaProvider>
     )

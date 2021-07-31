@@ -23,7 +23,7 @@ export default function ProfileSCreen({ navigation , userDetail  }) {
          
     let userDetail_ = userDetail.userDetail[0];
     
-    // console.log(RefreshJsons(userDetail_.id),"21221");
+    console.log(userDetail.navigation,"21221");
     // let Profile = userDetail_.profile_dp
   const [name, setName] = useState({ value: userDetail_.username, error: '' })
   const [mobile, setmobile] = useState({ value: userDetail_.mobile, error: '' })
@@ -155,6 +155,28 @@ const onRefresh = React.useCallback(async() => {
   wait(5000).then(() => setRefreshing(false));
 }, []);
 
+
+  const LogoutUser=async()=>{
+        // console.log("STYLE")
+        await AsyncStorage.removeItem(Stored.userDetail); 
+        await AsyncStorage.removeItem(Stored.TripsJsob); 
+        userDetail.navigation.navigate('LoginScreen')
+}
+
+const AlertLogout = () =>
+    Alert.alert(
+      "Logout",
+      "Are you sure !",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => LogoutUser() }
+      ]
+    );
+
     useEffect(() => {
         const backAction = () => {
           Alert.alert("Hold on!", "Are you sure you want to close the app?", [
@@ -276,8 +298,12 @@ const onRefresh = React.useCallback(async() => {
           />
 
 
-<Button mode="contained" style={{backgroundColor:"#ce3232"}} onPress={onUpdatePressed}>
+<Button mode="contained" style={styles.button} onPress={onUpdatePressed}>
         Update Profile
+</Button>
+
+<Button mode="contained" style={styles.button} onPress={AlertLogout}>
+        Logout
 </Button>
           
         
@@ -301,6 +327,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'lightgray',
         alignItems:"center"
     },
+    button:{
+      backgroundColor:"#ce3232",
+      width:"95%",
+      marginLeft:'2%'
+
+    },
     cardViewStyle:{
         width: '100%', 
         marginTop:10,
@@ -318,7 +350,8 @@ const styles = StyleSheet.create({
     ViewcardBelow1:{
       marginTop:5,
       height:150,
-      position:'relative'
+      position:'relative',
+      
     },
     heading:{
       alignSelf:'center',

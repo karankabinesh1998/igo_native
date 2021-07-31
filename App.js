@@ -13,7 +13,7 @@ import {
 } from './src/screens';
 import HomePage from './src/screens/HomePage';
 
-import LogoutScreen from './src/components/Logout';
+import WhatsappandCall from './src/components/WhatsappandCall';
 
 import ProfileScreen  from  './src/screens/ProfileScreen';
 
@@ -73,7 +73,7 @@ export default class App extends Component
           <Stack.Screen name="HomePage" component={HomePage} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen}/>
           <Stack.Screen name="NewTrips" component={NewTrips}/>
-          <Stack.Screen name="LogoutScreen" component={LogoutScreen} />
+          <Stack.Screen name="WhatsappandCall" component={WhatsappandCall} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

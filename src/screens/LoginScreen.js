@@ -78,6 +78,15 @@ console.log(email.value , password.value );
                     index: 0,
                     routes: [{ name: 'Dashboard' }],
                   })
+                }else{
+                  Alert.alert(
+                    "Login Failed ",
+                    "There is no username / password !",
+                    [
+                     
+                      { text: "OK", onPress: () => console.log("OK Pressed") }
+                    ]
+                  )
                 }
                 }).catch(function(error) {
                   console.log("There is an error in networks",error);
