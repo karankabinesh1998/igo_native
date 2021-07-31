@@ -19,6 +19,8 @@ import ProfileScreen  from  './src/screens/ProfileScreen';
 
 import Splashscreen from './src/screens/Splashscreen';
 
+import NewTrips from './src/screens/NewTrips';
+
 const Stack = createStackNavigator( )
 
 export default class App extends Component
@@ -70,6 +72,7 @@ export default class App extends Component
           />
           <Stack.Screen name="HomePage" component={HomePage} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen}/>
+          <Stack.Screen name="NewTrips" component={NewTrips}/>
           <Stack.Screen name="LogoutScreen" component={LogoutScreen} />
         </Stack.Navigator>
       </NavigationContainer>

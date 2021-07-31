@@ -2,7 +2,7 @@ module.exports = {
   userid:"userid",
   userDetail:"userDetail",
   data: "data",
-  product: "product",
+  TripsJsob: "TripsJsob",
   notification: "notification",
   duplicate: "duplicate",
   seen: "seen",

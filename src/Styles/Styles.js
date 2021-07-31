@@ -17,7 +17,8 @@ export const STYLES = StyleSheet.create({
   },
   selectButtonTitle: {
     padding: 10,
-    fontSize: 18
+    fontSize: 18,
+    color:'#22212c'
   }
 });
 

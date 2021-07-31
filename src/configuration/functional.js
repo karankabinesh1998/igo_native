@@ -287,7 +287,7 @@ export async function RefreshJsons(id){
   let URL = Config.ACCESS_POINT + Config.AppLoginIgotaxy + `/${id}`;
   let request = await fetch(URL);
   let requestJson = await request.json();
- let data = JSON.stringify(requestJson)
+   let data = JSON.stringify(requestJson)
   await AsyncStorage.setItem(Stored.userDetail,data);  
   AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
 
@@ -295,4 +295,49 @@ export async function RefreshJsons(id){
   let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : []
   return data1
 
+}
+
+export async function TripsJsons(id=null){
+  let URL = Config.ACCESS_POINT + Config.NewTripsJson;
+  console.log(URL);
+  let request = await fetch(URL);
+  let requestJson = await request.json();
+ let data = JSON.stringify(requestJson)
+//  console.log(data,"trips json");
+  await AsyncStorage.setItem(Stored.TripsJsob,data);  
+  AsyncStorage.setItem("TripsJsob",JSON.stringify(requestJson))
+
+  let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
+  let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : []
+  return data1
+
+}
+
+
+export async function UploadProfile(formData,id){
+  let URL = Config.ACCESS_POINT + Config.UploadUserProfile+`/${id}`;
+  console.log(URL);
+  let request = await fetch(URL, {
+    method: "POST",
+    headers: {
+      // "Accept": "application/json",
+      'Content-Type': 'multipart/form-data'
+    },
+    body: formData
+        });
+
+        if(request.status == 200){
+
+          let requestJson = await request.json();
+          let data = JSON.stringify(requestJson)
+
+          await AsyncStorage.setItem(Stored.userDetail,data);  
+          AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
+        
+          let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+          let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+          console.log(data1);
+          return data1
+
+        }
 }

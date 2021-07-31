@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import  RegisterScreen from '../screens/RegisterScreen';
+import  NewTrips from '../screens/NewTrips';
 import HomePage from '../screens/HomePage';
-import ProfileSCreen from '../screens/ProfileScreen';
+import ProfileSCreen from '../screens/ProfileScreen'; 
+import LoginScreen from '../screens/LoginScreen'
 import { Text, View  } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -13,13 +14,15 @@ import LogoutScreen from '../components/Logout';
 import AsyncStorage from "@react-native-community/async-storage";
 import Stored from '../configuration/storageDetails';
 import  Config from '../configuration/config';
+import { TripsJsons } from '../configuration/functional';
 
 
 
 
 const Tab = createBottomTabNavigator();
 
-function MyTabs(userDetail) {
+ function MyTabs(userDetail,navigation) {
+  console.log(userDetail.navigation,23);
   return (
     <Tab.Navigator
       initialRouteName="Feed"
@@ -29,7 +32,7 @@ function MyTabs(userDetail) {
     >
       <Tab.Screen
         name="Home"
-        children={()=><HomePage userDetail={userDetail} />}
+        children={()=><HomePage userDetail={userDetail} navigation={userDetail.navigation} />}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color , size }) => (
@@ -37,17 +40,28 @@ function MyTabs(userDetail) {
           ),
         }}
       />
+      {/* <Tab.Screen
+        name="NewTrips"
+        children={()=><NewTrips userDetail={userDetail} navigation={userDetail.navigation} />}
+        options={{
+          tabBarLabel: 'NewTrips',
+          tabBarIcon: ({ color , size }) => (
+            <MaterialCommunityIcons name="home" color={'#ce3232'} size={size} />
+          ),
+        }}
+      /> */}
       <Tab.Screen
-        name="Wallet"
-        component={RegisterScreen}
+        name="Account"
+        component={NewTrips}
 
         options={{
-          tabBarLabel: 'Wallet',
+          tabBarLabel: 'Account',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="wallet" color={'#ce3232'} size={size} />
           ),
         }}
       />
+      
       <Tab.Screen
         name="Profile"
         // component={ProfileSCreen}
@@ -68,7 +82,8 @@ export default class Dashboard extends Component {
     super(props)
     {
       this.state={
-        userDetail : []
+        userDetail : [],
+        NewTrips1:true
       }
     }
   }
@@ -76,8 +91,10 @@ export default class Dashboard extends Component {
   
 
   async componentDidMount(){
+
+    
     await AsyncStorage.getItem(Stored.userDetail)
-    // console.log(this.props.navigation);
+    // console.log(this.props.navigation.navigate,"Dashboard page 80");
     // await AsyncStorage.removeItem(Stored.userDetail);
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
     let data = Stored_Data !== null ? JSON.parse(Stored_Data) : []
@@ -89,7 +106,9 @@ export default class Dashboard extends Component {
         userDetail : data
       })
     }
-    console.log(this.state.userDetail[0],"92")
+
+    await TripsJsons()
+    // console.log(this.state.userDetail[0],"92")
     let URL = Config.ACCESS_POINT + Config.AppLoginIgotaxy + `/${this.state.userDetail[0].id}`;
   console.log(URL);
           fetch(URL, {
@@ -128,7 +147,7 @@ export default class Dashboard extends Component {
   }
 
   render(){
-    // console.log(this.props.navigation);
+    // console.log(this.props.navigation,132);
     return (
       <SafeAreaProvider >
        
@@ -148,9 +167,10 @@ export default class Dashboard extends Component {
         }}
       />
       
+    
 
       <NavigationContainer independent={true}>
-         <MyTabs userDetail={this.state.userDetail} />
+         <MyTabs userDetail={this.state.userDetail} navigation ={this.props.navigation} />
       </NavigationContainer>
       </SafeAreaProvider>
     )

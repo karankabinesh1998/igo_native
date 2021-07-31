@@ -11,5 +11,8 @@ module.exports = {
   GETJSON: "/cmsContent/R7UserStructer",
   PRODUCTJSON: "/cmsContent/R7/AppStructureR7",
   GETFREEDOM : "/admin/getFullFreedom/getFreedom",
-  ADDMASTER :"/admin/master/"
+  ADDMASTER :"/admin/master/",
+  UpdateMaster:"/admin/appmaster/",
+  NewTripsJson:'/admin/TripsJson',
+  UploadUserProfile:'/admin/UploadUserProfile'
 };

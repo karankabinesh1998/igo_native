@@ -6,14 +6,27 @@ import Button from '../components/Button'
 import Paragraph from '../components/Paragraph'
 import AsyncStorage from "@react-native-community/async-storage";
 import Stored from '../configuration/storageDetails';
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center"
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
+  }
+});
 
 export default class StartScreen extends Component  {
   constructor(props){
     super(props)
     {
       this.state={
-
-      }
+          spinner : true
+      } 
     }
   }
 
@@ -27,14 +40,22 @@ export default class StartScreen extends Component  {
     // console.log(data);
     if(data.length){
       this.props.navigation.navigate('Dashboard')
+    }else{
+        this.setState({
+          spinner : false
+        })
     }
+
   }
 
   render(){
   return (
     <Background>
       <Logo />
-      <Header>Igotaxy Car Rentals</Header>
+      
+      { this.state.spinner == false ? <> 
+      
+        <Header>Igotaxy Car Rentals</Header>
       <Paragraph>
       The easiest way to start your online travels.
       </Paragraph>
@@ -52,7 +73,18 @@ export default class StartScreen extends Component  {
       >
         Sign Up
       </Button>
+
+       </> : 
+       
+       <View style={[styles.container, styles.horizontal]}>
+         <ActivityIndicator size="large" color="#00ff00" />
+      </View>
+       
+       }
+      
     </Background>
   )
+  
   }
+  
 }

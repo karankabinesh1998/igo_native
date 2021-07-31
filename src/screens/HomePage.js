@@ -6,17 +6,23 @@ import FontAwsome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from "@react-native-community/async-storage";
+import  NewTrips from '../screens/NewTrips';
 
 
-
-export default  function HomePage({ navigation , userDetail  }) {
-
-  // console.log(userDetail.userDetail,"14th homepage");
+export default  function HomePage({ userDetail,navigation , HomePage1 = true}) {
+    let Hompage1 = true;
+  // console.log(navigation,"14th homepage");
   // await AsyncStorage.getItem(Stored.userDetail)
   let wallet = userDetail.userDetail.length ? userDetail.userDetail[0].wallet : null ;
 
   if(wallet == null){
     wallet = 0
+  }
+
+  const GotoNewTrips=async()=>{
+
+   
+
   }
 
   useEffect(() => {
@@ -90,128 +96,132 @@ export default  function HomePage({ navigation , userDetail  }) {
     return (
         <View style={styles.container}>
 
-        <View style={styles.MainContainer} >
+<View style={styles.MainContainer} >
 
-        <CardView
-          cardElevation={5}
-          cardMaxElevation={5}
-          cornerRadius={5}
-          style={styles.cardViewStyle}>
-            
-          <View style={styles.cardView_InsideText}>
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.cardViewStyle}>
 
-         <View style={styles.IconTopView}> 
-          <TouchableOpacity style={{alignItems:"center"}}  >
-          <MaterialCommunityIcons name="bank-transfer" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={39} />   
-          <Text style={styles.topNav} >Transaction</Text>
-          </TouchableOpacity>
-           </View>   
+<View style={styles.cardView_InsideText}>
 
-           <View style={styles.IconTopView}> 
-           <TouchableOpacity style={{alignItems:"center"}} >
-          <MaterialIcons name="account-balance-wallet" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={38} />   
-          <Text style={styles.topNav} >Account</Text>
-          </TouchableOpacity>
-           </View>
+  <View style={styles.IconTopView}> 
+  <TouchableOpacity style={{alignItems:"center"}}  >
+  <MaterialCommunityIcons name="bank-transfer" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={39} />   
+  <Text style={styles.topNav} >Transaction</Text>
+  </TouchableOpacity>
+  </View>   
 
-           <View style={styles.IconTopView}> 
-           <TouchableOpacity style={{alignItems:"center"}} onPress={initiateWhatsApp}>
-          <FontAwsome name="whatsapp" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={38} />   
-          <Text style={styles.topNav} >Whatsapp</Text>
-          </TouchableOpacity>
-           </View>  
-          
+  <View style={styles.IconTopView}> 
+  <TouchableOpacity style={{alignItems:"center"}} >
+  <MaterialIcons name="account-balance-wallet" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={38} />   
+  <Text style={styles.topNav} >Account</Text>
+  </TouchableOpacity>
+  </View>
 
-           <View style={styles.IconTopView}> 
-           <TouchableOpacity style={{alignItems:"center"}} onPress={callNumber}  >
-          <Feather name="phone-call" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={38} /> 
-          </TouchableOpacity>  
-          <Text style={styles.topNav} >Call</Text>
-           </View>
+<View style={styles.IconTopView}> 
+<TouchableOpacity style={{alignItems:"center"}} onPress={initiateWhatsApp}>
+<FontAwsome name="whatsapp" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={38} />   
+<Text style={styles.topNav} >Whatsapp</Text>
+</TouchableOpacity>
+</View>  
 
-     </View>
 
-        <View style={styles.BalanceText}>
-          <Text style={styles.BalText}>Balance in the Wallet :         Rs.{wallet}</Text>
-        </View>
-           
+<View style={styles.IconTopView}> 
+<TouchableOpacity style={{alignItems:"center"}} onPress={callNumber}  >
+<Feather name="phone-call" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={38} /> 
+</TouchableOpacity>  
+<Text style={styles.topNav} >Call</Text>
+</View>
 
-        </CardView>
+</View>
+
+<View style={styles.BalanceText}>
+<Text style={styles.BalText}>Balance in the Wallet :         Rs.{wallet}</Text>
+</View>
+
+
+</CardView>
+
+
+<View style={styles.MiniCardView}>
+
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={18}
+style={styles.miniCard}>
+
+<Image source={require('../assets/newtrip.jpg')} style={{width:'100%',flex: 1,}} /> 
+<TouchableOpacity onPress={() => navigation.navigate('NewTrips')}>
+<Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>New Trips & Quote Request</Text>
+</TouchableOpacity>
+</CardView>
+
+
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={18}
+style={styles.miniCard}>
+
+<Image source={require('../assets/activetrips.jpg')} style={{width:'100%',flex: 1,}} /> 
+<Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Active Trips</Text>
+
+</CardView>
+
+
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={18}
+style={styles.miniCard}>
+<Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} /> 
+<Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Approved Trips</Text>
+</CardView>
+
+</View>
+
+<View style={styles.MiniCardView}>
+
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={18}
+style={styles.miniCard}>
+<Image source={require('../assets/completedtrips.jpg')} style={{width:'100%',flex: 1}} /> 
+<Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Completed Trips</Text>
+
+</CardView>
+
+
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={18}
+style={styles.miniCard}>
+<Image source={require('../assets/document.png')} style={{width:'95%',marginLeft:3,flex: 1}} /> 
+<Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Document Upload</Text>
+</CardView>
+
+
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={18}
+style={styles.miniCard}>
+<Image source={require('../assets/wallet.png')} style={{width:'70%',marginLeft:15,flex: 1}} /> 
+<Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Document Upload</Text>
+</CardView>
+
+</View>
+
+
+</View> 
 
         
-       <View style={styles.MiniCardView}>
 
-       <CardView
-          cardElevation={5}
-          cardMaxElevation={5}
-          cornerRadius={18}
-          style={styles.miniCard}>
-         <Image source={require('../assets/newtrip.jpg')} style={{width:'100%',flex: 1,}} /> 
-         <Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>New Trips & Quote Request</Text>
-          </CardView>
-
-
-          <CardView
-          cardElevation={5}
-          cardMaxElevation={5}
-          cornerRadius={18}
-          style={styles.miniCard}>
-
-        <Image source={require('../assets/activetrips.jpg')} style={{width:'100%',flex: 1,}} /> 
-         <Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Active Trips</Text>
-
-          </CardView>
-
-
-          <CardView
-          cardElevation={5}
-          cardMaxElevation={5}
-          cornerRadius={18}
-          style={styles.miniCard}>
-          <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} /> 
-         <Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Approved Trips</Text>
-          </CardView>
-
-       </View>
-
-       <View style={styles.MiniCardView}>
-
-       <CardView
-          cardElevation={5}
-          cardMaxElevation={5}
-          cornerRadius={18}
-          style={styles.miniCard}>
-          <Image source={require('../assets/completedtrips.jpg')} style={{width:'100%',flex: 1}} /> 
-         <Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Completed Trips</Text>
-
-        </CardView>
-
-
-          <CardView
-          cardElevation={5}
-          cardMaxElevation={5}
-          cornerRadius={18}
-          style={styles.miniCard}>
-            <Image source={require('../assets/document.png')} style={{width:'95%',marginLeft:3,flex: 1}} /> 
-            <Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Document Upload</Text>
-          </CardView>
-
-
-          <CardView
-          cardElevation={5}
-          cardMaxElevation={5}
-          cornerRadius={18}
-          style={styles.miniCard}>
-            <Image source={require('../assets/wallet.png')} style={{width:'70%',marginLeft:15,flex: 1}} /> 
-            <Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Document Upload</Text>
-          </CardView>
-
-       </View>
-         
-
-        </View>
-
-        
 
         </View>
     )
@@ -242,7 +252,8 @@ const styles = StyleSheet.create({
     BalanceText:{
       // flex:2,
       flexDirection:"column-reverse",
-      marginLeft:8,
+      // marginLeft:8,
+      alignItems:"center",
       marginBottom:30,
       marginTop:10
 
@@ -298,8 +309,8 @@ const styles = StyleSheet.create({
         // textAlign: 'center',
         width:'100%', 
         flexDirection: "row",
-        // justifyContent: "center",
-        // alignItems:"center"
+        justifyContent: "center",
+        alignItems:"center"
         // marginRight :20    
      
       }

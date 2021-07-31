@@ -9,6 +9,7 @@ export default function LogoutScreen({ navigation }) {
   const LogoutUser=async()=>{
         // console.log("STYLE")
         await AsyncStorage.removeItem(Stored.userDetail); 
+        await AsyncStorage.removeItem(Stored.TripsJsob); 
         navigation.navigate('LoginScreen')
 }
 
