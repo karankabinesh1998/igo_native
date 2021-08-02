@@ -9,7 +9,8 @@ import AsyncStorage from "@react-native-community/async-storage";
 import Stored from '../configuration/storageDetails';
 import { TripsJsons } from '../configuration/functional';
 import Button from '../components/Button';
-import { showAlert }  from "react-native-customisable-alert"; 
+
+
 
 
 
@@ -19,6 +20,7 @@ export default  function NewTrips(navigation){
   // let TripsJson =  navigation.route.params.TripsJson;
   
   const [TripsData, setTripsData] = useState({ value: navigation.route.params.TripsJson, error: '' })
+
    console.log(TripsData.value,"TripsJsonTripsJson");
    
     // const dataa =async()=>{
@@ -33,7 +35,7 @@ export default  function NewTrips(navigation){
 
     // dataa();
 
-    const ApplyNewTrip = async()=>{
+    const ApplyNewTrip = ()=>{
 
     }
 
@@ -77,7 +79,7 @@ export default  function NewTrips(navigation){
 
     return(
         
-        <SafeAreaProvider>
+        <SafeAreaProvider style={{backgroundColor:"lightgrey"}}>
 
 <Header
       placement="left"
@@ -169,25 +171,16 @@ export default  function NewTrips(navigation){
 
                 </View>
 
-            {/* <Button mode="contained" style={styles.button} onPress={ApplyNewTrip}>
+
+
+            <Button mode="contained" style={styles.button} onPress={ApplyNewTrip}>
             Request New Trip
-            </Button> */}
+            </Button>
             
                
-            <Button
-            mode="contained"
-            style={styles.button}
-          onPress={() => {
-            showAlert({
-              title:"Are you sure?",
-              message: "All your files will be deleted!",
-              alertType: 'warning',
-              onPress: () => console.log('files deleted!'),
-            });
-          }}
-        >
-Request New Trip
-</Button>
+           
+{/* Request New Trip
+</Button> */}
 
            
         

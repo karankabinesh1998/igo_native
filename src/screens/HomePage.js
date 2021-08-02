@@ -1,17 +1,18 @@
 import { View , Text , StyleSheet , BackHandler , TouchableOpacity , Alert , Linking , Image, Platform } from 'react-native'
 import React , { useEffect } from 'react';
 import CardView from 'react-native-cardview';
-// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-// import FontAwsome from 'react-native-vector-icons/FontAwesome';
-// import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-// import Feather from 'react-native-vector-icons/Feather';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
 // import AsyncStorage from "@react-native-community/async-storage";
 import  NewTrips from '../screens/NewTrips';
 
 
 export default  function HomePage({ userDetail,navigation ,TripsJson, HomePage1 = true}) {
     // let Hompage1 = true;
-  // console.log(TripsJson,"14th homepage");
+  // console.log(userDetail,"14th homepage");
   // await AsyncStorage.getItem(Stored.userDetail)
   let wallet = userDetail.userDetail.length ? userDetail.userDetail[0].wallet : null ;
 
@@ -107,18 +108,33 @@ style={styles.cardViewStyle}>
 <CardView
 cardElevation={5}
 cardMaxElevation={5}
-cornerRadius={18}
+cornerRadius={5}
 style={styles.miniCard}>
 
-<Image source={require('../assets/newtrip.jpg')} style={{width:'100%',flex: 1,}} /> 
-<TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson  })}>
-<Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>New Trips & Quote Request</Text>
+{/* <Image source={require('../assets/newtrip.jpg')} style={{width:'100%',flex: 1,}} />  */}
+<TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson  })} style={styles.iconstyle}>
+<MaterialCommunityIcons name="book-information-variant" style={{marginTop:9 }} color={'#ce3232'} size={100}  />
+
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>Bookings For Bid</Text>
 </TouchableOpacity>
 </CardView>
 
 
-
 <CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.miniCard}>
+
+{/* <Image source={require('../assets/newtrip.jpg')} style={{width:'100%',flex: 1,}} />  */}
+<TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson  })} style={styles.iconstyle}>
+<FontAwesome5 name="book" color={'#ce3232'} style={{marginTop:9 }}  size={100}  />
+
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>Active Trips</Text>
+</TouchableOpacity>
+</CardView>
+
+{/* <CardView
 cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={18}
@@ -127,7 +143,7 @@ style={styles.miniCard}>
 <Image source={require('../assets/activetrips.jpg')} style={{width:'100%',flex: 1,}} /> 
 <Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Active Trips</Text>
 
-</CardView>
+</CardView> */}
 
 </View>
 
@@ -137,10 +153,13 @@ style={styles.miniCard}>
 <CardView
 cardElevation={5}
 cardMaxElevation={5}
-cornerRadius={18}
+cornerRadius={5}
 style={styles.miniCard}>
-<Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} /> 
-<Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Approved Trips</Text>
+  <TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson  })} style={styles.iconstyle}>
+{/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
+<Fontisto name="history" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>Trip History</Text>
+</TouchableOpacity>
 </CardView>
 
 
@@ -148,11 +167,13 @@ style={styles.miniCard}>
 <CardView
 cardElevation={5}
 cardMaxElevation={5}
-cornerRadius={18}
+cornerRadius={5}
 style={styles.miniCard}>
-<Image source={require('../assets/completedtrips.jpg')} style={{width:'100%',flex: 1}} /> 
-<Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Completed Trips</Text>
-
+  <TouchableOpacity onPress={() => navigation.navigate('DocumentUpload',{ userDetail : userDetail  })} style={styles.iconstyle}>
+{/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
+<Entypo name="upload" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>Document Upload</Text>
+</TouchableOpacity>
 </CardView>
 
 
@@ -163,21 +184,24 @@ style={styles.miniCard}>
 <CardView
 cardElevation={5}
 cardMaxElevation={5}
-cornerRadius={18}
+cornerRadius={5}
 style={styles.miniCard}>
-<Image source={require('../assets/document.png')} style={{width:'95%',marginLeft:3,flex: 1}} /> 
-<Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Document Upload</Text>
+  <TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson  })} style={styles.iconstyle}>
+{/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
+<FontAwesome name="cab" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>My Cabs</Text>
+</TouchableOpacity>
 </CardView>
 
 
-<CardView
+{/* <CardView
 cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={18}
 style={styles.miniCard}>
 <Image source={require('../assets/wallet.png')} style={{width:'70%',marginLeft:15,flex: 1}} /> 
 <Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Document Upload</Text>
-</CardView>
+</CardView> */}
 
 </View>
 
@@ -254,7 +278,7 @@ const styles = StyleSheet.create({
 
       miniCard:{
         width: '45%',
-        height:110,
+        height:150,
         // marginTop:16,
         // marginLeft:2
         margin:10
@@ -277,6 +301,11 @@ const styles = StyleSheet.create({
         alignItems:"center"
         // marginRight :20    
      
+      },
+      iconstyle:{
+        alignItems:"center",
+        flexDirection:"column",
+        // flex:1
       }
 
 })

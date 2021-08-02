@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   },
   forgot: {
     fontSize: 13,
-    color: theme.colors.primary,
+    color: '#ce3232',
   },
   link: {
     fontWeight: 'bold',

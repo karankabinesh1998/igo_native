@@ -1,5 +1,5 @@
 import { View } from 'native-base';
-import { StyleSheet , StatusBar,ScrollView ,Image, RefreshControl, BackHandler ,Alert } from 'react-native';
+import { StyleSheet , ActivityIndicator ,ScrollView ,Image, RefreshControl, BackHandler ,Alert } from 'react-native';
 import React , { useEffect , useState } from 'react'
 import CardView from 'react-native-cardview';
 import SimpleImagePicker from '../components/ImagePicker';
@@ -30,7 +30,8 @@ export default function ProfileSCreen({ navigation , userDetail  }) {
   const [alternate_mobile,setalternate_mobile] = useState({ value : userDetail_.alternate_mobile , error:'' })
   const [email, setEmail] = useState({ value:userDetail_.email_id, error: '' })
   const [address, setAddress] = useState({ value:userDetail_.address, error: '' })
-  const [profile_dp, setProfile] = useState(userDetail_.profile_dp)
+  const [profile_dp, setProfile] = useState(userDetail_.profile_dp);
+  const [activeIndicator,setActiveindicator] = useState(false)
 
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -51,6 +52,8 @@ const onUpdatePressed =async()=>{
     setAddress({ ...address, error: addressError })
     return
   }
+
+  setActiveindicator(true)
 
   console.log("hello profile");
 
@@ -83,6 +86,7 @@ const onUpdatePressed =async()=>{
       .then(response => response.json())
       .then(async responseJson => {
         if(responseJson.length>0){
+          setActiveindicator(false)
             console.log(responseJson,"hello")
              let data = JSON.stringify(responseJson)
              await AsyncStorage.setItem(Stored.userDetail,data);  
@@ -298,9 +302,15 @@ const AlertLogout = () =>
           />
 
 
-<Button mode="contained" style={styles.button} onPress={onUpdatePressed}>
+{ activeIndicator ?
+
+<View style={[styles.container, styles.horizontal]}>
+<ActivityIndicator size="large" color="#ce3232" />
+</View>
+
+: <Button mode="contained" style={styles.button} onPress={onUpdatePressed}>
         Update Profile
-</Button>
+</Button> }
 
 <Button mode="contained" style={styles.button} onPress={AlertLogout}>
         Logout

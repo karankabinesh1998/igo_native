@@ -10,7 +10,7 @@ import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-ta
 export default function AccountandWallet({ navigation , userDetail  }){
 
     let userDetail_ = userDetail.userDetail[0];
-console.log(userDetail_.wallethistory);
+console.log(userDetail_.wallethistory,"wallethistorywallethistory");
 
 // let tableHead = ['Head', 'Head2', 'Head3', 'Head4', 'Head5', 'Head6', 'Head7', 'Head8', 'Head9'];
       let widthArr =  [40, 60, 80, 100, 120, 140, 160, 180, 200]
@@ -18,7 +18,7 @@ console.log(userDetail_.wallethistory);
     const [wallet, setWallet] = useState(userDetail_.wallet);
     // const [userid,setUserDetail] = useState(null);
     const [refreshing, setRefreshing] = React.useState(false);
-    const [tableHead,setTableHead]=useState(['Sl.no', 'amount', 'Type', 'Date'])
+    const [tableHead,setTableHead]=useState(['SL.NO', 'AMOUNT', 'TYPE', 'DATE'])
     const [tableData,settableData]=useState( JSON.parse(userDetail_.wallethistory))
 
   
@@ -73,35 +73,15 @@ style={styles.cardViewStyle1}
 </View>
 </CardView>
 
+
 <View style={styles.container1}>
 
 {tableData.length ? <Table borderStyle={styles.borderStyle}>
-          <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
+          <Row data={tableHead} style={styles.head} textStyle={styles.text1}/>
           <Rows data={tableData} textStyle={styles.text}/>
         </Table> : null}
 
-{/* <ScrollView horizontal={true}>
-          <View>
-            <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
-              <Row data={tableHead} widthArr={widthArr} style={styles.header} textStyle={styles.text}/>
-            </Table>
-            <ScrollView style={styles.dataWrapper}>
-              <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
-                {
-                  tableData.map((rowData, index) => (
-                    <Row
-                      key={index}
-                      data={rowData}
-                      widthArr={widthArr}
-                      style={[styles.row, index%2 && {backgroundColor: '#F7F6E7'}]}
-                      textStyle={styles.text}
-                    />
-                  ))
-                }
-              </Table>
-            </ScrollView>
-          </View>
-        </ScrollView> */}
+
 
         </View>
 
@@ -154,11 +134,13 @@ const styles = StyleSheet.create({
        },
       borderStyle:{
           borderWidth: 2, 
-          borderColor: '#c8e1ff'
+          borderColor: '#ce3232',
+          
         },
 
           head: { height: 40, backgroundColor: '#f1f8ff' },
-          text: { margin: 6 }
+          text: { margin: 6,fontSize:7 },
+          text1:{ margin: 5,fontSize:13 ,textAlign:"center"  }
 
 
 

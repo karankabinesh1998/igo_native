@@ -14,5 +14,6 @@ module.exports = {
   ADDMASTER :"/admin/master/",
   UpdateMaster:"/admin/appmaster/",
   NewTripsJson:'/admin/TripsJson',
-  UploadUserProfile:'/admin/UploadUserProfile'
+  UploadUserProfile:'/admin/UploadUserProfile',
+  AppDocumentUpload:'/admin/AppDocumentUpload'
 };

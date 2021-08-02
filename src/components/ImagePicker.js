@@ -214,7 +214,7 @@ export default class SimpleImagePicker extends Component {
   }
 
   render(){
-console.log(`${Config.ACCESS_POINT}/admin/profile/${this.state.Profile}`,"render 187");
+// console.log(`${Config.ACCESS_POINT}/admin/profile/${this.state.Profile}`,"render 187");
   return (
     // <View
     //   style={[
