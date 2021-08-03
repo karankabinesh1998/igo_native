@@ -141,7 +141,7 @@ const wait = (timeout) => {
       setpancard_back(DocumentationArray[0].pancard_back)
       setShowButton(DocumentationArray.length ? true : false)
       setApproval(DocumentationArray[0].approval)
-     console.log(DocumentationArray[0].approval ,"Refrehjson");
+     console.log(DocumentationArray ,"Refrehjson");
     wait(5000).then(() => setRefreshing(false));
   }, []);
 

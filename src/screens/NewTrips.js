@@ -1,4 +1,4 @@
-import { View , Text, ScrollView ,TextInput , RefreshControl,BackHandler,Alert, StyleSheet} from 'react-native';
+import { View , Text, ScrollView , Modal ,Pressable, RefreshControl,BackHandler,Alert, StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
@@ -7,9 +7,11 @@ import Logo from '../components/Logo';
 import WhatsappandCall from '../components/WhatsappandCall';
 import AsyncStorage from "@react-native-community/async-storage";
 import Stored from '../configuration/storageDetails';
-import { TripsJsons } from '../configuration/functional';
+import { TripsJsons , AddBidTrips } from '../configuration/functional';
 import Button from '../components/Button';
-
+import TextInput from '../components/TextInput';
+import { bidamountValidator } from '../helpers/bidamountValidator';
+import { bidandWalletValidator } from '../helpers/bidandWalletValidator';
 
 
 
@@ -20,8 +22,12 @@ export default  function NewTrips(navigation){
   // let TripsJson =  navigation.route.params.TripsJson;
   
   const [TripsData, setTripsData] = useState({ value: navigation.route.params.TripsJson, error: '' })
-
-   console.log(TripsData.value,"TripsJsonTripsJson");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [bidamount,setBidAmount]=useState({value:'',error:''});
+  const [bidData,setbidDAta]=useState(null);
+  const [wallet,setWallet]=useState(navigation.route.params.userDetail.userDetail[0].wallet ? navigation.route.params.userDetail.userDetail[0].wallet : 0 )
+  const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
+  // console.log(,"TripsJsonTripsJson");
    
     // const dataa =async()=>{
     //     let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
@@ -35,8 +41,10 @@ export default  function NewTrips(navigation){
 
     // dataa();
 
-    const ApplyNewTrip = ()=>{
-
+    const ApplyNewTrip = (value)=>{
+        console.log(wallet);
+        setModalVisible(!modalVisible);
+        setbidDAta(value)
     }
 
     const [refreshing, setRefreshing] = React.useState(false);
@@ -71,15 +79,144 @@ export default  function NewTrips(navigation){
         //  setmobile({ value: result[0].mobile, error: '' })
         //  setEmail({ value:  result[0].email_id, error: '' })
         //  setAddress({ value:  result[0].address, error: '' })
-        //  console.log( result,"Refrehjson");
+         console.log( result,"Refrehjson");
         wait(5000).then(() => setRefreshing(false));
       }, []);
 
 
+const SubmitBidamount=async()=>{
+
+  const BidAmount = bidamountValidator(bidamount.value);
+
+  const Validator = bidandWalletValidator(wallet,bidamount.value)
+
+  if (BidAmount) {
+    setBidAmount({ ...bidamount, error: BidAmount })
+    return
+  }
+
+  // console.log(wallet , bidamount.value );
+
+  if(Validator){
+    setBidAmount({ ...bidamount, error: Validator })
+    return
+  }
+
+  console.log(bidData);
+
+  const formDate = new FormData();
+  formDate.append("trip_id",bidData.id);
+  formDate.append("trip_id_1",bidData.trip_id)
+  formDate.append("req_amount",bidamount.value);
+  formDate.append("vendor_id",id)
+  formDate.append("pickUp_date",bidData.pickup_date)
+  formDate.append("total_amount",parseInt(bidData.trip_kms)*parseInt(bidData.trip_charges))
+
+  // const formData=new FormData();
+
+  //   formData.append("username",name.value)
+  //   // formData.append("name",name.value)
+  //   formData.append("mobile",mobile.value)
+  //   formData.append("email_id",email.value)
+  //   formData.append("password",password.value)
+  //   formData.append("userType",3)
+  //   formData.append("login_status",1)
+  //   formData.append("status",1)
+  let result = await AddBidTrips(formDate);
+
+  if(result){
+    console.log(result,"Success");
+
+    setModalVisible(false);
+    setBidAmount(0)
+    Alert.alert(
+      "Bidding has been Updated",
+      "Successfully Bidded !",
+      [
+       
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+      ]
+    )
+
+  }
+  
+  
+
+}
+
+const ResetModal = () =>{
+   
+    setBidAmount({value:0,error:''})
+    setbidDAta(null)
+    setModalVisible(false)
+}
 
     return(
         
         <SafeAreaProvider style={{backgroundColor:"lightgrey"}}>
+
+
+  <Modal
+  animationType="fade"
+  transparent={true}
+  visible={modalVisible}
+  onRequestClose={() => ResetModal()}
+  >
+
+<View style={styles.centeredView1}>
+          <View style={styles.modalView}>
+           
+            <View style={styles.modelHead}>
+            <Text style={styles.modalText}>Place Your Bid!</Text>
+            {/* <Button
+             mode="contained"
+              style={[styles.button1, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+            <Text style={styles.modalText1}>X</Text>
+            </Button> */}
+            </View>
+
+            <TextInput
+          label="Bid Amount"
+          keyboardType="numeric"
+          // style={[styles.textInput, { width: '100%' }]}
+          container={styles.InputText}
+          value={bidamount.value}
+          placeholder='Enter your bit amount'
+          onChangeText={(value) => setBidAmount({ value: value, error: '' })} 
+          error={!!bidamount.error}
+          errorText={bidamount.error}
+          />
+
+            <View style={styles.Alignbutton}>
+
+            
+
+            <Button
+             mode="contained"
+              style={styles.button1}
+              onPress={() => SubmitBidamount()}
+            > Submit</Button>
+
+            <Button
+                mode="contained"
+                style={styles.button1}
+                onPress={() => ResetModal()}
+              > Close</Button>
+
+
+            </View>
+
+            
+             
+            
+          </View>
+          
+        </View>
+
+
+  </Modal>
 
 <Header
       placement="left"
@@ -98,6 +235,9 @@ export default  function NewTrips(navigation){
         
         <View style={styles.MainContainer} >
 
+
+
+
         <ScrollView
     // stickyHeaderIndices={[1]}
     showsVerticalScrollIndicator={false}
@@ -111,6 +251,9 @@ export default  function NewTrips(navigation){
 
 
 
+
+
+
       {TripsData.value.length ? TripsData.value.map((ival,i)=>{
         //   console.log(ival,"ival");
           return(
@@ -119,15 +262,41 @@ export default  function NewTrips(navigation){
             cardMaxElevation={5}
             cornerRadius={5}
             style={styles.cardViewStyle}>
+
+              
     
                 <View style={styles.Heading}>
-                <Text style={styles.paraHeading}>PICKUP FROM:</Text>
+                <Text style={styles.paraHeading}>TRIP ID:</Text>
+                <Text style={styles.paraData}>{ival.trip_id}</Text>
+
+                {/* <Text style={styles.paraHeading}>PICKUP FROM:</Text>
                 <Text style={styles.paraData}>{ival.pickuplocation_name}</Text>
 
                 <Text style={styles.paraHeading}>DROP TO:</Text>
-                <Text style={styles.paraData}>{ival.drop_location_name}</Text>
+                <Text style={styles.paraData}>{ival.drop_location_name}</Text> */}
 
-                <Text style={styles.paraHeading}>TRIP NO:</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+            </View>
+
+                <View style={styles.ViewParallel}>
+
+                <View style={styles.ParallelView}>
+                <Text style={styles.paraHeading}>PICKUP FROM:</Text>
+                <Text style={styles.paraData}>{ival.pickuplocation_name}</Text>
+                </View>
+
+                <View style={styles.ParallelView}>
+                <Text style={styles.paraHeading}>DROP TO:</Text>
+                <Text style={styles.paraData}>{ival.drop_location_name}</Text>
+                </View>
+                </View>
+
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+            </View>
+
+                <Text style={styles.paraHeading}>PICK UP DATE:</Text>
                 <Text style={styles.paraData}>{ival.pickup_date}</Text>
 
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -169,11 +338,16 @@ export default  function NewTrips(navigation){
                 <Text style={styles.paraData}>{ival.extra_charge}</Text>
                 </View>
 
+                
                 </View>
 
 
+                <Text style={styles.paraHeading}>TOTAL FAIR:</Text>
+                <Text style={styles.paraData}>Rs.{parseInt(ival.trip_kms)*parseInt(ival.trip_charges)}/-</Text>
 
-            <Button mode="contained" style={styles.button} onPress={ApplyNewTrip}>
+
+
+            <Button mode="contained" style={styles.button} onPress={() => ApplyNewTrip(ival)}>
             Request New Trip
             </Button>
             
@@ -211,7 +385,86 @@ export default  function NewTrips(navigation){
 }
 
 const styles = StyleSheet.create({
- 
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+    // width:'100%'
+  },
+  centeredView1: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+    
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "#e6e6e6",
+    borderRadius: 20,
+    padding: 15,
+    // alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 5,
+      height: 2
+    },
+    width:340,
+    height:250,
+
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 15
+  },
+  Alignbutton:{
+    flexDirection:"row",
+    // width:500
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    textAlign: "center",
+    fontWeight:"700",
+    fontSize:25,
+    color:"#ce3232"
+  },
+  modalText1: {
+    // marginBottom: 5,
+    textAlign: "center",
+    // marginLeft:15,
+    // fontSize:25
+  },
+  modelHead:{
+    // textAlign:"center",
+    alignItems:"center",
+    //  flexDirection:"row",
+    //  flex:1
+  },
+  button1: {
+    borderRadius: 15,
+    width:150,
+    margin:4,
+    backgroundColor:"#ce3232",
+    // padding: 4,
+    // elevation: 2,
+    // marginLeft:65
+    
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+
+
+
+
+
     MainContainer: {
    
       flex: 1,
@@ -223,7 +476,7 @@ const styles = StyleSheet.create({
      cardViewStyle:{
  
         width: '96%', 
-        height: 400,
+        height: 450,
         flexDirection: "column",
         marginTop:9,
         // marginLeft: 9,
@@ -264,6 +517,7 @@ const styles = StyleSheet.create({
       },
       ViewParallel:{
       flexDirection:"row",
+      justifyContent:"space-between"
     },
     button:{
       backgroundColor:"#ce3232",

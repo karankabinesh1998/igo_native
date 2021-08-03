@@ -343,6 +343,37 @@ export async function UploadProfile(formData,id){
 }
 
 
+export async function AddBidTrips(formData){
+  let URL = Config.ACCESS_POINT + Config.AddBidTrips;
+  console.log(URL);
+  let request = await fetch(URL, {
+    method: "POST",
+    headers: {
+      // "Accept": "application/json",
+      'Content-Type': 'multipart/form-data'
+    },
+    body: formData
+        });
+
+        if(request.status == 200){
+
+          let requestJson = await request.json();
+          let data = JSON.stringify(requestJson);
+
+          console.log(requestJson);
+
+          await AsyncStorage.setItem(Stored.BiddingData,data);  
+          AsyncStorage.setItem("BiddingData",JSON.stringify(requestJson))
+        
+          let Stored_Data = await AsyncStorage.getItem(Stored.BiddingData);
+          let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+          console.log(data1);
+          return data1
+
+        }
+}
+
+
 export async function UploadAppDocumentUpload(formData){
   let URL = Config.ACCESS_POINT + Config.AppDocumentUpload;
   console.log(URL);

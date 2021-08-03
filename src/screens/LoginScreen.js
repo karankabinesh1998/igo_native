@@ -69,7 +69,12 @@ console.log(email.value , password.value );
           .then(response => response.json())
           .then(async responseJson => {
             if(responseJson.length){
-                console.log(responseJson,"hello")
+                console.log(responseJson[0],"hello")
+                console.log(responseJson[0].BiddingTrip);
+
+                await AsyncStorage.setItem(Stored.BiddingData,responseJson[0].BiddingTrip)
+                AsyncStorage.setItem("BiddingData",responseJson[0].BiddingTrip)  
+
                 let data = JSON.stringify(responseJson)
                  await AsyncStorage.setItem(Stored.userDetail,data);  
                 AsyncStorage.setItem("Userdetail",JSON.stringify(responseJson))  

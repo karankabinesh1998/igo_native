@@ -22,7 +22,7 @@ import { TripsJsons } from '../configuration/functional';
 const Tab = createBottomTabNavigator();
 
  function MyTabs(userDetail,navigation) {
-  console.log(userDetail.TripsJson,23);
+  // console.log(userDetail.TripsJson,23);
   return (
     <Tab.Navigator
       initialRouteName="Feed"
@@ -99,11 +99,17 @@ export default class Dashboard extends Component {
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
     let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
 
+    let Trip = await TripsJsons()
+
     await AsyncStorage.getItem(Stored.TripsJsob);
     let Stored_Data1 = await AsyncStorage.getItem(Stored.TripsJsob);
     let data2 = Stored_Data1 !== null ? JSON.parse(Stored_Data1) : [];
 
-    // console.log(data2,"datadatadata");
+    await AsyncStorage.getItem(Stored.BiddingData);
+    let Stored_Data11 = await AsyncStorage.getItem(Stored.BiddingData);
+    let data21 = Stored_Data11 !== null ? JSON.parse(Stored_Data11) : [];
+
+    console.log(data21,"datadatadata");
    
     if(data.length){
       this.setState({
@@ -112,7 +118,7 @@ export default class Dashboard extends Component {
       })
     }
 
-    await TripsJsons()
+    
     // console.log(this.state.userDetail[0],"92")
     let URL = Config.ACCESS_POINT + Config.AppLoginIgotaxy + `/${this.state.userDetail[0].id}`;
   console.log(URL);
@@ -148,7 +154,7 @@ export default class Dashboard extends Component {
   }
 
   renderComponent3=async()=>{
-    console.log("hello world");
+    // console.log("hello world");
   }
 
   render(){

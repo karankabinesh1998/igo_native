@@ -21,7 +21,9 @@ import Splashscreen from './src/screens/Splashscreen';
 
 import NewTrips from './src/screens/NewTrips';
 
-import DocumentUpload from './src/screens/DocumentUpload'
+import DocumentUpload from './src/screens/DocumentUpload';
+
+import MyBiddings from './src/screens/MyBiddings';
 
 const Stack = createStackNavigator( )
 
@@ -75,6 +77,7 @@ export default class App extends Component
           <Stack.Screen name="HomePage" component={HomePage} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen}/>
           <Stack.Screen name="NewTrips" component={NewTrips}/>
+          <Stack.Screen name="MyBiddings" component={MyBiddings}/>
           <Stack.Screen name="DocumentUpload" component={DocumentUpload}/>
           <Stack.Screen name="WhatsappandCall" component={WhatsappandCall} />
         </Stack.Navigator>

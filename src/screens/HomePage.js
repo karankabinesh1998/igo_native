@@ -4,6 +4,7 @@ import CardView from 'react-native-cardview';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 // import AsyncStorage from "@react-native-community/async-storage";
@@ -112,13 +113,12 @@ cornerRadius={5}
 style={styles.miniCard}>
 
 {/* <Image source={require('../assets/newtrip.jpg')} style={{width:'100%',flex: 1,}} />  */}
-<TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson  })} style={styles.iconstyle}>
-<MaterialCommunityIcons name="book-information-variant" style={{marginTop:9 }} color={'#ce3232'} size={100}  />
+<TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson ,userDetail : userDetail })} style={styles.iconstyle}>
+<AntDesign name="dashboard" style={{marginTop:9 }} color={'#ce3232'} size={100}  />
 
-<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>Bookings For Bid</Text>
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>New Trips</Text>
 </TouchableOpacity>
 </CardView>
-
 
 <CardView
 cardElevation={5}
@@ -127,12 +127,26 @@ cornerRadius={5}
 style={styles.miniCard}>
 
 {/* <Image source={require('../assets/newtrip.jpg')} style={{width:'100%',flex: 1,}} />  */}
+<TouchableOpacity onPress={() => navigation.navigate('MyBiddings',{ TripsJson : TripsJson ,userDetail : userDetail  })} style={styles.iconstyle}>
+<MaterialCommunityIcons name="book-information-variant" style={{marginTop:9 }} color={'#ce3232'} size={100}  />
+
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>My Biddings</Text>
+</TouchableOpacity>
+</CardView>
+
+
+{/* <CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.miniCard}>
+
 <TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson  })} style={styles.iconstyle}>
 <FontAwesome5 name="book" color={'#ce3232'} style={{marginTop:9 }}  size={100}  />
 
 <Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>Active Trips</Text>
 </TouchableOpacity>
-</CardView>
+</CardView> */}
 
 {/* <CardView
 cardElevation={5}
@@ -149,6 +163,18 @@ style={styles.miniCard}>
 
 <View style={styles.MiniCardView}>
 
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.miniCard}>
+
+<TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson  })} style={styles.iconstyle}>
+<FontAwesome5 name="book" color={'#ce3232'} style={{marginTop:9 }}  size={100}  />
+
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>Active Trips</Text>
+</TouchableOpacity>
+</CardView>
 
 <CardView
 cardElevation={5}
@@ -164,17 +190,7 @@ style={styles.miniCard}>
 
 
 
-<CardView
-cardElevation={5}
-cardMaxElevation={5}
-cornerRadius={5}
-style={styles.miniCard}>
-  <TouchableOpacity onPress={() => navigation.navigate('DocumentUpload',{ userDetail : userDetail  })} style={styles.iconstyle}>
-{/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
-<Entypo name="upload" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
-<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>Document Upload</Text>
-</TouchableOpacity>
-</CardView>
+
 
 
 </View>
@@ -193,6 +209,17 @@ style={styles.miniCard}>
 </TouchableOpacity>
 </CardView>
 
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.miniCard}>
+  <TouchableOpacity onPress={() => navigation.navigate('DocumentUpload',{ userDetail : userDetail  })} style={styles.iconstyle}>
+{/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
+<Entypo name="upload" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>Document Upload</Text>
+</TouchableOpacity>
+</CardView>
 
 {/* <CardView
 cardElevation={5}

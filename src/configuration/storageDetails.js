@@ -4,7 +4,7 @@ module.exports = {
   data: "data",
   TripsJsob: "TripsJsob",
   notification: "notification",
-  duplicate: "duplicate",
+  BiddingData: "BiddingData",
   seen: "seen",
   downloaded: "downloaded",
   serviceid: "serviceid",
