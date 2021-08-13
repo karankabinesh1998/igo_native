@@ -6,6 +6,8 @@ import SimpleImagePicker from '../components/ImagePicker';
 import Button from '../components/Button';
 import Header from '../components/Header';
 import TextInput from '../components/TextInput';
+
+
 import  Config from '../configuration/config';
 import { emailValidator } from '../helpers/emailValidator'
 import { addressValidator } from '../helpers/addressValidator'
@@ -155,6 +157,7 @@ const onRefresh = React.useCallback(async() => {
    setEmail({ value:  result[0].email_id, error: '' })
    setAddress({ value:  result[0].address, error: '' })
    setProfile(result[0].profile_dp)
+   setActiveindicator(true)
    console.log( result,"Refrehjson");
   wait(5000).then(() => setRefreshing(false));
 }, []);
@@ -359,7 +362,8 @@ const styles = StyleSheet.create({
     },
     ViewcardBelow1:{
       marginTop:5,
-      height:150,
+      marginBottom:5,
+      // height:150,
       position:'relative',
       
     },

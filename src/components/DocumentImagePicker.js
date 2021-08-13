@@ -7,9 +7,9 @@ import { UploadAppDocumentUpload } from '../configuration/functional';
 
 const styles = StyleSheet.create({
     tinyLogo: {
-      width: "95%",
+      width: "50%",
       // marginTop:5,
-      height: "90%",
+      height: "50%",
       alignSelf:'center',
       // position:'absolute'
    },

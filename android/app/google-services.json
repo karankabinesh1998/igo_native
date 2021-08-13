@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "518964990107",
+    "project_id": "igotaxy",
+    "storage_bucket": "igotaxy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:518964990107:android:d94f0cff81e9d608f7f63e",
+        "android_client_info": {
+          "package_name": "com.r7zerocarbon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "518964990107-hd3akt5sb098f28ese55o2jhj4nthvj0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSl1_jYQR7hoZLgvB_ijZWElwVgaQ80sg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "518964990107-hd3akt5sb098f28ese55o2jhj4nthvj0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

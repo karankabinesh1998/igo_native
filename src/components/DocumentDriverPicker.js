@@ -6,6 +6,7 @@ import * as ImagePicker from "react-native-image-picker";
 // import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import  Config from '../configuration/config';
 import { Avatar } from 'react-native-paper';
+import {Button as PaperButton  } from 'react-native-paper';
 
 const styles = StyleSheet.create({
   tinyLogo: {
@@ -15,9 +16,13 @@ const styles = StyleSheet.create({
     alignSelf:'center',
     // position:'absolute'
  },
+ FileUploadButton:{
+    width:'50%',
+    alignContent:"flex-end"
+},
 })
 
-export default class SimpleImagePicker extends Component {
+export default class DocumentDriverPicker extends Component {
 
   constructor(props){
     super(props)
@@ -35,16 +40,18 @@ export default class SimpleImagePicker extends Component {
     console.log(this.props,"31");
     try {
 
-      if(this.props.Profile !== null ){
-        this.setState({
-          Profile : this.props.Profile,
-          id : this.props.id
-        })
-      }else{
-        this.setState({
-          id : this.props.id
-        })
-      }
+    //   if(this.props.Profile !== null ){
+    //     this.setState({
+    //       Profile : this.props.Profile,
+    //       id : this.props.id
+    //     })
+    //   }else{
+    //     this.setState({
+    //       id : this.props.id
+    //     })
+    //   }
+
+    console.log(this.props,"DOCUMENTPICKEr");
       
     } catch (error) {
       console.log(error);
@@ -55,8 +62,8 @@ export default class SimpleImagePicker extends Component {
 
   ChooseImagorFile = async()=>{
     Alert.alert(
-      "Profile Image Upload",
-      "Do you want to upload Profile Image ? ",
+      "Document Image Upload",
+      "Do you want to upload Document ? ",
       [
         
         { text: "Cancel", onPress: () => console.log("OK Pressed") },
@@ -127,15 +134,19 @@ export default class SimpleImagePicker extends Component {
                   uri: response.uri
                 })
 
-                 let result =await UploadProfile(formData,this.state.id);
+                //  let result =await UploadProfile(formData,this.state.id);
 
-                 if(result){
+                //  if(result){
                   //  console.log(result,"Imagepicker");
-                   this.setState({
-                    Profile : result[0].profile_dp
-                   })
-                   this.props.handleUserDeatils(result)
-                 }
+                //    this.setState({
+                //     Profile : result[0].profile_dp
+                //    })
+                   this.props.handleChange({
+                    name: response.fileName,
+                    type: response.type,
+                    uri: response.uri
+                  })
+                //  }
                 
               }
             },
@@ -163,15 +174,21 @@ export default class SimpleImagePicker extends Component {
                         uri: response.uri
                       })
 
-                       let result =await UploadProfile(formData,this.state.id);
+                    //    let result =await UploadProfile(formData,this.state.id);
 
-                       if(result){
-                        //  console.log(result,"Imagepicker");
-                         this.setState({
-                          Profile : result[0].profile_dp
-                         })
-                         this.props.handleUserDeatils(result)
-                       }
+                    //    if(result){
+                    //     //  console.log(result,"Imagepicker");
+                    //      this.setState({
+                    //       Profile : result[0].profile_dp
+                    //      })
+                    //      this.props.handleUserDeatils(result)
+                    //    }
+
+                    this.props.handleChange({
+                        name: response.fileName,
+                        type: response.type,
+                        uri: response.uri
+                      })
               }
             },
           );
@@ -217,39 +234,10 @@ export default class SimpleImagePicker extends Component {
   render(){
 // console.log(`${Config.ACCESS_POINT}/admin/profile/${this.state.Profile}`,"render 187");
   return (
-    // <View
-    //   style={[
-    //     STYLES.flex,
-    //     STYLES.centerContainer,
-        
-    //   ]}
-    // >
-    //   <Text style={[STYLES.title, { color: COLORS.primaryLight }]}>
-    //     Simple Image Picker
-    //   </Text>
-      <TouchableOpacity
-        onPress={() =>this.ChooseImagorFile()}
-      >
-
-{this.state.Profile == null ? 
-<Image source={require('../assets/profile_img.jpg')} style={styles.tinyLogo} /> :
-
-<Avatar.Image size={100} style={styles.tinyLogo} source={{
-uri: `${Config.ACCESS_POINT}/admin/profile/${this.state.Profile}`,
-}} />
-
-
-}
-
-{/* <Image
-style={styles.tinyLogo}
-source={{
-uri: `${Config.ACCESS_POINT}/admin/profile/${this.state.Profile}`,
-}}/> */}
-
-        {/* <Text style={STYLES.selectButtonTitle}>Pick an image</Text> */}
-      </TouchableOpacity>
-    // </View>
+    <PaperButton icon="camera" mode="contained" style={styles.FileUploadButton} onPress={() =>this.ChooseImagorFile()}>
+    Upload
+    </PaperButton> 
   );
       }
 }
+

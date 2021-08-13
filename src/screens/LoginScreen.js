@@ -13,11 +13,40 @@ import { passwordValidator } from '../helpers/passwordValidator';
 import  Config from '../configuration/config';
 import AsyncStorage from "@react-native-community/async-storage";
 import Stored from '../configuration/storageDetails';
-
+import PushNotification ,{ Importance } from 'react-native-push-notification';
+import  firebase  from '@react-native-firebase/app';
+import messaging from '@react-native-firebase/messaging'
 
 export default function LoginScreen({ navigation }) {
-  const [email, setEmail] = useState({ value: '', error: '' })
-  const [password, setPassword] = useState({ value: '', error: '' })
+  const [email, setEmail] = useState({ value: '', error: '' });
+  const [password, setPassword] = useState({ value: '', error: '' });
+  const [ Fire_Token , setToken ]=useState(null)
+  
+
+  useEffect(() => {
+    messaging().getToken(firebase.app().options.messagingSenderId).then((token)=>{
+      console.log(`firebase in Login SCreen TOKEN`,token)
+      setToken(token)
+    })
+    const unsubscribe = messaging().onMessage(async remoteMsg=>{
+      const channelId = Math.random().toString(36).substring(7)
+    //   createChannel(channelId);
+    //   showNotification(channelId,
+    //     {
+    //     bigImage: remoteMsg.notification.android.imageUrl , 
+    //     title : remoteMsg.notification.android.title ,
+    //      body:remoteMsg.notification.android.body,
+    //      color:remoteMsg.notification.android.color,
+    //      subText: remoteMsg.data.subTitle });
+    //   console.log(channelId,"channelId");
+    //   console.log(remoteMsg,'remoteMsg');
+      
+    })
+    messaging().setBackgroundMessageHandler(async remoteMsg =>{
+      console.log(`remoteMsg Background`, remoteMsg)
+    } )
+    return unsubscribe
+},[])
 
   useEffect(() => {
     const backAction = () => {
@@ -68,21 +97,60 @@ console.log(email.value , password.value );
         })
           .then(response => response.json())
           .then(async responseJson => {
+            console.log(responseJson)
             if(responseJson.length){
                 console.log(responseJson[0],"hello")
-                console.log(responseJson[0].BiddingTrip);
+                // console.log(responseJson[0].BiddingTrip);
 
-                await AsyncStorage.setItem(Stored.BiddingData,responseJson[0].BiddingTrip)
-                AsyncStorage.setItem("BiddingData",responseJson[0].BiddingTrip)  
+                const formData=new FormData();
 
-                let data = JSON.stringify(responseJson)
-                 await AsyncStorage.setItem(Stored.userDetail,data);  
-                AsyncStorage.setItem("Userdetail",JSON.stringify(responseJson))  
-                  // this.setState({ button : "Verify OTP" , otpView : true})
-                  navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'Dashboard' }],
-                  })
+                formData.append("token",Fire_Token)
+          
+                let URL =
+                Config.ACCESS_POINT +
+                Config.UpdateMaster+`tbl_user_web/${responseJson[0].id}`;
+          
+                console.log(URL);
+          
+                fetch(URL, {
+                  method: "put",
+                  body: formData
+                })
+                .then(response1 => response1.json())
+                .then(async responseJson1 => {
+                  console.log(responseJson1,"responseJson1");
+                  let data = JSON.stringify(responseJson1)
+                  await AsyncStorage.setItem(Stored.userDetail,data);  
+                  AsyncStorage.setItem("Userdetail",JSON.stringify(responseJson1))
+
+                  Alert.alert(
+                    "Login Success ",
+                    "You have successfully Logged In!",
+                    [
+                     
+                      { text: "OK", onPress: () => console.log("OK Pressed") }
+                    ]
+                  )
+                    // this.setState({ button : "Verify OTP" , otpView : true})
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: 'Dashboard' }],
+                    })
+
+          
+                }).catch(function(error) {
+                        console.log("There is an error in networks",error);
+                        throw error;
+                      })
+
+                // await AsyncStorage.setItem(Stored.BiddingData,responseJson[0].BiddingTrip)
+                // AsyncStorage.setItem("BiddingData",responseJson[0].BiddingTrip)  
+
+                // let data = JSON.stringify(responseJson)
+                //  await AsyncStorage.setItem(Stored.userDetail,data);  
+                // AsyncStorage.setItem("Userdetail",JSON.stringify(responseJson))  
+                
+
                 }else{
                   Alert.alert(
                     "Login Failed ",

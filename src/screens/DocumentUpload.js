@@ -14,9 +14,11 @@ import DocumentImagePicker from '../components/DocumentImagePicker';
 
 export default  function DocumentUpload(navigation){
 
+  console.log(navigation.route.params.userDetail,"20202020")
+
     const [userDetail1, setuserDetail] = useState(navigation.route.params.userDetail.userDetail);
     const [ DocumentationArray , setDocumentationArray ] = useState(JSON.parse(userDetail1[0].Documentation));
-    console.log(DocumentationArray,"20202020")
+    
     const [refreshing, setRefreshing] = React.useState(false);
     const [approval,setApproval] = useState(DocumentationArray.length ?  DocumentationArray[0].approval : 0 )
     const [showButton, setShowButton] = useState(DocumentationArray.length ? true : false);
@@ -221,22 +223,24 @@ style={styles.cardViewStyle}>
 <View style={styles.HeadingView}>
     <Text style={styles.TextView}>Aadhar Front </Text>
     <DocumentImagePicker Profile={aadhar_front} docname={'aadhar_front'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils}/>
+
+    <Text style={styles.TextView}>Aadhar Back </Text>
+    <DocumentImagePicker Profile={aadhar_back} docname={'aadhar_back'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
 </View>
 
 </CardView>    
 
-<CardView
+{/* <CardView
 cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={5}
 style={styles.cardViewStyle}>
 
 <View style={styles.HeadingView}>
-    <Text style={styles.TextView}>Aadhar Back </Text>
-    <DocumentImagePicker Profile={aadhar_back} docname={'aadhar_back'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
+    
 </View>
 
-</CardView>  
+</CardView>   */}
 
 
 <CardView
@@ -248,11 +252,14 @@ style={styles.cardViewStyle}>
 <View style={styles.HeadingView}>
     <Text style={styles.TextView}>Driving License Front </Text>
     <DocumentImagePicker Profile={driving_licence_front} docname={'driving_licence_front'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
+
+    <Text style={styles.TextView}>Driving License Back </Text>
+    <DocumentImagePicker Profile={driving_licence_back} docname={'driving_licence_back'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
 </View>
 
 </CardView>  
 
-
+{/* 
 <CardView
 cardElevation={5}
 cardMaxElevation={5}
@@ -260,11 +267,10 @@ cornerRadius={5}
 style={styles.cardViewStyle}>
 
 <View style={styles.HeadingView}>
-    <Text style={styles.TextView}>Driving License Back </Text>
-    <DocumentImagePicker Profile={driving_licence_back} docname={'driving_licence_back'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
+    
 </View>
 
-</CardView>  
+</CardView>   */}
 
 
 <CardView
@@ -276,23 +282,25 @@ style={styles.cardViewStyle}>
 <View style={styles.HeadingView}>
     <Text style={styles.TextView}>Pan Card Front </Text>
     <DocumentImagePicker Profile={pancard_front} docname={'pancard_front'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
+
+    <Text style={styles.TextView}>Pan Card Back </Text>
+    <DocumentImagePicker Profile={pancard_back} docname={'pancard_back'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
 </View>
 
 </CardView>  
 
 
-<CardView
+{/* <CardView
 cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={5}
 style={styles.cardViewStyle}>
 
 <View style={styles.HeadingView}>
-    <Text style={styles.TextView}>Pan Card Back </Text>
-    <DocumentImagePicker Profile={pancard_back} docname={'pancard_back'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
+    
 </View>
 
-</CardView>  
+</CardView>   */}
 
 
 

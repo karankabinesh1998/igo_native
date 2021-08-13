@@ -1,26 +1,68 @@
-import { View , Text, ScrollView , Modal ,Pressable, RefreshControl,BackHandler,Alert, StyleSheet} from 'react-native';
+import { View , Text, ScrollView , Picker,ActivityIndicator, RefreshControl,BackHandler, StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
 import { Header } from 'react-native-elements';
 import Logo from '../components/Logo';
 import WhatsappandCall from '../components/WhatsappandCall';
-import AsyncStorage from "@react-native-community/async-storage";
-import Stored from '../configuration/storageDetails';
-import { RefreshJsons , AddBidTrips } from '../configuration/functional';
+import { RefreshJsons , AddBidTrips , ConfirmActiveTrip } from '../configuration/functional';
 import Button from '../components/Button';
-import TextInput from '../components/TextInput';
+
+
+
+
+
 
 export default  function MyBiddings(navigation){
 
     let [BidData,setBidData]=useState(navigation.route.params.userDetail.userDetail[0].BiddingTrip ? JSON.parse( navigation.route.params.userDetail.userDetail[0].BiddingTrip ) : null);
     const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
+    const [selectedDriver, setselectedDriver] = useState(0);
+    const [selectedCab,setselectedCab]=useState(0)
+    
+    const [vendorDrivers,setvendorDrivers]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorDrivers))
+    const [activeIndicator,setActiveindicator] = useState(false)
+    const [vendorCabs,setvendorCabs]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorCabs))
 
-    if(BidData){
 
-        // setBidData(JSON.parse(BidData));
-        // console.log(BidData)
- }
+
+const Submit =async(e)=>{
+
+  
+  console.log(selectedDriver,selectedCab);
+
+  setActiveindicator(true)
+
+  const formData=new FormData();
+  formData.append("vendor_id",id);
+  formData.append("driver_id",selectedDriver)
+  formData.append("cab_id",selectedCab)
+  formData.append("trip_id",e.trip_id)
+  formData.append("pick_up_date",e.pickUp_date)
+  formData.append("trip_amount",e.total_amount)
+  formData.append("vendor_req_amount",e.req_amount)
+  formData.append("status","pending")
+  console.log(formData,"IVALs");
+  try {
+
+    let result = await ConfirmActiveTrip(formData);
+
+    if(result){
+      console.log(result)
+      setActiveindicator(false)
+      setBidData(result)
+    }
+    
+  } catch (error) {
+    console.log(error);
+  }
+
+}
+
+const CancelTrip=async()=>{
+  setActiveindicator(false)
+}
+
 
  const [refreshing, setRefreshing] = React.useState(false);
 
@@ -54,6 +96,8 @@ export default  function MyBiddings(navigation){
         // let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
         //  setTripsData({ value: result, error: ''})
         //  setmobile({ value: result[0].mobile, error: '' })
+        setselectedDriver(JSON.parse(result[0].vendorDrivers))
+        setselectedCab(JSON.parse(result[0].vendorCabs))
         //  setEmail({ value:  result[0].email_id, error: '' })
         //  setAddress({ value:  result[0].address, error: '' })
         //  console.log( result,"Refrehjson");
@@ -97,8 +141,8 @@ onRefresh={onRefresh}
 
 {BidData.length ? BidData.map((ival,i)=>{
 
-console.log(ival);
-
+console.log(ival,"117");
+if(ival.status=='approved'){
 return(
     <CardView
     cardElevation={5}
@@ -117,6 +161,12 @@ return(
         </View>
 
         <View style={styles.HeadData}>
+            <Text style={styles.TextTrip}>Trip Date : {ival.pickUp_date}</Text>
+        </View>
+
+        
+
+        <View style={styles.HeadData}>
             <Text style={styles.TextTrip}>Trip Total Amount : Rs.{ival.total_amount ? ival.total_amount : 0} /-</Text>
         </View>
 
@@ -124,11 +174,69 @@ return(
             <Text style={styles.TextTrip}>Your Request Amount : Rs.{ival.req_amount}/-</Text>
         </View>
 
-       
+      <View style={styles.FileUploadView}>
+      <Text style={{fontSize:16,fontWeight:"bold"}}>Select Driver: </Text>    
+      </View>  
+        
+        <Picker
+        selectedValue={selectedDriver}
+        style={{ height: 50, width: '100%' }}
+        onValueChange={(itemValue, itemIndex) => setselectedDriver(itemValue)}
+      >
 
+        {vendorDrivers.length ? vendorDrivers.map((ival,i)=>{
+           if(ival.status==1){
+           return(
+              <Picker.Item label={ival.driver_name} value={ival.id} />
+            )
+           }
+        }):null}
+       
+        {/* <Picker.Item label="JavaScript" value="js" /> */}
+
+      </Picker>
+
+
+      <View style={styles.FileUploadView}>
+      <Text style={{fontSize:16,fontWeight:"bold"}}>Select Cab: </Text>    
+      </View>  
+        
+        <Picker
+        selectedValue={selectedCab}
+        style={{ height: 50, width: '100%' }}
+        onValueChange={(itemValue, itemIndex) => setselectedCab(itemValue)}
+      >
+
+        {vendorCabs.length ? vendorCabs.map((ival,i)=>{
+           if(ival.status==1){
+            return(
+              <Picker.Item label={ival.cab_name} value={ival.id} />
+            )
+           }
+        }):null}
+       
+        {/* <Picker.Item label="JavaScript" value="js" /> */}
+
+      </Picker>
+
+      { activeIndicator ?
+
+<View style={[styles.container, styles.horizontal]}>
+<ActivityIndicator size="large" color="#ce3232" />
+</View>
+
+: <Button mode="contained" style={styles.button} onPress={()=>Submit(ival)}>
+        Active Trip
+</Button> }
+
+<Button mode="contained" style={styles.button} onPress={CancelTrip}>
+        Cancel Trip
+</Button>
 
     </CardView>
 )
+
+}
 
 }) : null }
 
@@ -163,15 +271,26 @@ const styles = StyleSheet.create({
        cardViewStyle:{
  
         width: '96%', 
-        height: 150,
+        height: 490,
         flexDirection: "column",
         marginTop:9,
         // marginLeft: 9,
      
-      }, 
+      },
+      button:{
+        backgroundColor:"#ce3232",
+        width:"95%",
+        marginLeft:'2%'
+  
+      },
+        FileUploadView:{
+        flexDirection:"row",
+        margin:5,
+        
+    },
 
       Headings:{
-          backgroundColor:"yellow",
+          backgroundColor:"#008000",
           alignItems:"center"
       },
       Status:{

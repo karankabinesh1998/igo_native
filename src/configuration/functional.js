@@ -298,7 +298,7 @@ export async function RefreshJsons(id){
 }
 
 export async function TripsJsons(id=null){
-  let URL = Config.ACCESS_POINT + Config.NewTripsJson;
+  let URL = Config.ACCESS_POINT + Config.NewTripsJson +`/${id}`;
   console.log(URL);
   let request = await fetch(URL);
   let requestJson = await request.json();
@@ -329,7 +329,7 @@ export async function UploadProfile(formData,id){
         if(request.status == 200){
 
           let requestJson = await request.json();
-          let data = JSON.stringify(requestJson)
+          let data = JSON.stringify(requestJson);
 
           await AsyncStorage.setItem(Stored.userDetail,data);  
           AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
@@ -342,9 +342,8 @@ export async function UploadProfile(formData,id){
         }
 }
 
-
-export async function AddBidTrips(formData){
-  let URL = Config.ACCESS_POINT + Config.AddBidTrips;
+export async function UpdateToken(formData,id){
+  let URL = Config.ACCESS_POINT + Config.UpdateToken+`/${id}`;
   console.log(URL);
   let request = await fetch(URL, {
     method: "POST",
@@ -358,14 +357,12 @@ export async function AddBidTrips(formData){
         if(request.status == 200){
 
           let requestJson = await request.json();
-          let data = JSON.stringify(requestJson);
+          let data = JSON.stringify(requestJson)
 
-          console.log(requestJson);
-
-          await AsyncStorage.setItem(Stored.BiddingData,data);  
-          AsyncStorage.setItem("BiddingData",JSON.stringify(requestJson))
+          await AsyncStorage.setItem(Stored.userDetail,data);  
+          AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
         
-          let Stored_Data = await AsyncStorage.getItem(Stored.BiddingData);
+          let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
           let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
           console.log(data1);
           return data1
@@ -373,6 +370,177 @@ export async function AddBidTrips(formData){
         }
 }
 
+export async function StartandEndTrip(formData,id,vendor_id){
+  let URL = Config.ACCESS_POINT + Config.StartandEndTrip+`/${id}`;
+  console.log(URL);
+  let request = await fetch(URL, {
+    method: "POST",
+    headers: {
+      // "Accept": "application/json",
+      'Content-Type': 'multipart/form-data'
+    },
+    body: formData
+        });
+
+        if(request.status == 200){
+
+          let UserDetail = RefreshJsons(vendor_id);
+
+          if(UserDetail){
+
+            let requestJson = await request.json();
+            // let data = JSON.stringify(requestJson)
+  
+            // await AsyncStorage.setItem(Stored.userDetail,data);  
+            // AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
+          
+            // let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+            // let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+            // console.log(data1);
+            return requestJson
+
+          }
+
+         
+
+        }
+}
+
+
+
+
+
+export async function AddBidTrips(formData,id = null,venid ){
+
+  if(id != null){
+
+    console.log(id);
+
+    let URL = Config.ACCESS_POINT + Config.AddBidTrips+`/${id}/${venid}`;
+
+    console.log(URL);
+
+    let request = await fetch(URL, {
+      method: "PUT",
+      headers: {
+        // "Accept": "application/json",
+        'Content-Type': 'multipart/form-data'
+      },
+      body: formData
+          });
+
+
+          if(request.status == 200){
+  
+            let requestJson = await request.json();
+            let data = JSON.stringify(requestJson);
+  
+            console.log(requestJson);
+  
+            await AsyncStorage.setItem(Stored.TripsJsob,data);  
+            AsyncStorage.setItem("TripsJsob",JSON.stringify(requestJson))
+          
+            let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
+            let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+            console.log(data1);
+            return data1;
+  
+          }
+
+  }else{
+    let URL = Config.ACCESS_POINT + Config.AddBidTrips +`/0/${venid}`;
+    console.log(URL);
+  
+    let request = await fetch(URL, {
+      method: "POST",
+      headers: {
+        // "Accept": "application/json",
+        'Content-Type': 'multipart/form-data'
+      },
+      body: formData
+          });
+  
+          if(request.status == 200){
+  
+            let requestJson = await request.json();
+            let data = JSON.stringify(requestJson);
+  
+            console.log(requestJson);
+  
+            await AsyncStorage.setItem(Stored.TripsJsob,data);  
+            AsyncStorage.setItem("TripsJsob",JSON.stringify(requestJson))
+          
+            let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
+            let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+            console.log(data1);
+            return data1
+  
+          }
+  }
+ 
+}
+
+export async function AddDriverdata(formData){
+  let URL = Config.ACCESS_POINT + Config.AddDriverdata;
+    console.log(URL);
+  let request = await fetch(URL, {
+    method: "POST",
+    headers: {
+      // "Accept": "application/json",
+      'Content-Type': 'multipart/form-data'
+    },
+    body: formData
+        });
+
+        if(request.status == 200){
+          let requestJson = await request.json();
+          return requestJson
+
+        }
+
+      }
+
+export async function Addcabs1(formData){
+  let URL = Config.ACCESS_POINT + Config.Addcabs1;
+    console.log(URL);
+  let request = await fetch(URL, {
+    method: "POST",
+    headers: {
+      // "Accept": "application/json",
+      'Content-Type': 'multipart/form-data'
+    },
+    body: formData
+        });
+
+        if(request.status == 200){
+          let requestJson = await request.json();
+          return requestJson
+
+        }
+
+      }
+
+      export async function ConfirmActiveTrip(formData){
+        let URL = Config.ACCESS_POINT + Config.ConfirmActiveTrip;
+          console.log(URL);
+        let request = await fetch(URL, {
+          method: "POST",
+          headers: {
+            // "Accept": "application/json",
+            'Content-Type': 'multipart/form-data'
+          },
+          body: formData
+              });
+      
+              if(request.status == 200){
+                let requestJson = await request.json();
+                return requestJson
+      
+              }
+      
+            }
+
+      
 
 export async function UploadAppDocumentUpload(formData){
   let URL = Config.ACCESS_POINT + Config.AppDocumentUpload;

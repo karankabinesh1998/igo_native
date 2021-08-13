@@ -94,12 +94,17 @@ export default class Dashboard extends Component {
 
     
     await AsyncStorage.getItem(Stored.userDetail)
-    // console.log(this.props.navigation.navigate,"Dashboard page 80");
+   
     // await AsyncStorage.removeItem(Stored.userDetail);
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
     let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+    // console.log(data,"Dashboard page 80");
+    if(data.length){
 
-    let Trip = await TripsJsons()
+      let Trip = await TripsJsons(data[0].id)
+
+    }
+    
 
     await AsyncStorage.getItem(Stored.TripsJsob);
     let Stored_Data1 = await AsyncStorage.getItem(Stored.TripsJsob);
@@ -109,7 +114,7 @@ export default class Dashboard extends Component {
     let Stored_Data11 = await AsyncStorage.getItem(Stored.BiddingData);
     let data21 = Stored_Data11 !== null ? JSON.parse(Stored_Data11) : [];
 
-    console.log(data21,"datadatadata");
+    // console.log(data21,"datadatadata");
    
     if(data.length){
       this.setState({

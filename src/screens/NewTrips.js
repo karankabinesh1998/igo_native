@@ -12,6 +12,7 @@ import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import { bidamountValidator } from '../helpers/bidamountValidator';
 import { bidandWalletValidator } from '../helpers/bidandWalletValidator';
+import { SegmentedControlIOSComponent } from 'react-native';
 
 
 
@@ -20,6 +21,8 @@ export default  function NewTrips(navigation){
    
   
   // let TripsJson =  navigation.route.params.TripsJson;
+
+  // console.log(navigation.route.params.userDetail,"TripsJsonTripsJson");
   
   const [TripsData, setTripsData] = useState({ value: navigation.route.params.TripsJson, error: '' })
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,7 +30,7 @@ export default  function NewTrips(navigation){
   const [bidData,setbidDAta]=useState(null);
   const [wallet,setWallet]=useState(navigation.route.params.userDetail.userDetail[0].wallet ? navigation.route.params.userDetail.userDetail[0].wallet : 0 )
   const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
-  // console.log(,"TripsJsonTripsJson");
+  
    
     // const dataa =async()=>{
     //     let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
@@ -72,7 +75,7 @@ export default  function NewTrips(navigation){
       
         setRefreshing(true);
       
-       let result = await TripsJsons();
+       let result = await TripsJsons(id);
         let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
         let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
          setTripsData({ value: result, error: ''})
@@ -102,7 +105,7 @@ const SubmitBidamount=async()=>{
     return
   }
 
-  console.log(bidData);
+  // console.log(bidData);
 
   const formDate = new FormData();
   formDate.append("trip_id",bidData.id);
@@ -122,10 +125,14 @@ const SubmitBidamount=async()=>{
   //   formData.append("userType",3)
   //   formData.append("login_status",1)
   //   formData.append("status",1)
-  let result = await AddBidTrips(formDate);
+
+  console.log(id,bidData);
+  let result = await AddBidTrips(formDate,bidData.tbl_bidding_id,id);
 
   if(result){
     console.log(result,"Success");
+
+    setTripsData({ value: result , error: '' })
 
     setModalVisible(false);
     setBidAmount(0)
@@ -255,124 +262,127 @@ const ResetModal = () =>{
 
 
       {TripsData.value.length ? TripsData.value.map((ival,i)=>{
-        //   console.log(ival,"ival");
-          return(
-            <CardView
-            cardElevation={5}
-            cardMaxElevation={5}
-            cornerRadius={5}
-            style={styles.cardViewStyle}>
+          // console.log(ival,"ival");
+          if(ival.trip_assigned_to==null){
 
-              
-    
-                <View style={styles.Heading}>
-                <Text style={styles.paraHeading}>TRIP ID:</Text>
-                <Text style={styles.paraData}>{ival.trip_id}</Text>
-
-                {/* <Text style={styles.paraHeading}>PICKUP FROM:</Text>
-                <Text style={styles.paraData}>{ival.pickuplocation_name}</Text>
-
-                <Text style={styles.paraHeading}>DROP TO:</Text>
-                <Text style={styles.paraData}>{ival.drop_location_name}</Text> */}
-
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
-            </View>
-
-                <View style={styles.ViewParallel}>
-
-                <View style={styles.ParallelView}>
-                <Text style={styles.paraHeading}>PICKUP FROM:</Text>
-                <Text style={styles.paraData}>{ival.pickuplocation_name}</Text>
-                </View>
-
-                <View style={styles.ParallelView}>
-                <Text style={styles.paraHeading}>DROP TO:</Text>
-                <Text style={styles.paraData}>{ival.drop_location_name}</Text>
-                </View>
-                </View>
-
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
-            </View>
-
-                <Text style={styles.paraHeading}>PICK UP DATE:</Text>
-                <Text style={styles.paraData}>{ival.pickup_date}</Text>
-
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
-                </View>
-
-                <View style={styles.ViewParallel}>
-
-                <View style={styles.ParallelView}>
-                <Text style={styles.paraHeading}>CAB TYPE:</Text>
-                <Text style={styles.paraData}>{ival.cab_type}</Text>
-                </View>
-
-                <View style={styles.ParallelView}>
-                <Text style={styles.paraHeading}>DUTY TYPE:</Text>
-                <Text style={styles.paraData}>{ival.trip_type}</Text>
-                </View>
-                </View>
-
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
-                </View>
-
-                <View style={styles.ViewParallel}>
-
-                <View style={styles.ParallelView1}>
-
-                <Text style={styles.paraHeading1}>TRIP KMS:</Text>
-                <Text style={styles.paraData}>{ival.trip_kms}</Text>
-                </View>
-
-                <View style={styles.ParallelView1}>
-                <Text style={styles.paraHeading1}>TRIP CHARGE:</Text>
-                <Text style={styles.paraData}>{ival.trip_charges}</Text>
-                </View>
-
-                <View style={styles.ParallelView1}>
-                <Text style={styles.paraHeading1}>EXTRACHARGE/KM:</Text>
-                <Text style={styles.paraData}>{ival.extra_charge}</Text>
-                </View>
-
+            return( 
+              <CardView
+              cardElevation={5}
+              cardMaxElevation={5}
+              cornerRadius={5}
+              style={styles.cardViewStyle}>
+  
                 
-                </View>
-
-
-                <Text style={styles.paraHeading}>TOTAL FAIR:</Text>
-                <Text style={styles.paraData}>Rs.{parseInt(ival.trip_kms)*parseInt(ival.trip_charges)}/-</Text>
-
-
-
-            <Button mode="contained" style={styles.button} onPress={() => ApplyNewTrip(ival)}>
-            Request New Trip
-            </Button>
-            
-               
-           
-{/* Request New Trip
-</Button> */}
-
-           
-        
-      {/* </View> */}
-
-
-
+      
+                  <View style={styles.Heading}>
+                  <Text style={styles.paraHeading}>TRIP ID:</Text>
+                  <Text style={styles.paraData}>{ival.trip_id}</Text>
+  
+                  {/* <Text style={styles.paraHeading}>PICKUP FROM:</Text>
+                  <Text style={styles.paraData}>{ival.pickuplocation_name}</Text>
+  
+                  <Text style={styles.paraHeading}>DROP TO:</Text>
+                  <Text style={styles.paraData}>{ival.drop_location_name}</Text> */}
+  
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+              </View>
+  
+                  <View style={styles.ViewParallel}>
+  
+                  <View style={styles.ParallelView}>
+                  <Text style={styles.paraHeading}>PICKUP FROM:</Text>
+                  <Text style={styles.paraData}>{ival.pickuplocation_name}</Text>
+                  </View>
+  
+                  <View style={styles.ParallelView}>
+                  <Text style={styles.paraHeading}>DROP TO:</Text>
+                  <Text style={styles.paraData}>{ival.drop_location_name}</Text>
+                  </View>
+                  </View>
+  
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+              </View>
+  
+                  <Text style={styles.paraHeading}>PICK UP DATE:</Text>
+                  <Text style={styles.paraData}>{ival.pickup_date}</Text>
+  
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+                  </View>
+  
+                  <View style={styles.ViewParallel}>
+  
+                  <View style={styles.ParallelView}>
+                  <Text style={styles.paraHeading}>CAB TYPE:</Text>
+                  <Text style={styles.paraData}>{ival.cab_type}</Text>
+                  </View>
+  
+                  <View style={styles.ParallelView}>
+                  <Text style={styles.paraHeading}>DUTY TYPE:</Text>
+                  <Text style={styles.paraData}>{ival.trip_type}</Text>
+                  </View>
+                  </View>
+  
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+                  </View>
+  
+                  <View style={styles.ViewParallel}>
+  
+                  <View style={styles.ParallelView1}>
+  
+                  <Text style={styles.paraHeading1}>TRIP KMS:</Text>
+                  <Text style={styles.paraData}>{ival.trip_kms}</Text>
+                  </View>
+  
+                  <View style={styles.ParallelView1}>
+                  <Text style={styles.paraHeading1}>TRIP CHARGE:</Text>
+                  <Text style={styles.paraData}>{ival.trip_charges}</Text>
+                  </View>
+  
+                  <View style={styles.ParallelView1}>
+                  <Text style={styles.paraHeading1}>EXTRACHARGE/KM:</Text>
+                  <Text style={styles.paraData}>{ival.extra_charge}</Text>
+                  </View>
+  
+                  
+                  </View>
+  
+                  <View style={styles.ViewParallel}>
+  
+                  <View style={styles.ParallelView}>
+                  <Text style={styles.paraHeading}>TOTAL FAIR:</Text>
+                  <Text style={styles.paraData}>Rs.{parseInt(ival.trip_kms)*parseInt(ival.trip_charges)}/-</Text>
+                  </View>
+  
+  
+                  <View style={styles.ParallelView}>
+                  <Text style={styles.paraHeading}>BIDDING FAIR:</Text>
+                  <Text style={styles.paraData}>{ival.bidding_amount =='No bidding' ?  ival.bidding_amount : `Rs.${ival.bidding_amount}`}/-</Text>
+                  </View>
+  
+                  
+  
+                  </View>
+  
+                 
+  
+  
+  
+              <Button mode="contained" style={styles.button} onPress={() => ApplyNewTrip(ival)}>
+              Request New Trip
+              </Button>
               
 
+                  </View>
+      
+              </CardView>
+            )
 
-
-                    {/* <Text style={styles.paraHeading}>Drop Location : {ival.drop_location_name}</Text>
-                    <Text style={styles.paraHeading}>Date: {ival.pickup_date}</Text>
-                    <Text style={styles.paraHeading}>Cab Type : {ival.cab_type}</Text> */}
-                </View>
-    
-            </CardView>
-          )
+          }
+         
       }) : null
     }
 
