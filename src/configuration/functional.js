@@ -342,6 +342,90 @@ export async function UploadProfile(formData,id){
         }
 }
 
+
+export async function UpdateProfileSelect(formData,id){
+  let URL = Config.ACCESS_POINT + Config.UpdateMaster+`tbl_user_web/${id}`;
+  console.log(URL);
+  let request = await fetch(URL, {
+    method: "PUT",
+    headers: {
+      // "Accept": "application/json",
+      'Content-Type': 'multipart/form-data'
+    },
+    body: formData
+        });
+
+        if(request.status == 200){
+
+          let requestJson = await request.json();
+          let data = JSON.stringify(requestJson);
+
+          await AsyncStorage.setItem(Stored.userDetail,data);  
+          AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
+        
+          let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+          let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+          console.log(data1);
+          return data1
+
+        }
+}
+
+export async function sendOtp(formData){
+  let URL = Config.ACCESS_POINT + Config.sendOtp;
+  console.log(URL);
+  let request = await fetch(URL, {
+    method: "POST",
+    headers: {
+      // "Accept": "application/json",
+      'Content-Type': 'multipart/form-data'
+    },
+    body: formData
+        });
+        console.log(request,"OTPSEND");
+        if(request.status == 200){
+
+          let requestJson = await request.json()
+
+         console.log(requestJson,request);
+         
+         return requestJson
+
+        }
+}
+
+
+export async function CheckOtpandPassword(formData){
+  let URL = Config.ACCESS_POINT + Config.CheckOtpandPassword;
+  console.log(URL);
+  let request = await fetch(URL, {
+    method: "POST",
+    headers: {
+      // "Accept": "application/json",
+      'Content-Type': 'multipart/form-data'
+    },
+    body: formData
+        });
+        console.log(request,"OTPSEND");
+        if(request.status == 200){
+
+          let requestJson = await request.json()
+
+         console.log(requestJson,request);
+         
+         return requestJson
+
+        }else{
+
+          let requestJson1 = await request.json()
+
+          return requestJson1
+
+        }
+}
+
+
+
 export async function UpdateToken(formData,id){
   let URL = Config.ACCESS_POINT + Config.UpdateToken+`/${id}`;
   console.log(URL);

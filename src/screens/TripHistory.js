@@ -206,7 +206,7 @@ onRefresh={onRefresh}
 
     <View style={styles.HeadHaed}>
         <Text style={styles.TextText}>
-            No Active Trips
+            No  Trips History
         </Text>
     </View> 
     

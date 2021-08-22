@@ -14,10 +14,16 @@ import WhatsappandCall from '../components/WhatsappandCall';
 import AsyncStorage from "@react-native-community/async-storage";
 import Stored from '../configuration/storageDetails';
 import  Config from '../configuration/config';
-import { TripsJsons } from '../configuration/functional';
+import { TripsJsons , RefreshJsons } from '../configuration/functional';
+import BackgroundTimer from 'react-native-background-timer';
 
 
 
+// const intervalId = BackgroundTimer.setInterval(() => {
+//   // this will be executed every 200 ms
+//   // even when app is the background
+//   console.log('tic 1');
+// }, 200);
 
 const Tab = createBottomTabNavigator();
 
@@ -86,8 +92,37 @@ export default class Dashboard extends Component {
         NewTrips1:true
       }
     }
+    BackgroundTimer.setInterval(async() => {
+      // this will be executed every 200 ms
+      // even when app is the background
+      // let result = await RefreshJsons()
+      this.Runbackground()
+      // console.log('tic 1');
+    }, 5000);
   }
 
+
+  
+Runbackground = async()=>{
+  // console.log(this.state.userDetail[0].id,"this.state.userdetails");
+  if(this.state.userDetail.length){
+    let result = await RefreshJsons(this.state.userDetail[0].id);
+
+    if(result.length){
+      // console.log(result);
+      this.setState({
+        userDetail : result
+      })
+    }
+
+    let Trip = await TripsJsons(this.state.userDetail[0].id)
+    if(Trip.length){
+        this.setState({
+          TripsJson:Trip
+        })
+    }
+  }
+}
   
 
   async componentDidMount(){

@@ -37,7 +37,9 @@ import ActiveTrips from './src/screens/ActiveTrips';
 
 import TripHistory from './src/screens/TripHistory';
 
-import PushNotification ,{ Importance } from 'react-native-push-notification'
+import PushNotification ,{ Importance } from 'react-native-push-notification';
+
+import MyLocations from './src/screens/MyLocations';
 
 import AsyncStorage from "@react-native-community/async-storage";
 import Stored from './src/configuration/storageDetails';
@@ -236,6 +238,7 @@ const showNotification=(channelId,options)=>{
           <Stack.Screen name="AddDriver" component={AddDriver}/>
           <Stack.Screen name="AddCabs" component={AddCabs}/>
           <Stack.Screen name="ActiveTrips" component={ActiveTrips}/>
+          <Stack.Screen name="MyLocations" component={MyLocations} />
           <Stack.Screen name="WhatsappandCall" component={WhatsappandCall} />
           <Stack.Screen name="TripHistory" component={TripHistory} />
         </Stack.Navigator>

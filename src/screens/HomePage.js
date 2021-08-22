@@ -7,12 +7,16 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
-import Zocial from 'react-native-vector-icons/Zocial'
+// import Zocial from 'react-native-vector-icons/Zocial'
 // import AsyncStorage from "@react-native-community/async-storage";
 // import  NewTrips from '../screens/NewTrips';
 import PushNotification from "react-native-push-notification";
 import AsyncStorage from "@react-native-community/async-storage";
 import Stored from '../configuration/storageDetails';
+import { RefreshJsons , TripsJsons } from '../configuration/functional';
+
+
+
 
 export default  function HomePage({ userDetail,navigation ,TripsJson, HomePage1 = true}) {
     // let Hompage1 = true;
@@ -20,11 +24,8 @@ export default  function HomePage({ userDetail,navigation ,TripsJson, HomePage1 
   // await AsyncStorage.getItem(Stored.userDetail)
   let wallet = userDetail.userDetail.length ? userDetail.userDetail[0].wallet : null ;
 
-  if(wallet == null){
-    wallet = 0
-  }
-
-
+  
+ 
 
 
 
@@ -40,13 +41,19 @@ PushNotification.configure({
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
     let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
 
+    let UserJson = await RefreshJsons(data[0].id);
+
+    let Tjson = await TripsJsons(data[0].id);
+
+    
+
     await AsyncStorage.getItem(Stored.TripsJsob);
     let Stored_Data1 = await AsyncStorage.getItem(Stored.TripsJsob);
     let data2 = Stored_Data1 !== null ? JSON.parse(Stored_Data1) : [];
 
-   let Tjson = data2;
+  //  let Tjson = data2;
 
-    let UserJson = data;
+  //   let UserJson = data;
 
     // console.log("onNotify:", data , "UserJsonUserJson ");
     if(UserJson.length){
@@ -306,6 +313,18 @@ style={styles.miniCard}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <FontAwesome name="drivers-license" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
 <Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>My Drivers</Text>
+</TouchableOpacity>
+</CardView>
+
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.miniCard}>
+  <TouchableOpacity onPress={() => navigation.navigate('MyLocations',{ TripsJson : TripsJson , userDetail : userDetail  })} style={styles.iconstyle}>
+{/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
+<Entypo name="location" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>My Locations</Text>
 </TouchableOpacity>
 </CardView>
 

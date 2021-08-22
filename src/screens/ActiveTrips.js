@@ -70,12 +70,26 @@ export default  function ActiveTrips(navigation){
 
         if(result){
             console.log(result,"FormData");
+            SetActiveTrips(result);
 
         }
 
       }
 
-      const StartTrip = async()=>{
+      const StartTrip = async(ival)=>{
+
+        const formData=new FormData();
+        // formData.append("vendor",id);
+        formData.append("start",1);
+        // formData.append("driver_mobile",mobile.value);
+
+        let result = await StartandEndTrip(formData,ival.id,id);
+
+        if(result){
+            console.log(result,"FormData");
+            SetActiveTrips(result);
+
+        }
           
       }
 
@@ -193,7 +207,7 @@ onRefresh={onRefresh}
         
         {ival.start == 1 ? <Button mode="contained" style={styles.buttonstarted} onPress={()=>EndTrip(ival)} >
         End Trip  
-        </Button> :  <Button mode="contained" style={styles.button} onPress={StartTrip} >Start Trip</Button> }
+        </Button> :  <Button mode="contained" style={styles.button} onPress={()=>StartTrip(ival)} >Start Trip</Button> }
 
         {/* <Button mode="contained" style={styles.button} >
         End Trip
@@ -263,8 +277,8 @@ const styles = StyleSheet.create({
       },
       button:{
         backgroundColor:"green",
-        width:"45%",
-        marginLeft:15,
+        width:"95%",
+        marginLeft:10,
         height:60
   
       },

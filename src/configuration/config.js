@@ -21,5 +21,7 @@ module.exports = {
   AddDriverdata:'/admin/AddDriverdata1',
   Addcabs1:'/admin/Addcabs1',
   ConfirmActiveTrip:'/admin/ConfirmActiveTrip',
-  StartandEndTrip:'/admin/StartandEndTrip'
+  StartandEndTrip:'/admin/StartandEndTrip',
+  sendOtp:'/admin/sendOtp',
+  CheckOtpandPassword:'/admin/CheckOtpandPassword'
 };

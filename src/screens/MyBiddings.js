@@ -1,4 +1,4 @@
-import { View , Text, ScrollView , Picker,ActivityIndicator, RefreshControl,BackHandler, StyleSheet} from 'react-native';
+import { View , Text, ScrollView , Picker,ActivityIndicator,Alert, RefreshControl,BackHandler, StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
@@ -17,19 +17,21 @@ export default  function MyBiddings(navigation){
 
     let [BidData,setBidData]=useState(navigation.route.params.userDetail.userDetail[0].BiddingTrip ? JSON.parse( navigation.route.params.userDetail.userDetail[0].BiddingTrip ) : null);
     const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
-    const [selectedDriver, setselectedDriver] = useState(0);
-    const [selectedCab,setselectedCab]=useState(0)
+    
     
     const [vendorDrivers,setvendorDrivers]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorDrivers))
     const [activeIndicator,setActiveindicator] = useState(false)
     const [vendorCabs,setvendorCabs]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorCabs))
 
+    const [selectedDriver, setselectedDriver] = useState(vendorDrivers[0].id);
+    const [selectedCab,setselectedCab]=useState(vendorCabs[0].id)
 
 
 const Submit =async(e)=>{
 
+  console.log("selectedDriver,selectedDriver");
   
-  console.log(selectedDriver,selectedCab);
+  console.log(selectedDriver,selectedCab,"selectedDriver,selectedDriver");
 
   setActiveindicator(true)
 
@@ -45,12 +47,22 @@ const Submit =async(e)=>{
   console.log(formData,"IVALs");
   try {
 
+
+
     let result = await ConfirmActiveTrip(formData);
 
     if(result){
-      console.log(result)
+      console.log(result,"result")
       setActiveindicator(false)
       setBidData(result)
+      Alert.alert(
+        "Trip has been Activated",
+        "Activated Successfully !",
+        [
+         
+          { text: "OK", onPress: () => navigation.navigate('LoginScreen') }
+        ]
+      )
     }
     
   } catch (error) {
@@ -59,8 +71,11 @@ const Submit =async(e)=>{
 
 }
 
+
+
 const CancelTrip=async()=>{
-  setActiveindicator(false)
+
+  setActiveindicator(false);
 }
 
 
@@ -238,7 +253,19 @@ return(
 
 }
 
-}) : null }
+}) : <CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.cardViewStyle}>
+
+<View style={styles.HeadHaed}>
+    <Text style={styles.TextText}>
+        No Bidding Trips
+    </Text>
+</View> 
+
+</CardView> }
 
 
     </ScrollView>
@@ -301,6 +328,14 @@ const styles = StyleSheet.create({
       },
       TextTrip:{
           fontSize:15
-      }
+      },
+      HeadHaed:{
+        alignItems:"center",
+        backgroundColor:'yellow'
+    },
+    TextText:{
+        fontSize:25
+
+    },
 
 })
