@@ -9,9 +9,9 @@ import { Avatar } from 'react-native-paper';
 
 const styles = StyleSheet.create({
   tinyLogo: {
-    // width: 100,
+    width: 100,
     // marginTop:5,
-    // height: 100,
+    height: 100,
     alignSelf:'center',
     // position:'absolute'
  },

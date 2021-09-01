@@ -76,14 +76,15 @@ export default function WhatsappandCall({ navigation }) {
 
     return (
        <View style={styles.container}>
-          <TouchableOpacity onPress={initiateWhatsApp} >
-          <FontAwsome name="whatsapp" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={38} />
-            
-        </TouchableOpacity>
-        <TouchableOpacity onPress={callNumber} >
+
+          {/* <TouchableOpacity onPress={initiateWhatsApp} >
+          <FontAwsome name="whatsapp" style={styles.MaterialCommunityIcons} color={'green'} size={40} />
+        </TouchableOpacity> */}
+
+        {/* <TouchableOpacity onPress={callNumber} >
         <Feather name="phone-call" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={38} /> 
-        
-    </TouchableOpacity>
+       </TouchableOpacity> */}
+
        </View>
     )
 }

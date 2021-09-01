@@ -5,7 +5,7 @@ import Background from '../components/Background';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
 import Button from '../components/Button';
-import TextInput from '../components/TextInput';
+import TextInput1 from '../components/TextInput';
 import BackButton from '../components/BackButton';
 import { theme } from '../core/theme';
 import { emailValidator } from '../helpers/emailValidator';
@@ -13,19 +13,21 @@ import { passwordValidator } from '../helpers/passwordValidator';
 import  Config from '../configuration/config';
 import AsyncStorage from "@react-native-community/async-storage";
 import Stored from '../configuration/storageDetails';
-import PushNotification ,{ Importance } from 'react-native-push-notification';
+// import PushNotification ,{ Importance } from 'react-native-push-notification';
+import { TextInput } from 'react-native-paper';
 import  firebase  from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging'
+import { cos } from 'react-native-reanimated';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
   const [ Fire_Token , setToken ]=useState(null)
-  
+  const [showpass,Setshowpass]=useState(true)
 
   useEffect(() => {
     messaging().getToken(firebase.app().options.messagingSenderId).then((token)=>{
-      console.log(`firebase in Login SCreen TOKEN`,token)
+      // console.log(`firebase in Login SCreen TOKEN`,token)
       setToken(token)
     })
     const unsubscribe = messaging().onMessage(async remoteMsg=>{
@@ -43,7 +45,7 @@ export default function LoginScreen({ navigation }) {
       
     })
     messaging().setBackgroundMessageHandler(async remoteMsg =>{
-      console.log(`remoteMsg Background`, remoteMsg)
+      // console.log(`remoteMsg Background`, remoteMsg)
     } )
     return unsubscribe
 },[])
@@ -78,7 +80,7 @@ export default function LoginScreen({ navigation }) {
       setPassword({ ...password, error: passwordError })
       return
     }
-console.log(email.value , password.value );
+// console.log(email.value , password.value );
 
 // try {
 
@@ -97,7 +99,7 @@ console.log(email.value , password.value );
         })
           .then(response => response.json())
           .then(async responseJson => {
-            console.log(responseJson)
+            // console.log(responseJson,"responseKaran")
             if(responseJson.length){
                 console.log(responseJson[0],"hello")
                 // console.log(responseJson[0].BiddingTrip);
@@ -122,7 +124,8 @@ console.log(email.value , password.value );
                   let data = JSON.stringify(responseJson1)
                   await AsyncStorage.setItem(Stored.userDetail,data);  
                   AsyncStorage.setItem("Userdetail",JSON.stringify(responseJson1))
-
+                  await AsyncStorage.setItem(Stored.login_token,responseJson1[0].login_token)
+                  AsyncStorage.setItem("login_token",responseJson1[0].login_token)
                   Alert.alert(
                     "Login Success ",
                     "You have successfully Logged In!",
@@ -172,12 +175,16 @@ console.log(email.value , password.value );
    
   }
 
+  const ShowPassword=()=>{
+    Setshowpass(!showpass)
+  }
+
   return (
     <Background>
       <BackButton goBack={navigation.goBack} />
       <Logo />
       <Header>Welcome back.</Header>
-      <TextInput
+      <TextInput1
         label="Email"
         returnKeyType="next"
         value={email.value}
@@ -189,14 +196,15 @@ console.log(email.value , password.value );
         textContentType="emailAddress"
         keyboardType="email-address"
       />
-      <TextInput
+      <TextInput1
         label="Password"
         returnKeyType="done"
         value={password.value}
         onChangeText={(text) => setPassword({ value: text, error: '' })}
         error={!!password.error}
         errorText={password.error}
-        secureTextEntry
+        secureTextEntry={showpass}
+        right={<TextInput.Icon onPress={ShowPassword} name={showpass==true ? "eye-off" : "eye" } />}
       />
       <View style={styles.forgotPassword}>
         <TouchableOpacity

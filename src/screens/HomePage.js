@@ -1,5 +1,5 @@
 import { View , Text , StyleSheet ,ScrollView, BackHandler , TouchableOpacity , Alert , Linking , Image, Platform } from 'react-native'
-import React , { useEffect } from 'react';
+import React , { useEffect,useState } from 'react';
 import CardView from 'react-native-cardview';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -18,12 +18,14 @@ import { RefreshJsons , TripsJsons } from '../configuration/functional';
 
 
 
+
 export default  function HomePage({ userDetail,navigation ,TripsJson, HomePage1 = true}) {
     // let Hompage1 = true;
-  // console.log(userDetail,"14th homepage");
+  // console.log(userDetail.userDetail[0],"14th homepage");
   // await AsyncStorage.getItem(Stored.userDetail)
+  const [username,SetUsername]=useState(userDetail.userDetail.length > 0 ? userDetail.userDetail[0].username : "vendor" )
   let wallet = userDetail.userDetail.length ? userDetail.userDetail[0].wallet : null ;
-
+    // console.log(username);
   
  
 
@@ -33,7 +35,7 @@ export default  function HomePage({ userDetail,navigation ,TripsJson, HomePage1 
 PushNotification.configure({
   // (optional) Called when Token is generated (iOS and Android)
   onRegister: function (token) {
-    console.log("USERTOKEN:", token);
+    // console.log("USERTOKEN:", token);
   },
 // (required) Called when a remote is received or opened, or local notification is opened
   onNotification:async function (notification) {
@@ -51,13 +53,8 @@ PushNotification.configure({
     let Stored_Data1 = await AsyncStorage.getItem(Stored.TripsJsob);
     let data2 = Stored_Data1 !== null ? JSON.parse(Stored_Data1) : [];
 
-  //  let Tjson = data2;
-
-  //   let UserJson = data;
-
-    // console.log("onNotify:", data , "UserJsonUserJson ");
     if(UserJson.length){
-      console.log("onNotify:", UserJson , "UserJsonUserJson ");
+      // console.log("onNotify:", UserJson , "UserJsonUserJson ");
       GotoNewTrips(notification,Tjson,UserJson)
     }
  // console.log(UserJson,"onNotifyUSER");
@@ -79,6 +76,7 @@ PushNotification.configure({
  popInitialNotification: true,
  requestPermissions: Platform.OS === 'ios',
 });
+
 
 
 
@@ -110,63 +108,34 @@ PushNotification.configure({
   }, []);
 
 
-
+  const callNumber = (phone = '9940944416' ) => {
+    let mobileNumber = '9940944416'
+      if (mobileNumber.length != 10) {
+        alert('Please insert correct WhatsApp number');
+        return;
+      }
+      // Using 91 for India
+      // You can change 91 with your country code
+      let url =
+        'whatsapp://send?text=' + 
+         `Hello igotaxy , This is ${username}` +
+        '&phone=91' + mobileNumber;
+      Linking.openURL(url)
+        .then((data) => {
+          console.log('WhatsApp Opened');
+        })
+        .catch(() => {
+          alert('Make sure Whatsapp installed on your device');
+        });
+  };
 
 
     return (
         <View style={styles.container}>
 
-{/* <View style={styles.MainContainer} > */}
-
-{/* <CardView
-cardElevation={5}
-cardMaxElevation={5}
-cornerRadius={5}
-style={styles.cardViewStyle}>
-
-<View style={styles.cardView_InsideText}>
-
-  <View style={styles.IconTopView}> 
-  <TouchableOpacity style={{alignItems:"center"}}  >
-  <MaterialCommunityIcons name="bank-transfer" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={39} />   
-  <Text style={styles.topNav} >Transaction</Text>
-  </TouchableOpacity>
-  </View>   
-
-  <View style={styles.IconTopView}> 
-  <TouchableOpacity style={{alignItems:"center"}} >
-  <MaterialIcons name="account-balance-wallet" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={38} />   
-  <Text style={styles.topNav} >Account</Text>
-  </TouchableOpacity>
-  </View>
-
-<View style={styles.IconTopView}> 
-<TouchableOpacity style={{alignItems:"center"}} onPress={initiateWhatsApp}>
-<FontAwsome name="whatsapp" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={38} />   
-<Text style={styles.topNav} >Whatsapp</Text>
-</TouchableOpacity>
-</View>  
-
-
-<View style={styles.IconTopView}> 
-<TouchableOpacity style={{alignItems:"center"}} onPress={callNumber}  >
-<Feather name="phone-call" style={styles.MaterialCommunityIcons} color={'#ce3232'} size={38} /> 
-</TouchableOpacity>  
-<Text style={styles.topNav} >Call</Text>
-</View>
-
-</View>
-
-<View style={styles.BalanceText}>
-<Text style={styles.BalText}>Balance in the Wallet :         Rs.{wallet}</Text>
-</View>
-
-
-</CardView> */}
-
 <ScrollView
 // stickyHeaderIndices={[1]}
-showsVerticalScrollIndicator={false}
+showsVerticalScrollIndicator={true}
 
 >
 
@@ -184,7 +153,7 @@ style={styles.miniCard}>
 <TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson ,userDetail : userDetail })} style={styles.iconstyle}>
 <AntDesign name="dashboard" style={{marginTop:9 }} color={'#ce3232'} size={100}  />
 
-<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>New Trips</Text>
+<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>New Trips</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -198,34 +167,9 @@ style={styles.miniCard}>
 <TouchableOpacity onPress={() => navigation.navigate('MyBiddings',{ TripsJson : TripsJson ,userDetail : userDetail  })} style={styles.iconstyle}>
 <MaterialCommunityIcons name="book-information-variant" style={{marginTop:9 }} color={'#ce3232'} size={100}  />
 
-<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>My Biddings</Text>
+<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>My Biddings</Text>
 </TouchableOpacity>
 </CardView>
-
-
-{/* <CardView
-cardElevation={5}
-cardMaxElevation={5}
-cornerRadius={5}
-style={styles.miniCard}>
-
-<TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson  })} style={styles.iconstyle}>
-<FontAwesome5 name="book" color={'#ce3232'} style={{marginTop:9 }}  size={100}  />
-
-<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>Active Trips</Text>
-</TouchableOpacity>
-</CardView> */}
-
-{/* <CardView
-cardElevation={5}
-cardMaxElevation={5}
-cornerRadius={18}
-style={styles.miniCard}>
-
-<Image source={require('../assets/activetrips.jpg')} style={{width:'100%',flex: 1,}} /> 
-<Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Active Trips</Text>
-
-</CardView> */}
 
 </View>
 
@@ -240,7 +184,7 @@ style={styles.miniCard}>
 <TouchableOpacity onPress={() => navigation.navigate('ActiveTrips',{ TripsJson : TripsJson  , userDetail : userDetail })} style={styles.iconstyle}>
 <FontAwesome5 name="book" color={'#ce3232'} style={{marginTop:9 }}  size={100}  />
 
-<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>Active Trips</Text>
+<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>Active Trips</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -252,7 +196,7 @@ style={styles.miniCard}>
   <TouchableOpacity onPress={() => navigation.navigate('TripHistory',{ TripsJson : TripsJson , userDetail : userDetail    })} style={styles.iconstyle}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <Fontisto name="history" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
-<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>Trip History</Text>
+<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>Trip History</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -273,7 +217,7 @@ style={styles.miniCard}>
   <TouchableOpacity onPress={() => navigation.navigate('DocumentUpload',{ userDetail : userDetail  })} style={styles.iconstyle}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <Entypo name="upload" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
-<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>Document Upload</Text>
+<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>Document Upload</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -285,20 +229,10 @@ style={styles.miniCard}>
   <TouchableOpacity onPress={() => navigation.navigate('AddCabs',{ TripsJson : TripsJson , userDetail : userDetail })} style={styles.iconstyle}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <FontAwesome name="cab" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
-<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>My Cabs</Text>
+<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>My Cabs</Text>
 </TouchableOpacity>
 </CardView>
 
-
-
-{/* <CardView
-cardElevation={5}
-cardMaxElevation={5}
-cornerRadius={18}
-style={styles.miniCard}>
-<Image source={require('../assets/wallet.png')} style={{width:'70%',marginLeft:15,flex: 1}} /> 
-<Text style={{textAlign:"center" , fontSize:10,marginBottom:8}}>Document Upload</Text>
-</CardView> */}
 
 </View>
 
@@ -312,7 +246,7 @@ style={styles.miniCard}>
   <TouchableOpacity onPress={() => navigation.navigate('AddDriver',{ TripsJson : TripsJson , userDetail : userDetail  })} style={styles.iconstyle}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <FontAwesome name="drivers-license" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
-<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>My Drivers</Text>
+<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>My Drivers</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -324,7 +258,7 @@ style={styles.miniCard}>
   <TouchableOpacity onPress={() => navigation.navigate('MyLocations',{ TripsJson : TripsJson , userDetail : userDetail  })} style={styles.iconstyle}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <Entypo name="location" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
-<Text style={{textAlign:"center",fontSize:16,marginBottom:8}}>My Locations</Text>
+<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>My Locations</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -332,7 +266,21 @@ style={styles.miniCard}>
 
 {/* </View>  */}
 
-        
+<View style={styles.MiniCardView}>
+
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.miniCard}>
+  <TouchableOpacity onPress={callNumber} style={styles.iconstyle}>
+{/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
+<FontAwesome name="whatsapp" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
+<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>Contact</Text>
+</TouchableOpacity>
+</CardView>
+
+</View>
 
 </ScrollView>
         </View>
@@ -403,17 +351,17 @@ const styles = StyleSheet.create({
       },
 
       miniCard:{
-        width: '45%',
-        height:150,
+        width: '40%',
+        height:140,
         // marginTop:16,
         // marginLeft:2
-        margin:10
+        margin:20
       },
 
       MiniCardView:{
         // flex:1,
         flexDirection:"row",
-        paddingTop:10
+        paddingTop:5
       },
 
       cardView_InsideText:{

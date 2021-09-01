@@ -32,13 +32,16 @@ export default class StartScreen extends Component  {
 
  async componentDidMount(){
 
-    await AsyncStorage.getItem(Stored.userDetail)
+    // await AsyncStorage.getItem(Stored.userDetail)
     // console.log(this.props.navigation);
     // await AsyncStorage.removeItem(Stored.userDetail);
+
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
     let data = Stored_Data !== null ? JSON.parse(Stored_Data) : []
     // console.log(data);
-    if(data.length){
+    let LoginToken = await AsyncStorage.getItem(Stored.login_token);
+    if(data.length && LoginToken != null){
+      // console.log("data","DAA","KAARN");
       this.props.navigation.navigate('Dashboard')
     }else{
         this.setState({

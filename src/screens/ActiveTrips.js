@@ -1,4 +1,4 @@
-import { View , Text, ScrollView , Picker,ActivityIndicator, RefreshControl,BackHandler, StyleSheet} from 'react-native';
+import { View , Text, ScrollView , Picker,ActivityIndicator,Alert, RefreshControl,BackHandler, StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
@@ -7,7 +7,7 @@ import Logo from '../components/Logo';
 import WhatsappandCall from '../components/WhatsappandCall';
 import { RefreshJsons , StartandEndTrip } from '../configuration/functional';
 import Button from '../components/Button';
-
+import SpinnerButton from 'react-native-spinner-button';
 
 export default  function ActiveTrips(navigation){
 
@@ -15,7 +15,8 @@ export default  function ActiveTrips(navigation){
 
     const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
     
-    console.log(activeTrips,"activeTrips")
+    // console.log(activeTrips,"activeTrips")
+    const [activeIndicator1,setActiveindicator1] = useState(false)
 
     const [refreshing, setRefreshing] = React.useState(false);
 
@@ -57,9 +58,18 @@ export default  function ActiveTrips(navigation){
         wait(5000).then(() => setRefreshing(false));
       }, []);
 
-      const EndTrip = async(ival)=>{
+      const EndTrip = async(ival,i)=>{
+        // onRefresh() 
 
+        
         // StartandEndTrip
+        setActiveindicator1(true)
+
+        const NewData = activeTrips;
+
+        NewData[i].activeindicator1 = true;
+
+        SetActiveTrips(NewData)
 
         const formData=new FormData();
         // formData.append("vendor",id);
@@ -71,12 +81,27 @@ export default  function ActiveTrips(navigation){
         if(result){
             console.log(result,"FormData");
             SetActiveTrips(result);
-
+            setActiveindicator1(false)
+            onRefresh(); 
+            Alert.alert(
+                "Trip Completed Successfully",
+                "Trip Completed Successfully!",
+                [
+                 
+                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                ]
+              )
         }
 
       }
 
-      const StartTrip = async(ival)=>{
+      const StartTrip = async(ival,i)=>{
+
+        const NewData = activeTrips;
+
+        NewData[i].activeindicator = true;
+
+        SetActiveTrips(NewData)
 
         const formData=new FormData();
         // formData.append("vendor",id);
@@ -87,8 +112,21 @@ export default  function ActiveTrips(navigation){
 
         if(result){
             console.log(result,"FormData");
+
+            onRefresh() ; 
+
             SetActiveTrips(result);
 
+              
+
+            Alert.alert(
+                "Trip Started Successfully",
+                "All the best for the Trip!",
+                [
+                 
+                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                ]
+              )
         }
           
       }
@@ -126,7 +164,9 @@ onRefresh={onRefresh}
 >
 
 {activeTrips.length ? activeTrips.map((ival,i)=>{
-    console.log(ival,"IVAL")
+    console.log(ival.activeindicator,"IVAL")
+    
+
     return(
         <CardView
         cardElevation={5}
@@ -205,13 +245,45 @@ onRefresh={onRefresh}
 
         <View style={styles.ButtView}>
         
-        {ival.start == 1 ? <Button mode="contained" style={styles.buttonstarted} onPress={()=>EndTrip(ival)} >
+        {/* {ival.start == 1 ? 
+        
+        <Button mode="contained" style={styles.buttonstarted} onPress={()=>EndTrip(ival)} >
         End Trip  
-        </Button> :  <Button mode="contained" style={styles.button} onPress={()=>StartTrip(ival)} >Start Trip</Button> }
+        </Button> :  <Button mode="contained" style={styles.button} onPress={()=>StartTrip(ival)} >Start Trip</Button> } */}
 
-        {/* <Button mode="contained" style={styles.button} >
-        End Trip
-        </Button> */}
+        { ival.start == 1 ? 
+        
+        <SpinnerButton
+        buttonStyle={styles.buttonStyle,
+        { backgroundColor: '#ce3232',width:300 }}
+        isLoading={ival.activeindicator1}
+        onPress={()=>EndTrip(ival,i)}
+        indicatorCount={10}
+        spinnerType='BarIndicator'
+        disabled={false}
+        animateHeight={50}
+        animateWidth={200}
+        animateRadius={10}
+        >
+        <Text style={styles.buttonText}>End Trip</Text>
+        </SpinnerButton>
+
+       : 
+       
+       <SpinnerButton
+       buttonStyle={styles.buttonStyle,
+       { backgroundColor: '#ce3232',width:300 }}
+       isLoading={ival.activeindicator}
+       onPress={()=>StartTrip(ival,i)}
+       indicatorCount={10}
+       spinnerType='BarIndicator'
+       disabled={false}
+       animateHeight={50}
+       animateWidth={200}
+       animateRadius={10}
+       >
+       <Text style={styles.buttonText}>Start Trip</Text>
+       </SpinnerButton> }
 
         </View>
 
@@ -269,9 +341,9 @@ const styles = StyleSheet.create({
        cardViewStyle:{
  
         width: '96%', 
-        height: 630,
+        height: 470,
         flexDirection: "column",
-        marginTop:9,
+        marginTop:30,
         // marginLeft: 9,
      
       },
@@ -314,11 +386,16 @@ const styles = StyleSheet.create({
           backgroundColor:'yellow'
       },
       TextText:{
-          fontSize:25
+          fontSize:15
 
       },
       TextTrip:{
-          fontSize:15
-      }
+          fontSize:10
+      },
+      buttonText:{
+        fontSize: 15,
+        textAlign: 'center',
+        color: 'white',
+        }
 
 })

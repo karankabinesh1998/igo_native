@@ -7,10 +7,10 @@ import { UploadAppDocumentUpload } from '../configuration/functional';
 
 const styles = StyleSheet.create({
     tinyLogo: {
-      width: "50%",
+      width: 150,
       // marginTop:5,
-      height: "50%",
-      alignSelf:'center',
+      height:100,
+      // alignSelf:'center',
       // position:'absolute'
    },
    TouchOPP:{

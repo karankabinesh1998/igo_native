@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import  AccountandWallet from '../screens/AccountandWallet';
 import HomePage from '../screens/HomePage';
 import ProfileSCreen from '../screens/ProfileScreen'; 
-import LoginScreen from '../screens/LoginScreen'
-import { Text, View  } from 'react-native';
+// import LoginScreen from '../screens/LoginScreen'
+// import { Text, View  } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,9 +16,9 @@ import Stored from '../configuration/storageDetails';
 import  Config from '../configuration/config';
 import { TripsJsons , RefreshJsons } from '../configuration/functional';
 import BackgroundTimer from 'react-native-background-timer';
-
-
-
+import NetInfo from "@react-native-community/netinfo";
+import { Platform , Alert } from "react-native";
+import { Appbar } from 'react-native-paper';
 // const intervalId = BackgroundTimer.setInterval(() => {
 //   // this will be executed every 200 ms
 //   // even when app is the background
@@ -89,74 +89,94 @@ export default class Dashboard extends Component {
     {
       this.state={
         userDetail : [],
-        NewTrips1:true
+        NewTrips1:true,
+        connection_Status:"",
+        TripsJson:[],
+        ID:null
       }
     }
+
     BackgroundTimer.setInterval(async() => {
       // this will be executed every 200 ms
       // even when app is the background
       // let result = await RefreshJsons()
+      this.handleConnectivityChange()
       this.Runbackground()
-      // console.log('tic 1');
-    }, 5000);
+      console.log('tic 1');
+    }, 10000);
   }
 
 
   
 Runbackground = async()=>{
-  // console.log(this.state.userDetail[0].id,"this.state.userdetails");
-  if(this.state.userDetail.length){
-    let result = await RefreshJsons(this.state.userDetail[0].id);
+  console.log(this.state.ID,"this.state.userdetails");
+  let LoginToken = await AsyncStorage.getItem(Stored.login_token);
+  console.log(LoginToken);
+  if(this.state.userDetail.length && LoginToken != null ){
+    let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+    let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+
+    if(data.length){
+
+    let result = await RefreshJsons(5); 
 
     if(result.length){
-      // console.log(result);
-      this.setState({
+     this.setState({
         userDetail : result
       })
     }
 
-    let Trip = await TripsJsons(this.state.userDetail[0].id)
+    let Trip = await TripsJsons(5)
+    console.log(Trip,"TRIp");
     if(Trip.length){
         this.setState({
           TripsJson:Trip
         })
     }
   }
+  }
 }
   
 
   async componentDidMount(){
 
+    let LoginToken = await AsyncStorage.getItem(Stored.login_token);
     
-    await AsyncStorage.getItem(Stored.userDetail)
-   
-    // await AsyncStorage.removeItem(Stored.userDetail);
+    console.log(LoginToken,"LoginToken");
+    
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
     let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-    // console.log(data,"Dashboard page 80");
-    if(data.length){
+    // console.log(data[0].id,"Dashboard page 80");
+   
+    if(data.length > 0){
+      this.setState({
+        userDetail : data,
+        ID:data[0].id
+      })
+    }
+
+    if(data.length > 0 && LoginToken != null ){
 
       let Trip = await TripsJsons(data[0].id)
-
-    }
+        console.log(Trip)
+      this.setState({
+        userDetail : data,
+        //TripsJson : data2
+      })
+   
     
 
     await AsyncStorage.getItem(Stored.TripsJsob);
     let Stored_Data1 = await AsyncStorage.getItem(Stored.TripsJsob);
     let data2 = Stored_Data1 !== null ? JSON.parse(Stored_Data1) : [];
 
-    await AsyncStorage.getItem(Stored.BiddingData);
-    let Stored_Data11 = await AsyncStorage.getItem(Stored.BiddingData);
-    let data21 = Stored_Data11 !== null ? JSON.parse(Stored_Data11) : [];
-
-    // console.log(data21,"datadatadata");
-   
-    if(data.length){
+     if(data.length){
       this.setState({
         userDetail : data,
         TripsJson : data2
       })
     }
+  
 
     
     // console.log(this.state.userDetail[0],"92")
@@ -191,11 +211,40 @@ Runbackground = async()=>{
             }
             )
 
+          }else{
+            // this.setState({
+            //   userDetail:[],
+            //   TripsJsons:[]
+            // })
+          }
+
   }
 
   renderComponent3=async()=>{
     // console.log("hello world");
   }
+
+
+
+  handleConnectivityChange = () => {
+    NetInfo.addEventListener(state => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+
+       if (state.isConnected) {
+       
+      } else {
+        Alert.alert(
+          "Woops !",
+          "Please Check your Internet Connection.",
+          [
+           
+            { text: "Retry", onPress:()=>this.handleConnectivityChange()}
+          ]
+        )
+      }
+    })
+  };
 
   render(){
     // console.log(this.props.navigation,132);
@@ -218,7 +267,11 @@ Runbackground = async()=>{
         }}
       />
       
-    
+  {/* <Appbar.Header style={{backgroundColor:"red"}}>
+
+    <Appbar.Content  title="Igotaxy" />
+
+</Appbar.Header> */}
 
       <NavigationContainer independent={true}>
          <MyTabs userDetail={this.state.userDetail} navigation ={this.props.navigation} TripsJson={this.state.TripsJson} />
@@ -228,20 +281,4 @@ Runbackground = async()=>{
   }
 }
 
-// import * as React from 'react';
-// import { Text, View } from 'react-native';
-// import { NavigationContainer } from '@react-navigation/native';
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-
-
-
-
-// export default function App() {
-//   return (
-//     <NavigationContainer>
-//       <MyTabs />
-//     </NavigationContainer>
-//   );
-// }

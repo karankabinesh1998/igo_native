@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
        cardViewStyle:{
  
         width: '96%', 
-        height: 390,
+        height: 300,
         flexDirection: "column",
         marginTop:9,
         // marginLeft: 9,
@@ -283,18 +283,19 @@ const styles = StyleSheet.create({
           fontSize:25
       },
       HeadData:{
-        margin:5
+        margin:6,
+        marginLeft:15
       },
       HeadHaed:{
           alignItems:"center",
           backgroundColor:'yellow'
       },
       TextText:{
-          fontSize:25
+          fontSize:15
 
       },
       TextTrip:{
-          fontSize:15
+          fontSize:10
       }
 
 })

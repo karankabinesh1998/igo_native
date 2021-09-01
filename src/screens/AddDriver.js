@@ -1,4 +1,8 @@
-import { View , Text, ScrollView ,ActivityIndicator, Modal ,Pressable, RefreshControl,BackHandler,Alert,Image ,StyleSheet} from 'react-native';
+import { View , Text, ScrollView ,ActivityIndicator,
+   Modal ,KeyboardAvoidingView, 
+   RefreshControl,BackHandler,TouchableWithoutFeedback,
+   Keyboard , Alert,
+   Image ,StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
@@ -6,19 +10,28 @@ import { Header } from 'react-native-elements';
 import Header1 from '../components/Header';
 import Logo from '../components/Logo';
 import WhatsappandCall from '../components/WhatsappandCall';
-import AsyncStorage from "@react-native-community/async-storage";
-import Stored from '../configuration/storageDetails';
-import { RefreshJsons , AddBidTrips } from '../configuration/functional';
+import { RefreshJsons} from '../configuration/functional';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import { AddDriverdata } from '../configuration/functional';
 import  Config from '../configuration/config';
 import DocumentDriverPicker from '../components/DocumentDriverPicker';
+import AccordionTab from '../components/AccordionTab';
 
-
-
+import { FAB, Portal, Provider } from 'react-native-paper';
+import SpinnerButton from 'react-native-spinner-button';
+import { nameValidator } from '../helpers/nameValidator';
+import { mobileValidator } from '../helpers/mobileValidator';
+import { emailValidator } from '../helpers/emailValidator';
+import { driving_license_numberValidator } from '../helpers/driving_license_numberValidator';
 
 export default  function AddDriver(navigation){
+
+      const [state, setState] = React.useState({ open: false });
+
+      const onStateChange = ({ open }) => setState({ open });
+
+      const { open } = state;
 
     const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null);
     // const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
@@ -28,7 +41,8 @@ export default  function AddDriver(navigation){
     const [email, setEmail] = useState({ value:'', error: '' });
     const [d_front, setd_front] = useState({ value:null, error: '' });
     const [d_front1, setd_front1] = useState('');
-
+    const [modalVisible, setModalVisible] = useState(false);
+    const [driving_license_number,Setdriving_license_number]=useState({value:'',error:''})
     const [d_back, setd_back] = useState({ value:null, error: '' });
     const [d_back1, setd_back1] = useState('');
 
@@ -66,7 +80,7 @@ export default  function AddDriver(navigation){
     console.log(e,"4747");
     setd_back({value:e,error:''});
     setd_back1(e.name);
-    setActiveindicator(false)
+    // setActiveindicator(false)
   }
 
   const handleChange2=(e)=>{
@@ -74,8 +88,23 @@ export default  function AddDriver(navigation){
     setpolice_verify({value:e,error:''});
     setpolice_verify1(e.name);
   }
+ 
 
   const Submit=async()=>{
+
+
+    const nameError = nameValidator(name.value)
+    const mobileError = mobileValidator(mobile.value)
+    const emailError = emailValidator(email.value)
+    const Driving = driving_license_numberValidator(driving_license_number.value)
+  
+    if (emailError || nameError || mobileError || Driving ) {
+      setName({ ...name, error: nameError })
+      setmobile({...mobile,error:mobileError})
+      setEmail({ ...email, error: emailError })
+      Setdriving_license_number({...driving_license_number,error:Driving})
+      return
+    }
 
     setActiveindicator(true)
 
@@ -84,13 +113,14 @@ export default  function AddDriver(navigation){
     formData.append("driver_name",name.value);
     formData.append("driver_mobile",mobile.value);
     formData.append("driver_email",email.value);
+    formData.append("driving_license_number",driving_license_number.value)
     formData.append("driving_license_front",d_front1);
     formData.append("driving_license_back",d_back1);
     formData.append("police_verify",police_verify1);
     formData.append("overall_exp",exp);
     formData.append("file",JSON.stringify(["file1","file2","file3"]))
     formData.append("file1",d_front.value)
-    formData.append("file2",d_back1.value)
+    formData.append("file2",d_back.value)
     formData.append("file3",police_verify.value)
 
 
@@ -98,7 +128,7 @@ export default  function AddDriver(navigation){
 
     let result = await AddDriverdata(formData);
 
-    if(result){
+    if(result !== false){
 
         console.log(result);
 
@@ -118,6 +148,28 @@ export default  function AddDriver(navigation){
         setpolice_verify1('');
 
         setexp(0);
+        Setdriving_license_number({ value: '', error: '' })
+        setModalVisible(false)
+
+        Alert.alert(
+          "Successfully Added",
+          "The Driver was added successfully!",
+          [
+           
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ]
+        )
+
+    }else{
+      
+      Alert.alert(
+        "Already Exists",
+        "The Driver was already Exists!",
+        [
+         
+          { text: "OK", onPress: () =>  setActiveindicator(false)}
+        ]
+      )
 
     }
 
@@ -132,37 +184,221 @@ export default  function AddDriver(navigation){
     setRefreshing(true);
   
    let result = await RefreshJsons(id);
-//    console.log();
-    setvendorDrivers(JSON.parse(result[0].vendorDrivers))
-    // let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
-    // let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-    //  setTripsData({ value: result, error: ''})
-    //  setmobile({ value: result[0].mobile, error: '' })
-    //  setEmail({ value:  result[0].email_id, error: '' })
-    //  setAddress({ value:  result[0].address, error: '' })
-     console.log(JSON.parse(result[0].vendorDrivers),"Refrehjson");
+   setvendorDrivers(JSON.parse(result[0].vendorDrivers))
+    console.log(JSON.parse(result[0].vendorDrivers),"Refrehjson");
     wait(5000).then(() => setRefreshing(false));
   }, []);
+
+
+  const ResetModal = () =>{
+    setName({ value: '', error: '' })
+    setmobile({ value: '', error: '' })
+    setEmail({ value:'', error: '' });
+    setd_front({ value:null, error: '' });
+    setd_front1('');
+    setd_back({ value:null, error: '' });
+    setd_back1('');
+
+    setpolice_verify({ value:null, error: '' });
+    setpolice_verify1('');
+
+    setexp(0);
+    setActiveindicator(false)
+    setModalVisible(false)
+}
    
 return(
     <SafeAreaProvider style={{backgroundColor:"lightgrey"}}> 
+<Provider>
+<Portal>
+        <FAB.Group
+          open={false}
+          color="white"
+          fabStyle={{backgroundColor:"#ce3232"}}
+          icon={open ? 'plus' : 'plus'}
+          actions={[
+            { icon: 'plus', onPress: () => console.log('Pressed add') },
+            {
+              icon: 'star',
+              label: 'Star',
+              onPress: () => console.log('Pressed star'),
+            },
+            {
+              icon: 'email',
+              label: 'Email',
+              onPress: () => console.log('Pressed email'),
+            },
+            {
+              icon: 'bell',
+              label: 'Remind',
+              onPress: () => console.log('Pressed notifications'),
+              small: false,
+            },
+          ]}
+          onStateChange={onStateChange}
+          onPress={() => setModalVisible(!modalVisible)}
+        />
+      </Portal>
+
+      <Modal
+  animationType="fade"
+  transparent={true}
+  visible={modalVisible}
+  onRequestClose={() => ResetModal()}
+  >
+
+  <View style={styles.centeredView1}>
+  <View style={styles.modalView}>
+  <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+  <ScrollView showsVerticalScrollIndicator={false}>
+  <Header1 style={styles.heading}>Add Driver</Header1>
+
+      <TextInput
+        label="Name"
+        returnKeyType="next"
+        container={styles.InputText}
+        value={name.value}
+        onChangeText={(text) => setName({ value: text, error: '' })}
+        error={!!name.error}
+        errorText={name.error}
+      />
+
+        <TextInput
+        label="Mobile"
+        keyboardType="numeric"
+        container={styles.InputText}
+        value={mobile.value}
+        maxLength = {10}
+        placeholder='mobile number'
+        onChangeText={(value) => setmobile({ value: value, error: '' })} 
+        error={!!mobile.error}
+        errorText={mobile.error}
+        />
+
+       <TextInput
+              label="Email"
+              returnKeyType="next"
+              value={email.value}
+              container={styles.InputText}
+              onChangeText={(text) => setEmail({ value: text, error: '' })}
+              error={!!email.error}
+              errorText={email.error}
+              autoCapitalize="none"
+              autoCompleteType="email"
+              textContentType="emailAddress"
+              keyboardType="email-address"
+       />
+
+      {/* <TextInput
+        label="Driving License Number"
+        returnKeyType="next"
+        container={styles.InputText}
+        value={driving_license_number.value}
+        onChangeText={(value) => Setdriving_license_number({ value: value, error: '' })}
+        error={!!driving_license_number.error}
+        errorText={driving_license_number.error} 
+        /> */}
+
+<TextInput
+        label="Driving License Number"
+        returnKeyType="next"
+        container={styles.InputText}
+        value={driving_license_number.value}
+        onChangeText={(text) => Setdriving_license_number({ value: text, error: '' })}
+        error={!!driving_license_number.error}
+        errorText={driving_license_number.error}
+      />
+
+        <TextInput
+        label="Experience"
+        keyboardType="numeric"
+         container={styles.InputText}
+        value={exp}
+        placeholder='Experience'
+        onChangeText={(value) => setexp(value)} 
+        />
+
+<View style={styles.FileUploadView}>
+<Text style={{fontSize:16}}>Upload Driving Licence Front : </Text>    
+</View>   
+
+    <View style={styles.FileUploadView}>
+      <DocumentDriverPicker Profile={d_front} handleChange={handleChange}/>
+    <Text style={{margin:6,fontSize:12}}>{d_front1 ? d_front1.substring(0,14) : null } </Text>
+    </View>
+
+<View style={styles.FileUploadView}>
+<Text style={{fontSize:16}}>Upload Driving Licence Back : </Text>    
+</View>    
+<View style={styles.FileUploadView}>
+<DocumentDriverPicker Profile={d_back} handleChange={handleChange1}/>
+<Text style={{margin:6,fontSize:12}}>{d_back1 ? d_back1.substring(0,14) : null } </Text>
+</View>
+
+<View style={styles.FileUploadView}>
+<Text style={{fontSize:16}}>Upload Police Certificate : </Text>    
+</View>    
+<View style={styles.FileUploadView}>
+<DocumentDriverPicker Profile={police_verify} handleChange={handleChange2}/>
+<Text style={{margin:6,fontSize:12}}>{police_verify1 ? police_verify1.substring(0,14) : null } </Text>
+</View>
+
+{/* { activeIndicator ?
+
+<View style={[styles.container, styles.horizontal]}>
+<ActivityIndicator size="large" color="#ce3232" />
+</View>
+
+: <Button mode="contained" style={styles.button} onPress={Submit}>
+        Add Driver
+</Button> } */}
+
+<SpinnerButton
+    buttonStyle={styles.buttonStyle,
+      { backgroundColor: '#ce3232',width:300 }}
+    isLoading={activeIndicator}
+    onPress={Submit}
+    indicatorCount={10}
+    spinnerType='BarIndicator'
+    disabled={false}
+    animateHeight={50}
+    animateWidth={200}
+    animateRadius={10}
+  >
+    <Text style={styles.buttonText}>Add Driver</Text>
+  </SpinnerButton>
+
+</ScrollView>
+</TouchableWithoutFeedback>
+</KeyboardAvoidingView>
+  </View>
+  </View>          
+
+    </Modal>
 
     <Header
-          placement="left"
-          statusBarProps={{ barStyle: 'light-content' }}
-          barStyle="light-content"
-          leftComponent={<Logo STYLE={ { width:110 , height: 100, marginBottom: 8, } } />}
-          centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
-          rightComponent={ <WhatsappandCall/> }
-          containerStyle={{
-              backgroundColor: 'white',
-              justifyContent: 'space-around',
-              width:'100%',
-              height:'15%'
-            }}
-          />
+    placement="left"
+    statusBarProps={{ barStyle: 'light-content' }}
+    barStyle="light-content"
+    leftComponent={<Logo STYLE={ { width:110 , height: 90, marginBottom: 8, } } />}
+    centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
+    rightComponent={ <WhatsappandCall/> }
+    containerStyle={{
+    backgroundColor: 'white',
+    justifyContent: 'space-around',
+    width:'100%',
+    height:'15%'
+    }}
+    />
+
+
+      
     
-<View style={styles.MainContainer} >
+<View style={styles.MainContainer}>
 
 
 <ScrollView
@@ -185,9 +421,11 @@ cornerRadius={5}
 style={styles.cardViewStyle12}>
 
 
+{/* 
+
 <Header1 style={styles.heading}>Add Your Driver</Header1>
 
-<TextInput
+      <TextInput
         label="Name"
         returnKeyType="next"
         container={styles.InputText}
@@ -197,64 +435,53 @@ style={styles.cardViewStyle12}>
         errorText={name.error}
       />
 
-        <TextInput
-        label="Mobile"
-        keyboardType="numeric"
-        // style={[styles.textInput, { width: '100%' }]}
+      <TextInput
+      label="Mobile"
+      keyboardType="numeric"
+      container={styles.InputText}
+      value={mobile.value}
+      placeholder='mobile number'
+      onChangeText={(value) => setmobile({ value: value, error: '' })} 
+      error={!!mobile.error}
+      errorText={mobile.error}
+      />
+
+      <TextInput
+        label="Email"
+        returnKeyType="next"
+        value={email.value}
         container={styles.InputText}
-        value={mobile.value}
-        placeholder='mobile number'
-        onChangeText={(value) => setmobile({ value: value, error: '' })} 
-        error={!!mobile.error}
-        errorText={mobile.error}
-        />
+        onChangeText={(text) => setEmail({ value: text, error: '' })}
+        error={!!email.error}
+        errorText={email.error}
+        autoCapitalize="none"
+        autoCompleteType="email"
+        textContentType="emailAddress"
+        keyboardType="email-address"
+      />
 
-    {/* <Input
-      label="Password"
-      style={styles.InputText}
-      underlineColor="transparent"
-        mode="outlined"
-      secureTextEntry
-      right={<Input.Icon name="eye" />}
-    /> */}
-
-            <TextInput
-              label="Email"
-              returnKeyType="next"
-              value={email.value}
-              container={styles.InputText}
-              onChangeText={(text) => setEmail({ value: text, error: '' })}
-              error={!!email.error}
-              errorText={email.error}
-              autoCapitalize="none"
-              autoCompleteType="email"
-              textContentType="emailAddress"
-              keyboardType="email-address"
-            />
-
-<TextInput
+        <TextInput
         label="Experience"
         keyboardType="numeric"
-        // style={[styles.textInput, { width: '100%' }]}
-        container={styles.InputText}
+         container={styles.InputText}
         value={exp}
         placeholder='Experience'
         onChangeText={(value) => setexp(value)} 
-        // error={!!exp.error}
-        // errorText={exp.error}
         />
 
 <View style={styles.FileUploadView}>
 <Text style={{fontSize:16}}>Upload Driving Licence Front : </Text>    
-</View>    
-            <View style={styles.FileUploadView}>
-             <DocumentDriverPicker Profile={d_front} handleChange={handleChange}/>
-            <Text style={{margin:6,fontSize:12}}>{d_front1 ? d_front1.substring(0,14) : null } </Text>
-            </View>
+</View>   
+
+    <View style={styles.FileUploadView}>
+      <DocumentDriverPicker Profile={d_front} handleChange={handleChange}/>
+    <Text style={{margin:6,fontSize:12}}>{d_front1 ? d_front1.substring(0,14) : null } </Text>
+    </View>
 
 <View style={styles.FileUploadView}>
 <Text style={{fontSize:16}}>Upload Driving Licence Back : </Text>    
 </View>    
+
 <View style={styles.FileUploadView}>
 <DocumentDriverPicker Profile={d_front} handleChange={handleChange1}/>
 <Text style={{margin:6,fontSize:12}}>{d_back1 ? d_back1.substring(0,14) : null } </Text>
@@ -263,6 +490,7 @@ style={styles.cardViewStyle12}>
 <View style={styles.FileUploadView}>
 <Text style={{fontSize:16}}>Upload Police Certificate : </Text>    
 </View>    
+
 <View style={styles.FileUploadView}>
 <DocumentDriverPicker Profile={police_verify} handleChange={handleChange2}/>
 <Text style={{margin:6,fontSize:12}}>{police_verify1 ? police_verify1.substring(0,14) : null } </Text>
@@ -278,111 +506,126 @@ style={styles.cardViewStyle12}>
         Add Driver
 </Button> }
 
+*/}
+
+
+<View style={{fontSize:10,marginLeft:20,alignItems:"center"}}>
+  <Text style={{fontWeight:"bold",fontSize:20,color:"#ce3232"}}>
+    Drivers List 
+  </Text>
+</View>  
+
 { vendorDrivers.length ? vendorDrivers.map((ival,i)=>{
-console.log(ival,"246");
+// console.log(ival,"246");
     return(
-        <CardView
-    cardElevation={5}
-    cardMaxElevation={5}
-    cornerRadius={5}
-    style={styles.cardViewStyle}>
+       
+//           ${ival.status==0 ? 'Waiting' : 'Approved' }
+<AccordionTab title={`${ival.driver_name} `} 
+bodyText={
+  <View style={{marginRight:50}}>
+    
+  {ival.status==0 ?  
 
-{ival.status==0 ?  
-
-<View style={{backgroundColor:'yellow',alignItems:"center"}}>
+    <View style={{backgroundColor:'yellow',alignItems:"center"}}>
+        <Text style={{alignItems:"center", fontSize:20}}>
+            Waiting
+        </Text>
+    </View>
+    
+    :
+     <View style={{backgroundColor:'green',alignItems:"center"}}>
     <Text style={{alignItems:"center", fontSize:20}}>
-        Waiting
+        Approved
     </Text>
-</View>
-
-:
- <View style={{backgroundColor:'green',alignItems:"center"}}>
-<Text style={{alignItems:"center", fontSize:20}}>
-    Approved
-</Text>
-</View> }
-
-<View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Driver Name : {ival.driver_name}
-    </Text>
-</View>
-
-<View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Driver Mobile : 
-    </Text>
-    <Text style={styles.DriverText1}>
-    {ival.driver_mobile} 
-    </Text>
-</View>
-
-<View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Driver Email : 
-    </Text>
-
-    <Text style={styles.DriverText1}>
-    {ival.driver_email} 
-    </Text>
-   
-</View>
-
-<View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Driving Experience : 
-    </Text>
-
-    <Text style={styles.DriverText1}>
-    {ival.overall_exp} 
-    </Text>
-   
-</View>
-
-<View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Driving License Front :  
-    </Text>
-
+    </View> }
+    
+    <View style={styles.DriverHead}>
+        <Text style={styles.DriverText}>
+        Driver Name : 
+        </Text>
+        <Text style={styles.DriverText1}>
+        {ival.driver_name}
+        </Text>
+    </View>
+    
+    <View style={styles.DriverHead}>
+        <Text style={styles.DriverText}>
+        Driver Mobile : 
+        </Text>
+        <Text style={styles.DriverText1}>
+        {ival.driver_mobile} 
+        </Text>
+    </View>
+    
+    <View style={styles.DriverHead}>
+        <Text style={styles.DriverText}>
+        Driver Email : 
+        </Text>
+    
+        <Text style={styles.DriverText1}>
+        {ival.driver_email} 
+        </Text>
+       
+    </View>
+    
+    <View style={styles.DriverHead}>
+        <Text style={styles.DriverText}>
+        Driving Experience : 
+        </Text>
+    
+        <Text style={styles.DriverText1}>
+        {ival.overall_exp} 
+        </Text>
+       
+    </View>
+    
+    <View style={styles.DriverHead}>
+        <Text style={styles.DriverText}>
+        Driving License Front :  
+        </Text>
+    
+        <Image
+    style={styles.tinyLogo}
+    source={{
+    uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.driving_license_front}/${id}`,
+    }}
+    />
+       
+    </View>
+    
+    <View style={styles.DriverHead}>
+        <Text style={styles.DriverText}>
+        Driving License Back : 
+        </Text>
+    
+        <Image
+    style={styles.tinyLogo}
+    source={{
+    uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.driving_license_back}/${id}`,
+    }}
+    />
+      
+    </View>
+    
+    
+    <View style={styles.DriverHead}>
+        <Text style={styles.DriverText}>
+        Police Verify Certificate : 
+        </Text>
+    
     <Image
-style={styles.tinyLogo}
-source={{
-uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.driving_license_front}/${id}`,
-}}
-/>
-   
-</View>
+    style={styles.tinyLogo}
+    source={{
+    uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.police_verify}/${id}`,
+    }}
+    />
+      
+    </View>
+    </View>
+  } />
 
-<View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Driving License Back : 
-    </Text>
 
-    <Image
-style={styles.tinyLogo}
-source={{
-uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.driving_license_back}/${id}`,
-}}
-/>
   
-</View>
-
-
-<View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Police Verify Certificate : 
-    </Text>
-
-<Image
-style={styles.tinyLogo}
-source={{
-uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.police_verify}/${id}`,
-}}
-/>
-  
-</View>
-
-  </CardView>
     )
 }) :null  }
     
@@ -397,7 +640,7 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.police_verify}/${id}`,
 
 </View>
 
-
+</Provider>
 
 </SafeAreaProvider>
 )
@@ -410,6 +653,9 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.police_verify}/${id}`,
           alignItems: "center",
           marginTop: 22,
           // width:'100%'
+        },
+        container: {
+          flex: 1
         },
         FileUploadView:{
             flexDirection:"row",
@@ -437,7 +683,7 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.police_verify}/${id}`,
            cardViewStyle:{
      
             width: '96%', 
-            height: 400,
+            height: 310,
             flexDirection: "column",
             // alignContent:"center",
             marginTop:9,
@@ -465,11 +711,11 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.police_verify}/${id}`,
               flexDirection:"row"
           },
           DriverText:{
-              fontSize:17,
+              fontSize:10,
               fontWeight:"500"
           },
           DriverText1:{
-            fontSize:15,
+            fontSize:10,
             margin:3
             // fontWeight:"500"
           },
@@ -495,7 +741,49 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.police_verify}/${id}`,
           },
           tinyLogo:{
               width:100,
-              height:50,
+              height:40,
               marginLeft:3
-          }
+          },
+          centeredView1: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 22,
+            
+          },
+          modalView: {
+            margin: 20,
+            backgroundColor: "#e6e6e6",
+            borderRadius: 20,
+            padding: 15,
+            shadowColor: "#000000",
+            shadowOffset: {
+              width: 5,
+              height: 2
+            },
+            width:330,
+            height:650,
+        
+            shadowOpacity: 0.15,
+            shadowRadius: 10,
+            elevation: 25
+          },
+           modalText1: {
+           textAlign: "center",
+           },
+          modelHead:{
+            alignItems:"center",
+           },
+          modalText: {
+            textAlign: "center",
+            fontWeight:"700",
+            fontSize:25,
+            color:"#ce3232"
+          }, 
+          buttonText:{
+            fontSize: 15,
+            textAlign: 'center',
+            color: 'white',
+            }
+        
     })

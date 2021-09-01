@@ -189,7 +189,7 @@ cardMaxElevation={5}
 cornerRadius={5}
 style={styles.cardViewStyle1}>
 
-<View style={styles.HeadingView1}>
+<View style={styles.HeadingView23}>
     <Text style={styles.TextView}>Waiting For Approval</Text> 
     {/* <DocumentImagePicker Profile={aadhar_front} docname={'aadhar_front'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils}/> */}
 </View>
@@ -202,7 +202,7 @@ cardMaxElevation={5}
 cornerRadius={5}
 style={styles.cardViewStyle3}>
 
-<View style={styles.HeadingView1}>
+<View style={styles.HeadingView23}>
    <Text style={styles.TextView2}>Approved</Text> 
   </View>
 
@@ -221,28 +221,19 @@ cornerRadius={5}
 style={styles.cardViewStyle}>
 
 <View style={styles.HeadingView}>
-    <Text style={styles.TextView}>Aadhar Front </Text>
+    <View style={styles.HeadingView1}>
+    <Text style={styles.TextView}>Aadhar Front </Text> 
     <DocumentImagePicker Profile={aadhar_front} docname={'aadhar_front'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils}/>
+    </View>
 
+    <View style={styles.HeadingView1}>
     <Text style={styles.TextView}>Aadhar Back </Text>
     <DocumentImagePicker Profile={aadhar_back} docname={'aadhar_back'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
+    </View>
 </View>
 
 </CardView>    
 
-{/* <CardView
-cardElevation={5}
-cardMaxElevation={5}
-cornerRadius={5}
-style={styles.cardViewStyle}>
-
-<View style={styles.HeadingView}>
-    
-</View>
-
-</CardView>   */}
-
-
 <CardView
 cardElevation={5}
 cardMaxElevation={5}
@@ -250,28 +241,18 @@ cornerRadius={5}
 style={styles.cardViewStyle}>
 
 <View style={styles.HeadingView}>
+<View style={styles.HeadingView1}>
     <Text style={styles.TextView}>Driving License Front </Text>
     <DocumentImagePicker Profile={driving_licence_front} docname={'driving_licence_front'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
-
+</View>
+<View style={styles.HeadingView1}>
     <Text style={styles.TextView}>Driving License Back </Text>
     <DocumentImagePicker Profile={driving_licence_back} docname={'driving_licence_back'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
+    </View>
 </View>
 
 </CardView>  
 
-{/* 
-<CardView
-cardElevation={5}
-cardMaxElevation={5}
-cornerRadius={5}
-style={styles.cardViewStyle}>
-
-<View style={styles.HeadingView}>
-    
-</View>
-
-</CardView>   */}
-
 
 <CardView
 cardElevation={5}
@@ -280,30 +261,17 @@ cornerRadius={5}
 style={styles.cardViewStyle}>
 
 <View style={styles.HeadingView}>
+<View style={styles.HeadingView1}>
     <Text style={styles.TextView}>Pan Card Front </Text>
     <DocumentImagePicker Profile={pancard_front} docname={'pancard_front'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
-
+</View>
+<View style={styles.HeadingView1}>
     <Text style={styles.TextView}>Pan Card Back </Text>
     <DocumentImagePicker Profile={pancard_back} docname={'pancard_back'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
+</View>    
 </View>
 
 </CardView>  
-
-
-{/* <CardView
-cardElevation={5}
-cardMaxElevation={5}
-cornerRadius={5}
-style={styles.cardViewStyle}>
-
-<View style={styles.HeadingView}>
-    
-</View>
-
-</CardView>   */}
-
-
-
 
 
 </ScrollView>
@@ -327,7 +295,7 @@ const styles = StyleSheet.create({
      cardViewStyle:{
  
         width: '96%', 
-        height: 400,
+        height: 150,
         flexDirection: "column",
         marginTop:9,
         
@@ -360,16 +328,21 @@ const styles = StyleSheet.create({
        },
        TextView:{
            textAlign:"center",
-           fontSize:20,
-           fontWeight:"500"
+           fontSize:10,
+           fontWeight:"bold"
        },
        HeadingView:{
            flex:1,
-           flexDirection:"column"
+           flexDirection:"row",
+           margin:5
        },
        HeadingView1:{
-        // flex:1,
-        // flexDirection:"column"
+        marginLeft:12,
+        borderWidth:1, 
+        alignItems:"center"
+    },
+    HeadingView23:{
+
     }
 
     })

@@ -17,7 +17,7 @@ import { mobileValidator } from '../helpers/mobileValidator'
 import AsyncStorage from "@react-native-community/async-storage";
 import Stored from '../configuration/storageDetails';
 // import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
- import { RefreshJsons } from '../configuration/functional'
+ import { RefreshJsons, VendorUserLogout } from '../configuration/functional'
 
  
 
@@ -25,7 +25,7 @@ export default function ProfileSCreen({ navigation , userDetail  }) {
          
     let userDetail_ = userDetail.userDetail[0];
     
-    console.log(userDetail.navigation,"21221");
+    // console.log(userDetail,"21221");
     // let Profile = userDetail_.profile_dp
   const [name, setName] = useState({ value: userDetail_.username, error: '' })
   const [mobile, setmobile] = useState({ value: userDetail_.mobile, error: '' })
@@ -151,7 +151,7 @@ const onRefresh = React.useCallback(async() => {
   setRefreshing(true);
 
  let result = await RefreshJsons(userDetail_.id);
- 
+ console.log( result,"Refrehjson");
    setName({ value: result[0].username, error: ''})
    setmobile({ value: result[0].mobile, error: '' })
    setEmail({ value:  result[0].email_id, error: '' })
@@ -164,11 +164,42 @@ const onRefresh = React.useCallback(async() => {
 
 
   const LogoutUser=async()=>{
-        // console.log("STYLE")
-        await AsyncStorage.removeItem(Stored.userDetail); 
-        await AsyncStorage.removeItem(Stored.TripsJsob); 
-        userDetail.navigation.navigate('LoginScreen')
-}
+        console.log(userDetail_.login_token)
+        // VendorUserLogout
+        try {
+
+          const formData=new FormData();
+
+          formData.append("login_token",null)
+
+          let result = await VendorUserLogout(formData,userDetail_.id)
+          console.log(result);
+          if(result==true){
+
+            await AsyncStorage.removeItem(Stored.userDetail); 
+            await AsyncStorage.removeItem(Stored.TripsJsob); 
+            await AsyncStorage.removeItem(Stored.login_token);
+            userDetail.navigation.navigate('LoginScreen');
+            console.log("Removed");
+            let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+            console.log(Stored_Data,"TRUETRUETRUE");
+            return true;
+
+          }else{
+
+
+
+
+
+          }
+
+           
+            
+          }
+          catch(exception) {
+              return false;
+          }
+        }
 
 const AlertLogout = () =>
     Alert.alert(
@@ -226,10 +257,11 @@ const AlertLogout = () =>
     >
            
             <Header style={styles.heading}>Your Profile</Header>
-            <View style={styles.ViewcardBelow1}>
 
-<SimpleImagePicker Profile={profile_dp} id={userDetail_.id}  handleUserDeatils={handleUserDeatils}/>
-</View>
+  <View style={styles.ViewcardBelow1}>
+
+  <SimpleImagePicker Profile={profile_dp} id={userDetail_.id}  handleUserDeatils={handleUserDeatils}/>
+  </View>
 
 
 
@@ -352,10 +384,11 @@ const styles = StyleSheet.create({
         height: '97%',
     },
     InputText:{
-      width: '95%',
+        width: '95%',
        marginVertical: 5,
-       marginLeft:3,
-      alignContent:"center"
+       marginLeft:5,
+        alignContent:"center",
+        // height:60
     }, 
     ViewcardBelow:{
       // alignItems:'center'

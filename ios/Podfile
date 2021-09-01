@@ -16,6 +16,8 @@ target 'R7ZeroCarbon' do
 
   pod 'react-native-background-timer', :path => '../node_modules/react-native-background-timer'
 
+  pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
+
   target 'R7ZeroCarbonTests' do
     inherit! :complete
     # Pods for testing

@@ -10,19 +10,17 @@ import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-ta
 export default function AccountandWallet({ navigation , userDetail  }){
 
     let userDetail_ = userDetail.userDetail[0];
-console.log(userDetail_.wallethistory,"wallethistorywallethistory");
-
-// let tableHead = ['Head', 'Head2', 'Head3', 'Head4', 'Head5', 'Head6', 'Head7', 'Head8', 'Head9'];
-      let widthArr =  [40, 60, 80, 100, 120, 140, 160, 180, 200]
-
+    console.log(userDetail);
+    let widthArr =  [80, 80, 80,100, 200]
+    let THead = ['Head', 'Head2', 'Head3', 'Head4', 'Head5']
     const [wallet, setWallet] = useState(userDetail_.wallet);
     // const [userid,setUserDetail] = useState(null);
     const [refreshing, setRefreshing] = React.useState(false);
-    const [tableHead,setTableHead]=useState(['SL.NO', 'AMOUNT', 'TYPE', 'DATE'])
+    const [tableHead,setTableHead]=useState(['SL.NO', 'AMOUNT', 'TYPE','REASON','DATE'])
     const [tableData,settableData]=useState( JSON.parse(userDetail_.wallethistory))
 
   
-
+console.log(tableData);
     
     const wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
@@ -34,17 +32,26 @@ console.log(userDetail_.wallethistory,"wallethistorywallethistory");
         setRefreshing(true);
       
        let result = await RefreshJsons(userDetail_.id);
-        // console.log(userDetail_,"userDetail_");
-         setWallet(result[0].wallet)
-        //  setuserDetail_(result[0].id)
+        setWallet(result[0].wallet)
         settableData(JSON.parse(result[0].wallethistory))
          
          console.log( JSON.parse(result[0].wallethistory),"Refrehjson");
         wait(5000).then(() => setRefreshing(false));
       }, []);
 
-    return(
-        <View style={styles.MainContainer} >
+      // const state = this.state;
+      const data = [];
+      for (let i = 0; i < 30; i += 1) {
+        const dataRow = [];
+        for (let j = 0; j < 5; j += 1) {
+          dataRow.push(`${i}${j}`);
+        }
+        data.push(dataRow);
+      }
+
+return(
+
+<View style={styles.MainContainer} >
 
 <CardView
 cardElevation={5}
@@ -53,14 +60,15 @@ cornerRadius={5}
 style={styles.cardViewStyle}>
 
 <ScrollView
-    // stickyHeaderIndices={[1]}
-    showsVerticalScrollIndicator={false}
-    refreshControl={
-      <RefreshControl
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-      />}
-    >
+showsVerticalScrollIndicator={false}
+refreshControl={
+  <RefreshControl
+  refreshing={refreshing}
+  onRefresh={onRefresh}
+  />}
+>
+
+<View style={styles.containerR}>
 
 <CardView
 cardElevation={5}
@@ -68,81 +76,132 @@ cardMaxElevation={5}
 cornerRadius={5}
 style={styles.cardViewStyle1}
 >
+
 <View style={styles.BalanceText}>
-<Text style={styles.BalText}>Balance in the Wallet : Rs.{wallet}</Text>
+<Text style={styles.BalText}>Deposit : Rs.{parseInt(wallet)>500 ? 500 : 0 }</Text>
 </View>
+
+
+<View style={styles.BalanceText}>
+<Text style={styles.BalText}>Wallet : Rs.{parseInt(wallet) - parseInt(500)}</Text>
+</View>
+
+
+
 </CardView>
 
-
-<View style={styles.container1}>
-
-{tableData.length ? <Table borderStyle={styles.borderStyle}>
-          <Row data={tableHead} style={styles.head} textStyle={styles.text1}/>
-          <Rows data={tableData} textStyle={styles.text}/>
-        </Table> : null}
-
-
-
-        </View>
-
+<ScrollView 
+ horizontal={true}
+ 
+ >
+   
+  <View>
+    <Table borderStyle={{borderColor: '#C1C0B9'}}>
+      <Row data={tableHead} widthArr={widthArr} style={styles.headD} textStyle={styles.textTT}/>
+    </Table>
+    <ScrollView style={styles.dataWrapperR}>
+      <Table borderStyle={{borderColor: '#C1C0B9'}}>
+        {
+          tableData.map((dataRow, index) => (
+            <Row
+              key={index}
+              data={dataRow}
+              widthArr={widthArr}
+              style={[styles.rowW, index%2 && {backgroundColor: '#ffffff'}]}
+              textStyle={styles.textT}
+            />
+          ))
+        }
+      </Table>
+    </ScrollView>
+  </View>
 </ScrollView>
-    </CardView>
+</View>
+</ScrollView>
+</CardView>
 
-    
+</View>
 
-
-        </View>
     )
 }
 
-const styles = StyleSheet.create({
- 
-    MainContainer: {
-        flex: 1,
-        marginTop:4,
-        width: '100%', 
-        height: 150 ,
-        alignItems:"center",
-     },
-    cardViewStyle:{
-          width: '95%', 
-        height: '100%',
-        flexDirection: "column",
-      },
-      container1:{
-         flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' 
-      },
-      cardViewStyle1:{
-        width: '100%',
-        // marginLeft:20,
-        // flexDirection:"row-reverse",
-        marginTop:5,
-        alignItems: "center",
-      },
-     BalanceText:{
-        // flex:2,
-        flexDirection:"column-reverse",
-        // marginLeft:8,
-        alignItems:"center",
-        marginBottom:30,
-        marginTop:10
-  
-      },
-      BalText:{
-        fontWeight:'bold',
-        fontSize:18,
-       },
-      borderStyle:{
-          borderWidth: 2, 
-          borderColor: '#ce3232',
-          
-        },
+  const styles = StyleSheet.create({
 
-          head: { height: 40, backgroundColor: '#f1f8ff' },
-          text: { margin: 6,fontSize:7 },
-          text1:{ margin: 5,fontSize:13 ,textAlign:"center"  }
+  MainContainer: {
+  flex: 1,
+  marginTop:4,
+  width: '100%', 
+  height: 150 ,
+  alignItems:"center",
+  },
 
+  cardViewStyle:{
+  width: '95%', 
+  height: '100%',
+  flexDirection: "column",
+  },
 
+  container1:{
+  flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' 
+  },
 
+  cardViewStyle1:{
+  width: '100%',
+  // marginTop:5,
+  alignItems: "center",
+  marginBottom:10
+  },
 
-})
+  BalanceText:{
+  flexDirection:"column-reverse",
+  alignItems:"center",
+  marginBottom:30,
+  marginTop:10
+
+  },
+
+  BalText:{
+  fontWeight:'bold',
+  fontSize:18,
+  },
+
+  borderStyle:{
+  borderWidth: 2, 
+  borderColor: '#ce3232',
+   },
+
+  head: { height: 40, backgroundColor: '#f1f8ff' },
+
+  text: { margin: 6,fontSize:7 },
+
+  text1:{ margin: 5,fontSize:13 ,textAlign:"center"  },
+
+  containerR: { 
+    flex: 1, 
+    padding: 16, 
+    paddingTop: 30, 
+    backgroundColor: '#ffffff' 
+  },
+  headD: { 
+    height: 50, 
+    backgroundColor: '#ce3232',
+     
+  },
+  textT: { 
+    textAlign: 'center', 
+    fontWeight: '200',
+  },
+  textTT:{
+    textAlign: 'center', 
+    fontWeight: '200',
+    color:"white" 
+  },
+  dataWrapperR: { 
+    marginTop: -1 
+  },
+  rowW: { 
+    height: 40, 
+    backgroundColor: '#F7F8FA' 
+  }
+
+  })

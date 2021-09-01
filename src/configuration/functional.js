@@ -285,7 +285,9 @@ import Config from "./config";
 
 export async function RefreshJsons(id){
   let URL = Config.ACCESS_POINT + Config.AppLoginIgotaxy + `/${id}`;
+  // console.log(URL,"Refresh JSOn");
   let request = await fetch(URL);
+  console.log(request);
   let requestJson = await request.json();
    let data = JSON.stringify(requestJson)
   await AsyncStorage.setItem(Stored.userDetail,data);  
@@ -299,11 +301,11 @@ export async function RefreshJsons(id){
 
 export async function TripsJsons(id=null){
   let URL = Config.ACCESS_POINT + Config.NewTripsJson +`/${id}`;
-  console.log(URL);
+  console.log(URL,"hello"); 
   let request = await fetch(URL);
   let requestJson = await request.json();
  let data = JSON.stringify(requestJson)
-//  console.log(data,"trips json");
+ console.log(request,"trips json");
   await AsyncStorage.setItem(Stored.TripsJsob,data);  
   AsyncStorage.setItem("TripsJsob",JSON.stringify(requestJson))
 
@@ -425,6 +427,34 @@ export async function CheckOtpandPassword(formData){
 }
 
 
+export async function CancelTrip(formData,id){
+  let URL = Config.ACCESS_POINT + Config.CancelTrip+`/${id}`;
+  console.log(URL);
+  let request = await fetch(URL, {
+    method: "POST",
+    headers: {
+      // "Accept": "application/json",
+      'Content-Type': 'multipart/form-data'
+    },
+    body: formData
+        });
+
+        if(request.status == 200){
+
+          let requestJson = await request.json();
+          // let data = JSON.stringify(requestJson)
+
+          // await AsyncStorage.setItem(Stored.userDetail,data);  
+          // AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
+        
+          // let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+          // let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+          // console.log(data1);
+          return requestJson
+
+        }
+}
+
 
 export async function UpdateToken(formData,id){
   let URL = Config.ACCESS_POINT + Config.UpdateToken+`/${id}`;
@@ -454,6 +484,34 @@ export async function UpdateToken(formData,id){
         }
 }
 
+
+export async function VendorUserLogout(formdata,id){
+  let URL = Config.ACCESS_POINT + Config.VendorUserLogout+`/${id}`;
+  console.log(URL,formdata);
+  let request = await fetch(URL, {
+    method: "POST",
+    headers: {
+      // "Accept": "application/json",
+      'Content-Type': 'multipart/form-data'
+    },
+    body: formdata
+        });
+        console.log(request);
+        if(request.status == 200){
+
+          // let UserDetail = RefreshJsons(vendor_id);
+
+          // if(UserDetail){
+          //     let requestJson = await request.json();
+             return true
+
+          // }
+         }else{
+           return false
+         }
+
+}
+
 export async function StartandEndTrip(formData,id,vendor_id){
   let URL = Config.ACCESS_POINT + Config.StartandEndTrip+`/${id}`;
   console.log(URL);
@@ -480,7 +538,7 @@ export async function StartandEndTrip(formData,id,vendor_id){
           
             // let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
             // let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-            // console.log(data1);
+            console.log(requestJson,"541");
             return requestJson
 
           }
@@ -580,6 +638,9 @@ export async function AddDriverdata(formData){
           let requestJson = await request.json();
           return requestJson
 
+        }else if(request.status == 400){
+
+          return false
         }
 
       }

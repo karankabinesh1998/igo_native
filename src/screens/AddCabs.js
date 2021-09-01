@@ -8,13 +8,13 @@ import Logo from '../components/Logo';
 import WhatsappandCall from '../components/WhatsappandCall';
 // import AsyncStorage from "@react-native-community/async-storage";
 // import Stored from '../configuration/storageDetails';
-import { RefreshJsons , AddBidTrips } from '../configuration/functional';
+import { RefreshJsons } from '../configuration/functional';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import { Addcabs1 } from '../configuration/functional';
 import  Config from '../configuration/config';
 import DocumentDriverPicker from '../components/DocumentDriverPicker';
-
+import AccordionTab from '../components/AccordionTab';
 
 
 
@@ -320,14 +320,23 @@ style={styles.cardViewStyle12}>
         Add Cab
 </Button> }
 
+<View style={{fontSize:10,marginLeft:20}}>
+  <Text style={{fontWeight:"bold",fontSize:20}}>
+    Cabs List :
+  </Text>
+</View>
+
 { vendorCabs.length ? vendorCabs.map((ival,i)=>{
 console.log(ival,"246");
     return(
-        <CardView
-    cardElevation={5}
-    cardMaxElevation={5}
-    cornerRadius={5}
-    style={styles.cardViewStyle}>
+    //     <CardView
+    // cardElevation={5}
+    // cardMaxElevation={5}
+    // cornerRadius={5}
+    // style={styles.cardViewStyle}>
+    <AccordionTab title={`${ival.cab_name}             ${ival.status==0 ? 'Waiting' : 'Approved' }`} 
+bodyText={
+  <View style={{marginRight:50}}>
 
 {ival.status==0 ?  
 
@@ -440,7 +449,10 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
   
 </View>
 
- </CardView>
+ {/* </CardView> */}
+ </View>
+}
+/>
     )
 }) :null  }
     
@@ -492,7 +504,7 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
            cardViewStyle:{
      
             width: '96%', 
-            height: 450,
+            height: 330,
             flexDirection: "column",
             marginLeft:6,
             alignContent:"center",
@@ -521,12 +533,12 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
               flexDirection:"row"
           },
           DriverText:{
-              fontSize:17,
+              fontSize:10,
               fontWeight:"500"
           },
           DriverText1:{
-            fontSize:15,
-            margin:3
+            fontSize:10,
+            margin:1
             // fontWeight:"500"
           },
           InputText:{
@@ -551,7 +563,7 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
           },
           tinyLogo:{
               width:100,
-              height:50,
+              height:40,
               marginLeft:3
           }
     })

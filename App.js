@@ -1,8 +1,9 @@
-import React , {Component , useEffect , useState } from 'react'
-import { Provider } from 'react-native-paper'
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
-import { theme } from './src/core/theme'
+import React , {Component , useEffect , useState } from 'react';
+import { Provider } from 'react-native-paper';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { theme } from './src/core/theme';
+
 import {
   StartScreen,
   LoginScreen,
@@ -45,22 +46,22 @@ import AsyncStorage from "@react-native-community/async-storage";
 import Stored from './src/configuration/storageDetails';
 import Config from './src/configuration/config';
 
+import { Platform , Alert } from "react-native";
+
+import NetInfo from "@react-native-community/netinfo";
+import { passwordValidator } from './src/helpers/passwordValidator';
+
 
 const Stack = createStackNavigator( )
 
-// export default class App extends Component
-// {
-//    constructor(props){
-//      super(props);
-//      this.state={
-//      isVisible : true,
-//     }
-//   }
+
 
 export default function App(){
 
   const [ isVisible , setVisible ] = useState(true);
-  const [ Fire_Token , setToken ]=useState(null)
+  const [ Fire_Token , setToken ]=useState(null);
+
+  const [netstate,SetNetState]=useState(false)
 
 
   let timer1 = setTimeout(() => setVisible(false), 2000)
@@ -108,6 +109,40 @@ export default function App(){
        return ()=>FunctionSTored()
      }
    )
+
+   useEffect(
+     ()=>{
+      unsubscribe();
+     }
+   )
+
+   
+
+  //  NetInfo.isConnected.addEventListener("connectionChange",handleFirstConnectivityChange); 
+
+  const unsubscribe = NetInfo.addEventListener(state => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+
+       if (state.isConnected) {
+        // Alert.alert("You are online!");
+        // Alert.alert("You are offline!");
+        
+      } else {
+        Alert.alert(
+          "Woops !",
+          "Please Check your Internet Connection.",
+          [
+           
+            { text: "Retry", onPress:()=>unsubscribe()}
+          ]
+        )
+      }
+  });
+  
+  
+   
+ 
 
   useEffect(
     () => {
@@ -162,6 +197,7 @@ const createChannel =(channelId)=>{
 
 const showNotification=(channelId,options)=>{
   console.log(channelId,"88888");
+  
   PushNotification.localNotification({
     /* Android Only Properties */
     channelId: channelId, // (required) channelId, if the channel doesn't exist, notification will not trigger.
@@ -187,29 +223,7 @@ const showNotification=(channelId,options)=>{
 }
 
 
-//  const  Hide_Splash_Screen=()=>{
-//     // this.setState({
-//     //   isVisible : false
-//     // });
-//     setVisible(false)
-//   }
 
-//  async componentDidMount(){
-    // var that = this;
-   
-  //  }
-
-      // useEffect(() => {
-
-      // setTimeout(function(){
-      // Hide_Splash_Screen;
-
-      // }, 2000);
-      // },[])
-
-   
-    // render()
-    // {
 
       
   

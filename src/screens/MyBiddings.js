@@ -7,7 +7,8 @@ import Logo from '../components/Logo';
 import WhatsappandCall from '../components/WhatsappandCall';
 import { RefreshJsons , AddBidTrips , ConfirmActiveTrip } from '../configuration/functional';
 import Button from '../components/Button';
-
+import { CancelTrip } from '../configuration/functional';
+import SpinnerButton from 'react-native-spinner-button';
 
 
 
@@ -21,19 +22,28 @@ export default  function MyBiddings(navigation){
     
     const [vendorDrivers,setvendorDrivers]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorDrivers))
     const [activeIndicator,setActiveindicator] = useState(false)
+    const [activeIndicator1,setActiveindicator1] = useState(false)
     const [vendorCabs,setvendorCabs]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorCabs))
 
-    const [selectedDriver, setselectedDriver] = useState(vendorDrivers[0].id);
-    const [selectedCab,setselectedCab]=useState(vendorCabs[0].id)
+    const [selectedDriver, setselectedDriver] = useState(vendorDrivers.length ? vendorDrivers[0].id : 0 );
+    const [selectedCab,setselectedCab]=useState(vendorCabs.length ? vendorCabs[0].id : 0)
 
 
-const Submit =async(e)=>{
+const Submit =async(e,i)=>{
 
   console.log("selectedDriver,selectedDriver");
   
   console.log(selectedDriver,selectedCab,"selectedDriver,selectedDriver");
 
-  setActiveindicator(true)
+  setActiveindicator1(true)
+
+  // BidData[i].activeindicator = false;
+
+  const NewData = BidData;
+
+  NewData[i].activeindicator = true;
+
+  setBidData(NewData)
 
   const formData=new FormData();
   formData.append("vendor_id",id);
@@ -53,14 +63,15 @@ const Submit =async(e)=>{
 
     if(result){
       console.log(result,"result")
-      setActiveindicator(false)
+      setActiveindicator1(false)
       setBidData(result)
+      onRefresh()
       Alert.alert(
         "Trip has been Activated",
         "Activated Successfully !",
         [
          
-          { text: "OK", onPress: () => navigation.navigate('LoginScreen') }
+          { text: "OK", onPress: () => console.log("OK Pressed") }
         ]
       )
     }
@@ -72,10 +83,55 @@ const Submit =async(e)=>{
 }
 
 
+const ConfirmCancelTrip = (e)=>{
+  Alert.alert("Are You Sure!", "Do you want to Cancel the Trip?", [
+    {
+      text: "No",
+      onPress: () => null,
+      style: "cancel"
+    },
+    { text: "YES", onPress: () => CancelTrip1(e) }
+  ]);
+}
 
-const CancelTrip=async()=>{
 
-  setActiveindicator(false);
+const CancelTrip1=async(e)=>{
+
+     console.log(e,"data");
+
+     setActiveindicator(true)
+
+     const NewData = BidData;
+
+  NewData[i].activeindicator1 = true;
+
+  setBidData(NewData)
+
+    const formData=new FormData();
+    formData.append("bid_id",e.id);
+    formData.append("trip_amount",e.total_amount)
+    formData.append("vendor_req_amount",e.req_amount)
+    formData.append("trip_id",e.trip_id) 
+
+
+
+     let result = await CancelTrip(formData,id)
+
+     if(result){
+       console.log(result,"result");
+       setActiveindicator(false)
+       setBidData(result)
+       onRefresh()
+       Alert.alert(
+         "Trip has been Cancelled",
+         "Trip Cancelled Successfully !",
+         [
+          
+           { text: "OK", onPress: () => console.log("OK Pressed") }
+         ]
+       )
+     }
+
 }
 
 
@@ -154,7 +210,7 @@ onRefresh={onRefresh}
 >
 
 
-{BidData.length ? BidData.map((ival,i)=>{
+{BidData.length > 0 ? BidData.map((ival,i)=>{
 
 console.log(ival,"117");
 if(ival.status=='approved'){
@@ -199,10 +255,10 @@ return(
         onValueChange={(itemValue, itemIndex) => setselectedDriver(itemValue)}
       >
 
-        {vendorDrivers.length ? vendorDrivers.map((ival,i)=>{
-           if(ival.status==1){
+        {vendorDrivers.length ? vendorDrivers.map((kval,k)=>{
+           if(kval.status==1){
            return(
-              <Picker.Item label={ival.driver_name} value={ival.id} />
+              <Picker.Item label={kval.driver_name} value={kval.id} />
             )
            }
         }):null}
@@ -222,10 +278,10 @@ return(
         onValueChange={(itemValue, itemIndex) => setselectedCab(itemValue)}
       >
 
-        {vendorCabs.length ? vendorCabs.map((ival,i)=>{
-           if(ival.status==1){
+        {vendorCabs.length ? vendorCabs.map((jval,j)=>{
+           if(jval.status==1){
             return(
-              <Picker.Item label={ival.cab_name} value={ival.id} />
+              <Picker.Item label={jval.cab_name} value={jval.id} />
             )
            }
         }):null}
@@ -234,19 +290,53 @@ return(
 
       </Picker>
 
-      { activeIndicator ?
+      <SpinnerButton
+    buttonStyle={styles.buttonStyle,
+      { backgroundColor: '#ce3232',width:300 }}
+    isLoading={ival.activeindicator}
+    onPress={()=>Submit(ival,i)}
+    indicatorCount={10}
+    spinnerType='BarIndicator'
+    disabled={false}
+    animateHeight={50}
+    animateWidth={200}
+    animateRadius={10}
+  >
+    <Text style={styles.buttonText}>Active Trip</Text>
+  </SpinnerButton>
+
+      {/* { activeIndicator ?
 
 <View style={[styles.container, styles.horizontal]}>
 <ActivityIndicator size="large" color="#ce3232" />
 </View>
 
 : <Button mode="contained" style={styles.button} onPress={()=>Submit(ival)}>
-        Active Trip
-</Button> }
+        Active Trip 
+</Button> } */}
 
-<Button mode="contained" style={styles.button} onPress={CancelTrip}>
-        Cancel Trip
-</Button>
+{/* <Button mode="contained" style={styles.button} onPress={()=>CancelTrip1(ival)}>
+        {activeIndicator ? <ActivityIndicator size="large" color="white" /> : "Cancel Trip" }
+</Button> */}
+
+
+
+<SpinnerButton
+    buttonStyle={styles.buttonStyle,
+      { backgroundColor: '#ce3232',width:300 }}
+    isLoading={ival.activeindicator1}
+    onPress={()=>ConfirmCancelTrip(ival)}
+    indicatorCount={10}
+    spinnerType='BarIndicator'
+    disabled={false}
+    animateHeight={50}
+    animateWidth={200}
+    animateRadius={10}
+  >
+    <Text style={styles.buttonText}>Cancel Trip</Text>
+  </SpinnerButton>
+
+
 
     </CardView>
 )
@@ -337,5 +427,16 @@ const styles = StyleSheet.create({
         fontSize:25
 
     },
+    buttonStyle:{
+      justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+    backgroundColor: '#25CAC6',
+    },
+    buttonText:{
+    fontSize: 15,
+    textAlign: 'center',
+    color: 'white',
+    }
 
 })

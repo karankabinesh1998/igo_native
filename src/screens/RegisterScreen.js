@@ -5,7 +5,7 @@ import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
 import Button from '../components/Button'
-import TextInput from '../components/TextInput'
+import TextInput1 from '../components/TextInput'
 import BackButton from '../components/BackButton'
 import  Config from '../configuration/config';
 import { theme } from '../core/theme'
@@ -13,14 +13,14 @@ import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
 import { mobileValidator } from '../helpers/mobileValidator'
-import AsyncStorage from "@react-native-community/async-storage";
-import Stored from '../configuration/storageDetails';
+import { TextInput } from 'react-native-paper';
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState({ value: '', error: '' })
   const [mobile, setmobile] = useState({ value: '', error: '' })
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
+  const [showpass,Setshowpass]=useState(true)
 
   const onSignUpPressed = () => {
     const nameError = nameValidator(name.value)
@@ -63,10 +63,11 @@ export default function RegisterScreen({ navigation }) {
       })
       .then(response => response.json())
       .then(async responseJson => {
+        console.log(responseJson);
         if(responseJson){
             console.log(responseJson,"hello")
             let data = JSON.stringify(responseJson)
-             await AsyncStorage.setItem(Stored.userDetail,data);  
+            //  await AsyncStorage.setItem(Stored.userDetail,data);  
             // AsyncStorage.setItem("Userdetail",JSON.stringify(responseJson))  
               // this.setState({ button : "Verify OTP" , otpView : true})
 
@@ -85,8 +86,17 @@ export default function RegisterScreen({ navigation }) {
 
                   navigation.reset({
                   index: 0,
-                  routes: [{ name: 'Dashboard' }],
+                  routes: [{ name: 'LoginScreen' }],
                   })
+            }else{
+              Alert.alert(
+                "Registration Failed !",
+                "User Already Exists",
+                [
+                 
+                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                ]
+              )
             }
             }).catch(function(error) {
               console.log("There is an error in networks",error);
@@ -100,13 +110,17 @@ export default function RegisterScreen({ navigation }) {
     // })
   }
 
+  const ShowPassword=()=>{
+    Setshowpass(!showpass)
+  }
+
   return (
     <Background>
       <BackButton goBack={navigation.goBack} />
       
       <Logo />
       <Header>Create Account</Header>
-      <TextInput
+      <TextInput1
         label="Name"
         returnKeyType="next"
         value={name.value}
@@ -114,7 +128,7 @@ export default function RegisterScreen({ navigation }) {
         error={!!name.error}
         errorText={name.error}
       />
-        <TextInput
+        <TextInput1
        keyboardType="numeric"
       // style={[styles.textInput, { width: '100%' }]}
        
@@ -125,7 +139,7 @@ export default function RegisterScreen({ navigation }) {
       errorText={mobile.error}
         />
 
-      <TextInput
+      <TextInput1
         label="Email"
         returnKeyType="next"
         value={email.value}
@@ -137,14 +151,15 @@ export default function RegisterScreen({ navigation }) {
         textContentType="emailAddress"
         keyboardType="email-address"
       />
-      <TextInput
+      <TextInput1
         label="Password"
         returnKeyType="done"
         value={password.value}
         onChangeText={(text) => setPassword({ value: text, error: '' })}
         error={!!password.error}
         errorText={password.error}
-        secureTextEntry
+        secureTextEntry={showpass}
+        right={<TextInput.Icon onPress={ShowPassword} name={showpass==true ? "eye-off" : "eye" } />}
       />
       <Button
         mode="contained"

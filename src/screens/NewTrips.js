@@ -39,7 +39,7 @@ export default  function NewTrips(navigation){
     //       setTripsData({value:data1 , error:''})
 
     //     console.log(navigation.route.params.userDetail.userDetail,"userdeatilsuserdeatils");
-    //     // console.log(navigation,"navigationnavigation");
+        // console.log(navigation,"navigationnavigation");
     // }
 
     // dataa();
@@ -74,15 +74,15 @@ export default  function NewTrips(navigation){
       const onRefresh = React.useCallback(async() => {
       
         setRefreshing(true);
-      
-       let result = await TripsJsons(id);
+        console.log( "result","Refrehjson");
+          let result = await TripsJsons(id);
         let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
         let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
          setTripsData({ value: result, error: ''})
         //  setmobile({ value: result[0].mobile, error: '' })
         //  setEmail({ value:  result[0].email_id, error: '' })
         //  setAddress({ value:  result[0].address, error: '' })
-         console.log( result,"Refrehjson");
+         console.log( result ,"Refrehjson");
         wait(5000).then(() => setRefreshing(false));
       }, []);
 
@@ -261,8 +261,8 @@ const ResetModal = () =>{
 
 
 
-      {TripsData.value.length ? TripsData.value.map((ival,i)=>{
-          // console.log(ival,"ival");
+      {TripsData.value.length > 0 ? TripsData.value.map((ival,i)=>{
+          console.log(ival.bidding_amount,"ival"); 
           if(ival.trip_assigned_to==null){
 
             return( 
@@ -383,7 +383,19 @@ const ResetModal = () =>{
 
           }
          
-      }) : null
+      }) : <CardView
+      cardElevation={5}
+      cardMaxElevation={5}
+      cornerRadius={5}
+      style={styles.cardViewStyle}>
+      
+      <View style={styles.HeadHaed}>
+          <Text style={styles.TextText}>
+              No New Trips
+          </Text>
+      </View> 
+      
+      </CardView>
     }
 
         </ScrollView>
@@ -535,5 +547,13 @@ const styles = StyleSheet.create({
       marginLeft:'2%'
 
     },
+    HeadHaed:{
+      alignItems:"center",
+      backgroundColor:'yellow'
+  },
+  TextText:{
+      fontSize:25
+
+  },
 
 })

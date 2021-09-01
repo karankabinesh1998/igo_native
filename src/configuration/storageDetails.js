@@ -5,7 +5,7 @@ module.exports = {
   TripsJsob: "TripsJsob",
   notification: "notification",
   BiddingData: "BiddingData",
-  seen: "seen",
+  login_token: "login_token",
   downloaded: "downloaded",
   serviceid: "serviceid",
   wallet:"wallet"

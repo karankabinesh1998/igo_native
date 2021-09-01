@@ -50,13 +50,16 @@ class MultiSelectExample extends Component {
  
 
   async componentDidMount(){
-      console.log(this.props.selectedItems,"propsprops");
+     
+    console.log(this.props,"propsprops ");
 
-      this.setState({
-        items : this.props.state,
-        id : this.props.id,
-        selectedItems:this.props.selectedItems
-      })
+    //  if(this.props)
+
+     this.setState({
+      items : this.props.state,
+      id : this.props.id,
+      selectedItems:this.props.selectedItems==null ? [] : this.props.selectedItems
+    })
      
    await  this.ViewData(this.props.selectedItems)
  }
