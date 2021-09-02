@@ -1,13 +1,14 @@
 import React, { Component, useState } from 'react';
-import { View, Text ,StyleSheet,Image, TouchableOpacity , PermissionsAndroid , Alert  } from 'react-native';
+import { View, Text ,StyleSheet, TouchableOpacity , PermissionsAndroid , Alert,ActivityIndicator   } from 'react-native';
 import * as ImagePicker from "react-native-image-picker";
 import  Config from '../configuration/config';
 import { UploadAppDocumentUpload } from '../configuration/functional';
+import { Image } from 'react-native-elements';
 
 
 const styles = StyleSheet.create({
     tinyLogo: {
-      width: 150,
+      width: 165,
       // marginTop:5,
       height:100,
       // alignSelf:'center',
@@ -215,6 +216,7 @@ style={styles.tinyLogo}
 source={{
 uri: `${Config.ACCESS_POINT}/admin/vendarfile/${this.state.DocumentATion}/${this.state.id}`,
 }}
+PlaceholderContent={<ActivityIndicator />}
 /> }
  </TouchableOpacity>
         )

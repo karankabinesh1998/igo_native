@@ -6,8 +6,7 @@ import SimpleImagePicker from '../components/ImagePicker';
 import Button from '../components/Button';
 import Header from '../components/Header';
 import TextInput from '../components/TextInput';
-
-
+import { Rating } from 'react-native-elements';
 import  Config from '../configuration/config';
 import { emailValidator } from '../helpers/emailValidator'
 import { addressValidator } from '../helpers/addressValidator'
@@ -33,7 +32,8 @@ export default function ProfileSCreen({ navigation , userDetail  }) {
   const [email, setEmail] = useState({ value:userDetail_.email_id, error: '' })
   const [address, setAddress] = useState({ value:userDetail_.address, error: '' })
   const [profile_dp, setProfile] = useState(userDetail_.profile_dp);
-  const [activeIndicator,setActiveindicator] = useState(false)
+  const [activeIndicator,setActiveindicator] = useState(false);
+  const [rating,setRating]=useState(userDetail_.rating)
 
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -157,6 +157,7 @@ const onRefresh = React.useCallback(async() => {
    setEmail({ value:  result[0].email_id, error: '' })
    setAddress({ value:  result[0].address, error: '' })
    setProfile(result[0].profile_dp)
+   setRating(result[0].rating)
    setActiveindicator(true)
    console.log( result,"Refrehjson");
   wait(5000).then(() => setRefreshing(false));
@@ -188,6 +189,14 @@ const onRefresh = React.useCallback(async() => {
           }else{
 
 
+            Alert.alert(
+              "Failed to logout!!",
+              "There is an error in networks",
+              [
+               
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+              ]
+            )
 
 
 
@@ -263,66 +272,74 @@ const AlertLogout = () =>
   <SimpleImagePicker Profile={profile_dp} id={userDetail_.id}  handleUserDeatils={handleUserDeatils}/>
   </View>
 
-
-
-            <TextInput
-        label="Name"
-        returnKeyType="next"
-        value={name.value}
-        container={styles.InputText}
-        onChangeText={(text) => setName({ value: text, error: '' })}
-        error={!!name.error}
-        errorText={name.error}
+  <Rating
+      type='custom'
+      ratingCount={5}
+      imageSize={20}
+      readonly={true}
+      startingValue={rating} 
       />
 
-          <TextInput
-          label="Mobile"
-          keyboardType="numeric"
-          // style={[styles.textInput, { width: '100%' }]}
-          container={styles.InputText}
-          value={mobile.value}
-          placeholder='mobile number'
-          onChangeText={(value) => setmobile({ value: value, error: '' })} 
-          error={!!mobile.error}
-          errorText={mobile.error}
-          />
+    <TextInput
+  label="Name"
+  returnKeyType="next"
+  value={name.value}
+  container={styles.InputText}
+  onChangeText={(text) => setName({ value: text, error: '' })}
+  error={!!name.error}
+  errorText={name.error}
+  />
 
-          <TextInput
-            label="Alternative Mobile"
-            keyboardType="numeric"
-            // style={[styles.textInput, { width: '100%' }]}
-            container={styles.InputText}
-            value={alternate_mobile.value}
-            placeholder='mobile number'
-            onChangeText={(value) => setalternate_mobile({ value: value, error: '' })} 
-            error={!!alternate_mobile.error}
-            errorText={alternate_mobile.error}
-            />
+    <TextInput
+    label="Mobile"
+    keyboardType="numeric"
+    // style={[styles.textInput, { width: '100%' }]}
+    container={styles.InputText}
+    value={mobile.value}
+    placeholder='mobile number'
+    onChangeText={(value) => setmobile({ value: value, error: '' })} 
+    error={!!mobile.error}
+    errorText={mobile.error}
+    />
 
-            <TextInput
-              label="Email"
-              returnKeyType="next"
-              value={email.value}
-              container={styles.InputText}
-              onChangeText={(text) => setEmail({ value: text, error: '' })}
-              error={!!email.error}
-              errorText={email.error}
-              autoCapitalize="none"
-              autoCompleteType="email"
-              textContentType="emailAddress"
-              keyboardType="email-address"
-            />
+  <TextInput
+    label="Alternative Mobile"
+    keyboardType="numeric"
+    // style={[styles.textInput, { width: '100%' }]}
+    container={styles.InputText}
+    value={alternate_mobile.value}
+    placeholder='mobile number'
+    onChangeText={(value) => setalternate_mobile({ value: value, error: '' })} 
+    error={!!alternate_mobile.error}
+    errorText={alternate_mobile.error}
+    />
+
+  <TextInput
+    label="Email"
+    returnKeyType="next"
+    value={email.value}
+    container={styles.InputText}
+    onChangeText={(text) => setEmail({ value: text, error: '' })}
+    error={!!email.error}
+    errorText={email.error}
+    autoCapitalize="none"
+    autoCompleteType="email"
+    textContentType="emailAddress"
+    keyboardType="email-address"
+  />
+
+
 {/* 
-              <TextInput
-              // multiline={true}
-              label="Address"
-              returnKeyType="next"
-              container={styles.InputText}
-              // numberOfLines={4}
-              error={!!name.error}
-              errorText={name.error}
-              onChangeText={(text) => setAddress({value: text, error: ''})}
-              value={address.value}/> */}
+  <TextInput
+  // multiline={true}
+  label="Address"
+  returnKeyType="next"
+  container={styles.InputText}
+  // numberOfLines={4}
+  error={!!name.error}
+  errorText={name.error}
+  onChangeText={(text) => setAddress({value: text, error: ''})}
+  value={address.value}/> */}
 
           <TextInput
             label="Address"

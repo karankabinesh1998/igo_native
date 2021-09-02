@@ -31,6 +31,7 @@ export default  function NewTrips(navigation){
   const [wallet,setWallet]=useState(navigation.route.params.userDetail.userDetail[0].wallet ? navigation.route.params.userDetail.userDetail[0].wallet : 0 )
   const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
   
+  
    
     // const dataa =async()=>{
     //     let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
@@ -74,7 +75,7 @@ export default  function NewTrips(navigation){
       const onRefresh = React.useCallback(async() => {
       
         setRefreshing(true);
-        console.log( "result","Refrehjson");
+        // console.log( "result","Refrehjson");
           let result = await TripsJsons(id);
         let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
         let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
@@ -109,7 +110,7 @@ const SubmitBidamount=async()=>{
 
   const formDate = new FormData();
   formDate.append("trip_id",bidData.id);
-  formDate.append("trip_id_1",bidData.trip_id)
+  formDate.append("trip_id_1",bidData.trip_id);
   formDate.append("req_amount",bidamount.value);
   formDate.append("vendor_id",id)
   formDate.append("pickUp_date",bidData.pickup_date)

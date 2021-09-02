@@ -1,35 +1,42 @@
-import { View , Text, ScrollView ,ActivityIndicator, Modal ,Pressable, RefreshControl,BackHandler,Alert,Image ,StyleSheet} from 'react-native';
+import { View , Text, ScrollView ,ActivityIndicator, Modal ,KeyboardAvoidingView, 
+  RefreshControl,BackHandler,Alert,Keyboard,TouchableWithoutFeedback,Image ,StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
-import { Header } from 'react-native-elements';
+import { Header , Rating} from 'react-native-elements';
 import Header1 from '../components/Header';
 import Logo from '../components/Logo';
 import WhatsappandCall from '../components/WhatsappandCall';
 // import AsyncStorage from "@react-native-community/async-storage";
 // import Stored from '../configuration/storageDetails';
-import { RefreshJsons } from '../configuration/functional';
+import { DeleteCab, EditCabdata, RefreshJsons } from '../configuration/functional';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import { Addcabs1 } from '../configuration/functional';
 import  Config from '../configuration/config';
 import DocumentDriverPicker from '../components/DocumentDriverPicker';
-import AccordionTab from '../components/AccordionTab';
-
+// import AccordionTab from '../components/AccordionTab';
+import { FAB, Portal, Provider } from 'react-native-paper';
+import SpinnerButton from 'react-native-spinner-button';
 
 
 export default  function AddCabs(navigation){
 
     const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null);
     // const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
-    const [vendorCabs,setvendorCabs]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorCabs))
+    const [state, setState] = React.useState({ open: false });
 
+      const onStateChange = ({ open }) => setState({ open });
+
+      const { open } = state;
+    const [vendorCabs,setvendorCabs]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorCabs))
+    const [modalVisible, setModalVisible] = useState(false);
     const [cab_name, setcab_name] = useState({ value: '', error: '' })
     const [cab_type, setcab_type] = useState({ value: '', error: '' })
-    const [email, setEmail] = useState({ value:'', error: '' });
+    const [onEditstate, setonEditstate] = useState(false);
     const [cab_image_front, setcab_image_front] = useState({ value:null, error: '' });
     const [cab_image_front1, setcab_image_front1] = useState('');
-
+    const [driverid,setdriverid]=useState(null)
     const [cab_image_back, setcab_image_back] = useState({ value:null, error: '' });
     const [cab_image_back1, setcab_image_back1] = useState('');
 
@@ -107,7 +114,7 @@ export default  function AddCabs(navigation){
     formData.append("cab_number",cab_number.value);
     formData.append("cab_rc_book_number",cab_rc_book_number.value);
     formData.append("cab_insurance",cab_insurance1);
-    formData.append("file",JSON.stringify(["file1","file2","file3","file4"]))
+    // formData.append("file",JSON.stringify(["file1","file2","file3","file4"]))
     formData.append("file1",cab_image_front.value);
     formData.append("file2",cab_image_back.value);
     formData.append("file3",cab_image_side.value);
@@ -118,7 +125,7 @@ export default  function AddCabs(navigation){
 
     let result = await Addcabs1(formData);
 
-    if(result){
+    if(result != false){
 
         console.log(result);
 
@@ -136,10 +143,28 @@ export default  function AddCabs(navigation){
         setcab_number({ value: '', error: '' })
         setcab_rc_book_number({ value: '', error: '' })
         setcab_type({ value: '', error: '' })
+        setModalVisible(false)
 
-        
+        Alert.alert(
+          "Successfully Added",
+          "The Cab was Added successfully!",
+          [
+           
+            { text: "OK", onPress: () =>  onRefresh() }
+          ]
+        )
 
+    }else{
+        Alert.alert(
+          "Already Exists",
+          "The Cab was already Exists!",
+          [
+          
+            { text: "OK", onPress: () =>  setActiveindicator(false)}
+          ]
+        )
     }
+   
 
   }
 
@@ -158,50 +183,252 @@ export default  function AddCabs(navigation){
      console.log(JSON.parse(result[0].vendorDrivers),"Refrehjson");
     wait(5000).then(() => setRefreshing(false));
   }, []);
+
+  const ResetModal =async()=>{
+    setModalVisible(false)
+    setonEditstate(false)
+
+    setcab_name({ value: '', error: '' })
+    setcab_image_back({ value: '', error: '' })
+    setcab_image_back1(null)
+    setcab_image_front({ value: '', error: '' })
+    setcab_image_front1(null)
+    setcab_image_side({ value: '', error: '' })
+    setcab_image_side1(null)
+    setcab_insurance({ value: '', error: '' })
+    setcab_insurance1(null)
+    setcab_number({ value: '', error: '' })
+    setcab_rc_book_number({ value: '', error: '' })
+    setcab_type({ value: '', error: '' })
+    setdriverid(null)
+    setActiveindicator(false)
+  }
+
+
+  const EditCab =(ival)=>{
+    Alert.alert(
+      "Are You Sure!!",
+      `Do you want to Edit ${ival.cab_name} ?`,
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => EditCabFromVendor(ival) }
+      ]
+    );
+  }
+
+  const EditCabFromVendor = async(ival)=>{
+
+    try {
+
+      console.log(ival)
+      
+      setcab_name({ value:ival.cab_name, error: '' })
+      setcab_type({ value:ival.cab_type, error: '' })
+      setonEditstate(true);
+      // const [cab_image_front, setcab_image_front] = useState({ value:null, error: '' });
+
+      setcab_image_front1(ival.cab_image_front);
+
+      setdriverid(ival.id)
+      // const [cab_image_back, setcab_image_back] = useState({ value:null, error: '' });
+
+      setcab_image_back1(ival.cab_image_front);
+  
+      // setcab_image_side({ value:null, error: '' });
+
+      setcab_image_side1(ival.cab_image_side);
+  
+      setcab_number({value:ival.cab_number,error:''});
+  
+      setcab_rc_book_number({value:ival.cab_rc_book_number,error:''});
+  
+      // const [cab_insurance,setcab_insurance]=useState({value:'',error:''});
+  
+      setcab_insurance1(ival.cab_insurance)
+
+      setModalVisible(true)
+      
+    } catch (error) {
+      console.log(error)
+    }
+      
+  }
+
+  const Update = async()=>{
+    const formData=new FormData();
+    formData.append("vendor",id);
+    formData.append("cab_name",cab_name.value);
+    formData.append("cab_type",cab_type.value);
+    formData.append("cab_image_front",cab_image_front1);
+    formData.append("cab_image_back",cab_image_back1);
+    formData.append("cab_image_side",cab_image_side1);
+    formData.append("cab_number",cab_number.value);
+    formData.append("cab_rc_book_number",cab_rc_book_number.value);
+    formData.append("cab_insurance",cab_insurance1);
+    // formData.append("file",JSON.stringify(["file1","file2","file3","file4"]))
+    formData.append("file1",cab_image_front.value);
+    formData.append("file2",cab_image_back.value);
+    formData.append("file3",cab_image_side.value);
+    formData.append("file4",cab_insurance.value)
+
+
+    console.log(formData);
+
+    try {
+
+      let result = await EditCabdata(formData,driverid);
+
+    if(result != false){
+
+        console.log(result);
+
+        setModalVisible(false)
+        setonEditstate(false)
+    
+        setcab_name({ value: '', error: '' })
+        setcab_image_back({ value: '', error: '' })
+        setcab_image_back1(null)
+        setcab_image_front({ value: '', error: '' })
+        setcab_image_front1(null)
+        setcab_image_side({ value: '', error: '' })
+        setcab_image_side1(null)
+        setcab_insurance({ value: '', error: '' })
+        setcab_insurance1(null)
+        setcab_number({ value: '', error: '' })
+        setcab_rc_book_number({ value: '', error: '' })
+        setcab_type({ value: '', error: '' })
+        setdriverid(null)
+        setActiveindicator(false)
+       
+        Alert.alert(
+          "Successfully Updated",
+          "The Cab was Updated successfully!",
+          [
+           
+            { text: "OK", onPress: () =>  onRefresh() }
+          ]
+        )
+    }else{
+      Alert.alert(
+        "Already Exists",
+        "The cAB was already Exists!",
+        [
+         
+          { text: "OK", onPress: () =>  setActiveindicator(false)}
+        ]
+      )
+    }
+      
+    } catch (error) {
+      console.log(error)
+    }
+    
+  }
+
+  const OnDeleteCab = (ival)=>{
+
+    Alert.alert(
+      "Are You Sure!!",
+      `Do you want to delete ${ival.cab_name} ?`,
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => DeleteDriverFromCab(ival) }
+      ]
+    );
+  }
+
+  const DeleteDriverFromCab  = async(ival)=>{
+
+    console.log(ival,"fghddfh")
+
+  try {
+
+    let result = await DeleteCab(ival.id)
+
+    if(result != null){
+        
+        Alert.alert(
+          "Driver Deleted",
+          "Driver Deleted Successfully!",
+          [
+           
+            { text: "OK", onPress: () => onRefresh()}
+          ]
+        )
+    }
+    
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+  const ratingCompleted =(rating)=>{
+
+    console.log("Rating is: " + rating)
+  }
    
 return(
     <SafeAreaProvider style={{backgroundColor:"lightgrey"}}> 
 
-    <Header
-          placement="left"
-          statusBarProps={{ barStyle: 'light-content' }}
-          barStyle="light-content"
-          leftComponent={<Logo STYLE={ { width:110 , height: 100, marginBottom: 8, } } />}
-          centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
-          rightComponent={ <WhatsappandCall/> }
-          containerStyle={{
-              backgroundColor: 'white',
-              justifyContent: 'space-around',
-              width:'100%',
-              height:'15%'
-            }}
-          />
-    
-<View style={styles.MainContainer} >
+    <Provider>
+<Portal>
+        <FAB.Group
+          open={false}
+          color="white"
+          fabStyle={{backgroundColor:"#ce3232"}}
+          icon={open ? 'plus' : 'plus'}
+          actions={[
+            { icon: 'plus', onPress: () => console.log('Pressed add') },
+            {
+              icon: 'star',
+              label: 'Star',
+              onPress: () => console.log('Pressed star'),
+            },
+            {
+              icon: 'email',
+              label: 'Email',
+              onPress: () => console.log('Pressed email'),
+            },
+            {
+              icon: 'bell',
+              label: 'Remind',
+              onPress: () => console.log('Pressed notifications'),
+              small: false,
+            },
+          ]}
+          onStateChange={onStateChange}
+          onPress={() => setModalVisible(!modalVisible)}
+        />
+      </Portal>
 
+      <Modal
+  animationType="fade"
+  transparent={true}
+  visible={modalVisible}
+  onRequestClose={() => ResetModal()}
+  >
 
-<ScrollView
-// stickyHeaderIndices={[1]}
-showsVerticalScrollIndicator={false}
-refreshControl={
-<RefreshControl
-refreshing={refreshing}
-onRefresh={onRefresh}
-/>
-}
->
+<View style={styles.centeredView1}>
+  <View style={styles.modalView}>
+  <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+  <ScrollView showsVerticalScrollIndicator={false}>
 
+  <Header1 style={styles.heading}>{onEditstate==true ? "Update Cab" : "Add Cab"}</Header1>
 
-<CardView
-cardElevation={5}
-cardMaxElevation={5}
-cornerRadius={5}
-style={styles.cardViewStyle12}>
-
-
-<Header1 style={styles.heading}>Add Your Cabs</Header1>
-
-        <TextInput
+  <TextInput
         label="Cab Name"
         returnKeyType="next"
         container={styles.InputText}
@@ -222,16 +449,6 @@ style={styles.cardViewStyle12}>
         errorText={cab_type.error}
         />
 
-       
-
-    {/* <Input
-      label="Password"
-      style={styles.InputText}
-      underlineColor="transparent"
-        mode="outlined"
-      secureTextEntry
-      right={<Input.Icon name="eye" />}
-    /> */}
     <TextInput
     label="Cab Number"
     returnKeyType="next"
@@ -293,50 +510,86 @@ style={styles.cardViewStyle12}>
 </View>
 
 
+<SpinnerButton
+    buttonStyle={styles.buttonStyle,
+      { backgroundColor: '#ce3232',width:300 }}
+    isLoading={activeIndicator}
+    onPress={onEditstate==true ? Update : Submit}
+    indicatorCount={10}
+    spinnerType='BarIndicator'
+    disabled={false}
+    animateHeight={50}
+    animateWidth={200}
+    animateRadius={10}
+  >
+    <Text style={styles.buttonText}>{onEditstate==true ? "Update Cab" : "Add Cab" }</Text>
+  </SpinnerButton>
 
-{/* <View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Upload Driving Licence Back : </Text>    
-</View>    
-<View style={styles.FileUploadView}>
-<DocumentDriverPicker Profile={d_front} handleChange={handleChange1}/>
-<Text style={{margin:6,fontSize:12}}>{d_back1 ? d_back1.substring(0,14) : null } </Text>
-</View>
+    </ScrollView>
+    </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
+    </View>
+    </View>
 
-<View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Upload Police Certificate : </Text>    
-</View>    
-<View style={styles.FileUploadView}>
-<DocumentDriverPicker Profile={police_verify} handleChange={handleChange2}/>
-<Text style={{margin:6,fontSize:12}}>{police_verify1 ? police_verify1.substring(0,14) : null } </Text>
-</View> */}
+  </Modal>
+    <Header
+          placement="left"
+          statusBarProps={{ barStyle: 'light-content' }}
+          barStyle="light-content"
+          leftComponent={<Logo STYLE={ { width:110 , height: 100, marginBottom: 8, } } />}
+          centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
+          rightComponent={ <WhatsappandCall/> }
+          containerStyle={{
+              backgroundColor: 'white',
+              justifyContent: 'space-around',
+              width:'100%',
+              height:'15%'
+            }}
+          />
+    
+<View style={styles.MainContainer} >
 
-{ activeIndicator ?
 
-<View style={[styles.container, styles.horizontal]}>
-<ActivityIndicator size="large" color="#ce3232" />
-</View>
+<ScrollView
+// stickyHeaderIndices={[1]}
+showsVerticalScrollIndicator={false}
+refreshControl={
+<RefreshControl
+refreshing={refreshing}
+onRefresh={onRefresh}
+/>
+}
+>
 
-: <Button mode="contained" style={styles.button} onPress={Submit}>
-        Add Cab
-</Button> }
 
-<View style={{fontSize:10,marginLeft:20}}>
-  <Text style={{fontWeight:"bold",fontSize:20}}>
-    Cabs List :
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.cardViewStyle12}>
+
+<View style={{fontSize:10,marginLeft:20,alignItems:"center"}}>
+  <Text style={{fontWeight:"bold",fontSize:20,color:"#ce3232"}}>
+    Cab List 
   </Text>
-</View>
+</View> 
+
 
 { vendorCabs.length ? vendorCabs.map((ival,i)=>{
-console.log(ival,"246");
+// console.log(ival,"246");
+
+if(ival.hide_show == 1 ){ 
     return(
-    //     <CardView
-    // cardElevation={5}
-    // cardMaxElevation={5}
-    // cornerRadius={5}
-    // style={styles.cardViewStyle}>
-    <AccordionTab title={`${ival.cab_name}             ${ival.status==0 ? 'Waiting' : 'Approved' }`} 
-bodyText={
-  <View style={{marginRight:50}}>
+    
+      <CardView 
+      cardElevation={5}
+      cardMaxElevation={5}
+      cornerRadius={5}
+      style={styles.cardViewStyle}
+      
+      >
+
+      <View>
 
 {ival.status==0 ?  
 
@@ -353,6 +606,14 @@ bodyText={
 </Text>
 </View> }
 
+<Rating
+      type='custom'
+      ratingCount={5}
+      imageSize={20}
+      readonly={true}
+      startingValue={ival.rating==null ? 0 : ival.rating } 
+      onFinishRating={ratingCompleted}
+      />
 
 <View style={styles.DriverHead}>
     <Text style={styles.DriverText}>
@@ -418,9 +679,7 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_image_back}/${id}`,
 />
   
 </View>
-
-
-<View style={styles.DriverHead}>
+{/* <View style={styles.DriverHead}>
     <Text style={styles.DriverText}>
     Cab Image Side :
     </Text>
@@ -432,8 +691,7 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_image_side}/${id}`,
 }}
 />
   
-</View>
-
+</View> */}
 
 <View style={styles.DriverHead}>
     <Text style={styles.DriverText}>
@@ -448,13 +706,19 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
 />
   
 </View>
-
- {/* </CardView> */}
+<View style={{flexDirection:"row"}}>
+        <Button mode="contained" style={styles.buttonstyle} onPress={()=>EditCab(ival)} >
+        Edit
+        </Button>
+        <Button mode="contained" style={styles.buttonstyle} onPress={()=>OnDeleteCab(ival)} >
+        Delete
+        </Button>
+      </View>
  </View>
-}
-/>
+ </CardView>
     )
-}) :null  }
+}
+}) :null}
     
 </CardView>
 
@@ -465,7 +729,7 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
 </View>
 
 
-
+ </Provider>
 </SafeAreaProvider>
 )
 
@@ -492,7 +756,7 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
             marginTop:4,
             marginLeft: 9,
             width: '100%', 
-            height: 80 ,
+            height: '100%' ,
            },
            cardViewStyle12:{
             width: '96%', 
@@ -504,7 +768,7 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
            cardViewStyle:{
      
             width: '96%', 
-            height: 330,
+            height: 380,
             flexDirection: "column",
             marginLeft:6,
             alignContent:"center",
@@ -541,6 +805,11 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
             margin:1
             // fontWeight:"500"
           },
+          buttonstyle:{
+            backgroundColor:"#ce3232",
+            width:150,
+            marginLeft:12
+          },
           InputText:{
             width: '95%',
              marginVertical: 5,
@@ -565,5 +834,33 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
               width:100,
               height:40,
               marginLeft:3
-          }
+          },
+          centeredView1: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 22,
+            
+          },
+          modalView: {
+            margin: 20,
+            backgroundColor: "#e6e6e6",
+            borderRadius: 20,
+            padding: 15,
+            shadowColor: "#000000",
+            shadowOffset: {
+              width: 5,
+              height: 2
+            },
+            width:330,
+            height:650,
+        
+            shadowOpacity: 0.15,
+            shadowRadius: 10,
+            elevation: 25
+          },buttonText:{
+            fontSize: 15,
+            textAlign: 'center',
+            color: 'white',
+            }
     })

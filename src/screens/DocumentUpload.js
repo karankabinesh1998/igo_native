@@ -337,8 +337,9 @@ const styles = StyleSheet.create({
            margin:5
        },
        HeadingView1:{
-        marginLeft:12,
-        borderWidth:1, 
+        marginLeft:1,
+        borderWidth:1,
+        // borderColor:"red", 
         alignItems:"center"
     },
     HeadingView23:{

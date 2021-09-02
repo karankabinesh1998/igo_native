@@ -16,6 +16,10 @@ export default  function ActiveTrips(navigation){
     const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
     
     // console.log(activeTrips,"activeTrips")
+
+    
+
+
     const [activeIndicator1,setActiveindicator1] = useState(false)
 
     const [refreshing, setRefreshing] = React.useState(false);
@@ -110,12 +114,13 @@ export default  function ActiveTrips(navigation){
 
         let result = await StartandEndTrip(formData,ival.id,id);
 
-        if(result){
+        if(result != false){
+
             console.log(result,"FormData");
 
             onRefresh() ; 
 
-            SetActiveTrips(result);
+            // SetActiveTrips(result);
 
               
 
@@ -127,8 +132,51 @@ export default  function ActiveTrips(navigation){
                   { text: "OK", onPress: () => console.log("OK Pressed") }
                 ]
               )
+        }else{
+            onRefresh() ; 
+            Alert.alert(
+                "Failed to Start",
+                "Trip Failed to Start !",
+                [
+                 
+                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                ]
+              )
         }
           
+      }
+
+      const formatAMPM=(date)=> {
+          console.log(date,"date")
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        return strTime;
+      }
+
+
+      const getbeforedateandtimeFunction=async(pick)=>{
+       
+            let Split_it = pick.split(" ");
+
+            let Split_date = Split_it[0].split("-");
+
+            let Split_time = Split_it[1].split(":");
+
+            let fullDate = `${Split_date[0]}-${Split_date[1]}-${Split_date[2]} ${Split_time[0]}:${Split_time[1]}`;
+
+            let check = new Date(Date.UTC(Split_date[0],Split_date[1]-1,Split_date[2],Split_time[0],Split_time[1], 0))
+            console.log(fullDate,"fullDate");
+    
+            // var today = new Date(fullDate);
+            var hourago = new Date(check.getTime() - (1000*60*60)); 
+            let past = formatAMPM(new Date(check.getTime() - (1000*60*60)))
+
+            console.log(hourago,past,"yesterday");      
       }
 
     return(
@@ -164,8 +212,11 @@ onRefresh={onRefresh}
 >
 
 {activeTrips.length ? activeTrips.map((ival,i)=>{
-    console.log(ival.activeindicator,"IVAL")
     
+
+    let getbeforedateandtime = getbeforedateandtimeFunction(ival.pickup_date);
+
+
 
     return(
         <CardView
@@ -341,9 +392,9 @@ const styles = StyleSheet.create({
        cardViewStyle:{
  
         width: '96%', 
-        height: 470,
+        height: 480,
         flexDirection: "column",
-        marginTop:30,
+        marginTop:10,
         // marginLeft: 9,
      
       },

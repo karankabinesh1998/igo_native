@@ -6,24 +6,25 @@ import { View , Text, ScrollView ,ActivityIndicator,
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
-import { Header } from 'react-native-elements';
+import { Header,Rating } from 'react-native-elements';
 import Header1 from '../components/Header';
 import Logo from '../components/Logo';
 import WhatsappandCall from '../components/WhatsappandCall';
-import { RefreshJsons} from '../configuration/functional';
-import Button from '../components/Button';
+import { DeleteDriver, EditDriverdata, RefreshJsons} from '../configuration/functional';
 import TextInput from '../components/TextInput';
 import { AddDriverdata } from '../configuration/functional';
 import  Config from '../configuration/config';
 import DocumentDriverPicker from '../components/DocumentDriverPicker';
-import AccordionTab from '../components/AccordionTab';
-
+// import AccordionTab from '../components/AccordionTab';
+import Button from '../components/Button';
 import { FAB, Portal, Provider } from 'react-native-paper';
 import SpinnerButton from 'react-native-spinner-button';
 import { nameValidator } from '../helpers/nameValidator';
 import { mobileValidator } from '../helpers/mobileValidator';
 import { emailValidator } from '../helpers/emailValidator';
 import { driving_license_numberValidator } from '../helpers/driving_license_numberValidator';
+
+
 
 export default  function AddDriver(navigation){
 
@@ -45,14 +46,21 @@ export default  function AddDriver(navigation){
     const [driving_license_number,Setdriving_license_number]=useState({value:'',error:''})
     const [d_back, setd_back] = useState({ value:null, error: '' });
     const [d_back1, setd_back1] = useState('');
+    const [driverid,setdriverid]=useState(null)
 
     const [police_verify, setpolice_verify] = useState({ value:null, error: '' });
     const [police_verify1, setpolice_verify1] = useState('');
 
     const [ exp , setexp ] = useState(0);
     const [activeIndicator,setActiveindicator] = useState(false)
+    const [ onEditstate , SetEditstate ] = useState(false)
     
     const [refreshing, setRefreshing] = React.useState(false);
+
+   const ratingCompleted =(rating)=>{
+
+      console.log("Rating is: " + rating)
+    }
 
     // console.log(vendorDrivers,"AddDreiver");
  useEffect(() => {
@@ -89,6 +97,89 @@ export default  function AddDriver(navigation){
     setpolice_verify1(e.name);
   }
  
+
+  const Update = async()=>{
+
+    const nameError = nameValidator(name.value)
+    const mobileError = mobileValidator(mobile.value)
+    const emailError = emailValidator(email.value)
+    const Driving = driving_license_numberValidator(driving_license_number.value)
+  
+    if (emailError || nameError || mobileError || Driving ) {
+      setName({ ...name, error: nameError })
+      setmobile({...mobile,error:mobileError})
+      setEmail({ ...email, error: emailError })
+      Setdriving_license_number({...driving_license_number,error:Driving})
+      return
+    }
+
+    setActiveindicator(true)
+
+    const formData=new FormData();
+    formData.append("vendor",id);
+    formData.append("driver_name",name.value);
+    formData.append("driver_mobile",mobile.value);
+    formData.append("driver_email",email.value);
+    formData.append("driving_license_number",driving_license_number.value)
+    formData.append("driving_license_front",d_front1);
+    formData.append("driving_license_back",d_back1);
+    formData.append("police_verify",police_verify1);
+    formData.append("overall_exp",exp);
+    // formData.append("file",JSON.stringify(["d_front","d_back","police_c"]))
+    formData.append("d_front",d_front.value)
+    formData.append("d_back",d_back.value)
+    formData.append("police_c",police_verify.value)
+
+    let result = await EditDriverdata(formData,driverid);
+
+    console.log(result);
+
+    if(result !== false){
+
+        console.log(result);
+
+        // setvendorDrivers(result)
+        setActiveindicator(false)
+        setName({ value: '', error: '' })
+        setmobile({ value: '', error: '' })
+        setEmail({ value:'', error: '' });
+        setd_front({ value:null, error: '' });
+        setd_front1('');
+
+        setd_back({ value:null, error: '' });
+        setd_back1('');
+
+        setpolice_verify({ value:null, error: '' });
+        setpolice_verify1('');
+
+        setexp(0);
+        Setdriving_license_number({ value: '', error: '' })
+        setModalVisible(false)
+        SetEditstate(false)
+        setdriverid(null)
+        onRefresh()
+        Alert.alert(
+          "Successfully Updated",
+          "The Driver was Updated successfully!",
+          [
+           
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ]
+        )
+
+    }else{
+      
+      Alert.alert(
+        "Already Exists",
+        "The Driver was already Exists!",
+        [
+         
+          { text: "OK", onPress: () =>  setActiveindicator(false)}
+        ]
+      )
+
+    }
+  }
 
   const Submit=async()=>{
 
@@ -150,7 +241,7 @@ export default  function AddDriver(navigation){
         setexp(0);
         Setdriving_license_number({ value: '', error: '' })
         setModalVisible(false)
-
+        onRefresh()
         Alert.alert(
           "Successfully Added",
           "The Driver was added successfully!",
@@ -184,8 +275,8 @@ export default  function AddDriver(navigation){
     setRefreshing(true);
   
    let result = await RefreshJsons(id);
-   setvendorDrivers(JSON.parse(result[0].vendorDrivers))
-    console.log(JSON.parse(result[0].vendorDrivers),"Refrehjson");
+     setvendorDrivers(JSON.parse(result[0].vendorDrivers))
+    // console.log(JSON.parse(result[0].vendorDrivers),"Refrehjson");
     wait(5000).then(() => setRefreshing(false));
   }, []);
 
@@ -201,10 +292,108 @@ export default  function AddDriver(navigation){
 
     setpolice_verify({ value:null, error: '' });
     setpolice_verify1('');
-
+    setdriverid(null)
     setexp(0);
     setActiveindicator(false)
     setModalVisible(false)
+
+    SetEditstate(false)
+}
+
+
+const EditDriver =(ival)=>{
+  Alert.alert(
+    "Are You Sure!!",
+    `Do you want to Edit ${ival.driver_name} ?`,
+    [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel"
+      },
+      { text: "OK", onPress: () => EditDriverFromVendor(ival) }
+    ]
+  );
+}
+
+const EditDriverFromVendor=async(ival)=>{
+
+  try {
+
+    console.log(ival);
+
+    setModalVisible(true)
+
+    setName({ value: ival.driver_name, error: '' })
+    // const [name, setName] = useState({ value: '', error: '' })
+    setmobile({ value: ival.driver_mobile, error: '' })
+
+    setEmail({ value:ival.driver_email, error: '' });
+
+    // setd_front({ value:null, error: '' });
+    setd_front1(ival.driving_license_front);
+
+    
+    Setdriving_license_number({value:ival.driving_license_number,error:''})
+
+    // const [d_back, setd_back] = useState({ value:null, error: '' });
+    setd_back1(ival.driving_license_back);
+
+    // const [police_verify, setpolice_verify] = useState({ value:null, error: '' });
+
+    setpolice_verify1(ival.police_verify);
+
+    setexp(ival.overall_exp);
+
+    SetEditstate(true)
+
+    setdriverid(ival.id)
+
+    console.log(modalVisible)
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const DeleteDriverFromVendor = async(ival)=>{
+
+    console.log(ival,"fghddfh")
+
+  try {
+
+    let result = await DeleteDriver(ival.id)
+
+    if(result != null){
+        
+        Alert.alert(
+          "Driver Deleted",
+          "Driver Deleted Successfully!",
+          [
+           
+            { text: "OK", onPress: () => onRefresh()}
+          ]
+        )
+    }
+    
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const OnDeleteDriver = (ival)=>{
+  Alert.alert(
+    "Are You Sure!!",
+    `Do you want to delete ${ival.driver_name} ?`,
+    [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel"
+      },
+      { text: "OK", onPress: () => DeleteDriverFromVendor(ival) }
+    ]
+  );
 }
    
 return(
@@ -255,7 +444,7 @@ return(
     >
   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
   <ScrollView showsVerticalScrollIndicator={false}>
-  <Header1 style={styles.heading}>Add Driver</Header1>
+  <Header1 style={styles.heading}>{onEditstate==true ? "Update Driver" : "Add Driver"}</Header1>
 
       <TextInput
         label="Name"
@@ -293,16 +482,7 @@ return(
               keyboardType="email-address"
        />
 
-      {/* <TextInput
-        label="Driving License Number"
-        returnKeyType="next"
-        container={styles.InputText}
-        value={driving_license_number.value}
-        onChangeText={(value) => Setdriving_license_number({ value: value, error: '' })}
-        error={!!driving_license_number.error}
-        errorText={driving_license_number.error} 
-        /> */}
-
+     
 <TextInput
         label="Driving License Number"
         returnKeyType="next"
@@ -347,21 +527,12 @@ return(
 <Text style={{margin:6,fontSize:12}}>{police_verify1 ? police_verify1.substring(0,14) : null } </Text>
 </View>
 
-{/* { activeIndicator ?
-
-<View style={[styles.container, styles.horizontal]}>
-<ActivityIndicator size="large" color="#ce3232" />
-</View>
-
-: <Button mode="contained" style={styles.button} onPress={Submit}>
-        Add Driver
-</Button> } */}
 
 <SpinnerButton
     buttonStyle={styles.buttonStyle,
       { backgroundColor: '#ce3232',width:300 }}
     isLoading={activeIndicator}
-    onPress={Submit}
+    onPress={onEditstate==true ? Update : Submit}
     indicatorCount={10}
     spinnerType='BarIndicator'
     disabled={false}
@@ -369,7 +540,7 @@ return(
     animateWidth={200}
     animateRadius={10}
   >
-    <Text style={styles.buttonText}>Add Driver</Text>
+    <Text style={styles.buttonText}>{onEditstate==true ? "Update Driver" : "Add Driver" }</Text>
   </SpinnerButton>
 
 </ScrollView>
@@ -394,9 +565,6 @@ return(
     height:'15%'
     }}
     />
-
-
-      
     
 <View style={styles.MainContainer}>
 
@@ -420,95 +588,6 @@ cardMaxElevation={5}
 cornerRadius={5}
 style={styles.cardViewStyle12}>
 
-
-{/* 
-
-<Header1 style={styles.heading}>Add Your Driver</Header1>
-
-      <TextInput
-        label="Name"
-        returnKeyType="next"
-        container={styles.InputText}
-        value={name.value}
-        onChangeText={(text) => setName({ value: text, error: '' })}
-        error={!!name.error}
-        errorText={name.error}
-      />
-
-      <TextInput
-      label="Mobile"
-      keyboardType="numeric"
-      container={styles.InputText}
-      value={mobile.value}
-      placeholder='mobile number'
-      onChangeText={(value) => setmobile({ value: value, error: '' })} 
-      error={!!mobile.error}
-      errorText={mobile.error}
-      />
-
-      <TextInput
-        label="Email"
-        returnKeyType="next"
-        value={email.value}
-        container={styles.InputText}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-      />
-
-        <TextInput
-        label="Experience"
-        keyboardType="numeric"
-         container={styles.InputText}
-        value={exp}
-        placeholder='Experience'
-        onChangeText={(value) => setexp(value)} 
-        />
-
-<View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Upload Driving Licence Front : </Text>    
-</View>   
-
-    <View style={styles.FileUploadView}>
-      <DocumentDriverPicker Profile={d_front} handleChange={handleChange}/>
-    <Text style={{margin:6,fontSize:12}}>{d_front1 ? d_front1.substring(0,14) : null } </Text>
-    </View>
-
-<View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Upload Driving Licence Back : </Text>    
-</View>    
-
-<View style={styles.FileUploadView}>
-<DocumentDriverPicker Profile={d_front} handleChange={handleChange1}/>
-<Text style={{margin:6,fontSize:12}}>{d_back1 ? d_back1.substring(0,14) : null } </Text>
-</View>
-
-<View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Upload Police Certificate : </Text>    
-</View>    
-
-<View style={styles.FileUploadView}>
-<DocumentDriverPicker Profile={police_verify} handleChange={handleChange2}/>
-<Text style={{margin:6,fontSize:12}}>{police_verify1 ? police_verify1.substring(0,14) : null } </Text>
-</View>
-
-{ activeIndicator ?
-
-<View style={[styles.container, styles.horizontal]}>
-<ActivityIndicator size="large" color="#ce3232" />
-</View>
-
-: <Button mode="contained" style={styles.button} onPress={Submit}>
-        Add Driver
-</Button> }
-
-*/}
-
-
 <View style={{fontSize:10,marginLeft:20,alignItems:"center"}}>
   <Text style={{fontWeight:"bold",fontSize:20,color:"#ce3232"}}>
     Drivers List 
@@ -516,117 +595,145 @@ style={styles.cardViewStyle12}>
 </View>  
 
 { vendorDrivers.length ? vendorDrivers.map((ival,i)=>{
-// console.log(ival,"246");
-    return(
-       
-//           ${ival.status==0 ? 'Waiting' : 'Approved' }
-<AccordionTab title={`${ival.driver_name} `} 
-bodyText={
-  <View style={{marginRight:50}}>
-    
-  {ival.status==0 ?  
+    // console.log(ival,"246");
 
-    <View style={{backgroundColor:'yellow',alignItems:"center"}}>
-        <Text style={{alignItems:"center", fontSize:20}}>
-            Waiting
-        </Text>
-    </View>
-    
-    :
-     <View style={{backgroundColor:'green',alignItems:"center"}}>
-    <Text style={{alignItems:"center", fontSize:20}}>
-        Approved
-    </Text>
-    </View> }
-    
-    <View style={styles.DriverHead}>
-        <Text style={styles.DriverText}>
-        Driver Name : 
-        </Text>
-        <Text style={styles.DriverText1}>
-        {ival.driver_name}
-        </Text>
-    </View>
-    
-    <View style={styles.DriverHead}>
-        <Text style={styles.DriverText}>
-        Driver Mobile : 
-        </Text>
-        <Text style={styles.DriverText1}>
-        {ival.driver_mobile} 
-        </Text>
-    </View>
-    
-    <View style={styles.DriverHead}>
-        <Text style={styles.DriverText}>
-        Driver Email : 
-        </Text>
-    
-        <Text style={styles.DriverText1}>
-        {ival.driver_email} 
-        </Text>
+if(ival.hide_show == 1 ){    
+
+return(
        
-    </View>
+
+
+<CardView 
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.cardViewStyle}
+
+>
+<View>
     
-    <View style={styles.DriverHead}>
-        <Text style={styles.DriverText}>
-        Driving Experience : 
-        </Text>
-    
-        <Text style={styles.DriverText1}>
-        {ival.overall_exp} 
-        </Text>
-       
-    </View>
-    
-    <View style={styles.DriverHead}>
-        <Text style={styles.DriverText}>
-        Driving License Front :  
-        </Text>
-    
-        <Image
-    style={styles.tinyLogo}
-    source={{
-    uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.driving_license_front}/${id}`,
-    }}
-    />
-       
-    </View>
-    
-    <View style={styles.DriverHead}>
-        <Text style={styles.DriverText}>
-        Driving License Back : 
-        </Text>
-    
-        <Image
-    style={styles.tinyLogo}
-    source={{
-    uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.driving_license_back}/${id}`,
-    }}
-    />
+    {ival.status==0 ?  
+  
+      <View style={{backgroundColor:'yellow',alignItems:"center"}}>
+          <Text style={{alignItems:"center", fontSize:20}}>
+              Waiting
+          </Text>
+      </View>
       
-    </View>
-    
-    
-    <View style={styles.DriverHead}>
-        <Text style={styles.DriverText}>
-        Police Verify Certificate : 
-        </Text>
-    
-    <Image
-    style={styles.tinyLogo}
-    source={{
-    uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.police_verify}/${id}`,
-    }}
-    />
+      :
+       <View style={{backgroundColor:'green',alignItems:"center"}}>
+      <Text style={{alignItems:"center", fontSize:20}}>
+          Approved
+      </Text>
+      </View> }
+  
+      <Rating
+      type='custom'
+      ratingCount={5}
+      imageSize={20}
+      readonly={true}
+      startingValue={ival.rating==null ? 0 : ival.rating } 
+      onFinishRating={ratingCompleted}
+      />
       
-    </View>
-    </View>
-  } />
+      <View style={styles.DriverHead}>
+          <Text style={styles.DriverText}>
+          Driver Name : 
+          </Text>
+          <Text style={styles.DriverText1}>
+          {ival.driver_name}
+          </Text>
+      </View>
+      
+      <View style={styles.DriverHead}>
+          <Text style={styles.DriverText}>
+          Driver Mobile : 
+          </Text>
+          <Text style={styles.DriverText1}>
+          {ival.driver_mobile} 
+          </Text>
+      </View>
+      
+      {/* <View style={styles.DriverHead}>
+          <Text style={styles.DriverText}>
+          Driver Email : 
+          </Text>
+      
+          <Text style={styles.DriverText1}>
+          {ival.driver_email} 
+          </Text>
+         
+      </View>
+      
+      <View style={styles.DriverHead}>
+          <Text style={styles.DriverText}>
+          Driving Experience : 
+          </Text>
+      
+          <Text style={styles.DriverText1}>
+          {ival.overall_exp} 
+          </Text>
+         
+      </View> */}
+      
+      <View style={styles.DriverHead}>
+          <Text style={styles.DriverText}>
+          Driving License Front :  
+          </Text>
+      
+          <Image
+      style={styles.tinyLogo}
+      source={{
+      uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.driving_license_front}/${id}`,
+      }}
+      />
+         
+      </View>
+      
+      <View style={styles.DriverHead}>
+          <Text style={styles.DriverText}>
+          Driving License Back : 
+          </Text>
+      
+          <Image
+      style={styles.tinyLogo}
+      source={{
+      uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.driving_license_back}/${id}`,
+      }}
+      />
+        
+      </View>
+      
+      
+      <View style={styles.DriverHead}>
+          <Text style={styles.DriverText}>
+          Police Verify Certificate : 
+          </Text>
+      
+      <Image
+      style={styles.tinyLogo}
+      source={{
+      uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.police_verify}/${id}`,
+      }}
+      />
+        
+      </View>
 
+      <View style={{flexDirection:"row"}}>
+        <Button mode="contained" style={styles.buttonstyle} onPress={()=>EditDriver(ival)} >
+        Edit
+        </Button>
+        <Button mode="contained" style={styles.buttonstyle} onPress={()=>OnDeleteDriver(ival)} >
+        Delete
+        </Button>
+      </View>
 
+      </View>
+</CardView>
   
     )
+}
+
 }) :null  }
     
 </CardView>
@@ -644,6 +751,7 @@ bodyText={
 
 </SafeAreaProvider>
 )
+
 
     }
     const styles = StyleSheet.create({
@@ -683,14 +791,13 @@ bodyText={
            cardViewStyle:{
      
             width: '96%', 
-            height: 310,
+            height: 330,
             flexDirection: "column",
             // alignContent:"center",
+            // alignItems:"center",
             marginTop:9,
             marginLeft: 9,
-         
-          }, 
-    
+           }, 
           Headings:{
               backgroundColor:"#008000",
               alignItems:"center"
@@ -716,7 +823,8 @@ bodyText={
           },
           DriverText1:{
             fontSize:10,
-            margin:3
+            marginLeft:2,
+            // margin:3
             // fontWeight:"500"
           },
           InputText:{
@@ -738,6 +846,11 @@ bodyText={
             width:"95%",
             marginLeft:'2%'
       
+          },
+          buttonstyle:{
+            backgroundColor:"#ce3232",
+            width:150,
+            marginLeft:12
           },
           tinyLogo:{
               width:100,

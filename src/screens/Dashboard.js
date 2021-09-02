@@ -109,9 +109,9 @@ export default class Dashboard extends Component {
 
   
 Runbackground = async()=>{
-  console.log(this.state.ID,"this.state.userdetails");
+   console.log(this.state.ID,"this.state.userdetails");
   let LoginToken = await AsyncStorage.getItem(Stored.login_token);
-  console.log(LoginToken);
+  // console.log(LoginToken);
   if(this.state.userDetail.length && LoginToken != null ){
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
     let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
@@ -159,10 +159,9 @@ Runbackground = async()=>{
 
       let Trip = await TripsJsons(data[0].id)
         console.log(Trip)
-      this.setState({
-        userDetail : data,
-        //TripsJson : data2
-      })
+      
+
+
    
     
 
@@ -181,7 +180,7 @@ Runbackground = async()=>{
     
     // console.log(this.state.userDetail[0],"92")
     let URL = Config.ACCESS_POINT + Config.AppLoginIgotaxy + `/${this.state.userDetail[0].id}`;
-  console.log(URL);
+      console.log(URL);
           fetch(URL, {
             method: "GET",
           

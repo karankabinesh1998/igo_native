@@ -21,23 +21,43 @@ export default  function MyBiddings(navigation){
     
     
     const [vendorDrivers,setvendorDrivers]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorDrivers))
-    const [activeIndicator,setActiveindicator] = useState(false)
-    const [activeIndicator1,setActiveindicator1] = useState(false)
     const [vendorCabs,setvendorCabs]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorCabs))
 
-    const [selectedDriver, setselectedDriver] = useState(vendorDrivers.length ? vendorDrivers[0].id : 0 );
-    const [selectedCab,setselectedCab]=useState(vendorCabs.length ? vendorCabs[0].id : 0)
+    const [selectedDriver, setselectedDriver] = useState(null);
+    const [selectedCab,setselectedCab]=useState(null)
 
 
 const Submit =async(e,i)=>{
 
-  console.log("selectedDriver,selectedDriver");
-  
   console.log(selectedDriver,selectedCab,"selectedDriver,selectedDriver");
+  if(selectedDriver==null){
+    Alert.alert(
+      "No Driver selected",
+      "Please Select your driver",
+      [
+       
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+      ]
+    )
 
-  setActiveindicator1(true)
+    return false
+  }
 
-  // BidData[i].activeindicator = false;
+console.log(selectedCab,"selectedCab")
+  if(selectedCab==null){
+    Alert.alert(
+      "No Cab selected",
+      "Please Select your Cab",
+      [
+       
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+      ]
+    )
+
+    return false
+  }
+
+
 
   const NewData = BidData;
 
@@ -63,7 +83,7 @@ const Submit =async(e,i)=>{
 
     if(result){
       console.log(result,"result")
-      setActiveindicator1(false)
+      // setActiveindicator1(false)
       setBidData(result)
       onRefresh()
       Alert.alert(
@@ -83,29 +103,27 @@ const Submit =async(e,i)=>{
 }
 
 
-const ConfirmCancelTrip = (e)=>{
+const ConfirmCancelTrip = (e,i)=>{
   Alert.alert("Are You Sure!", "Do you want to Cancel the Trip?", [
     {
       text: "No",
       onPress: () => null,
       style: "cancel"
     },
-    { text: "YES", onPress: () => CancelTrip1(e) }
+    { text: "YES", onPress: () => CancelTrip1(e,i) }
   ]);
 }
 
 
-const CancelTrip1=async(e)=>{
+const CancelTrip1=async(e,i)=>{
 
-     console.log(e,"data");
+     if(BidData.length > 0){
 
-     setActiveindicator(true)
-
-     const NewData = BidData;
-
-  NewData[i].activeindicator1 = true;
-
-  setBidData(NewData)
+      const NewData = BidData;
+     
+      NewData[i].activeindicator1 = true; 
+     setBidData(NewData);
+      }
 
     const formData=new FormData();
     formData.append("bid_id",e.id);
@@ -113,13 +131,14 @@ const CancelTrip1=async(e)=>{
     formData.append("vendor_req_amount",e.req_amount)
     formData.append("trip_id",e.trip_id) 
 
+   try {
 
 
-     let result = await CancelTrip(formData,id)
+      let result = await CancelTrip(formData,id)
 
      if(result){
        console.log(result,"result");
-       setActiveindicator(false)
+      //  setActiveindicator(false)
        setBidData(result)
        onRefresh()
        Alert.alert(
@@ -132,8 +151,19 @@ const CancelTrip1=async(e)=>{
        )
      }
 
+     
+   } catch (error) {
+     console.log(error)
+   }
+ 
 }
 
+
+const GetDataDriver=(a,b)=>{
+  //setselectedDriver(itemValue)
+  console.log(a,b)
+
+}
 
  const [refreshing, setRefreshing] = React.useState(false);
 
@@ -155,23 +185,16 @@ const CancelTrip1=async(e)=>{
       const wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
       }
+
       
       const onRefresh = React.useCallback(async() => {
       
         setRefreshing(true);
       
        let result = await RefreshJsons(id);
-    //    console.log();
         setBidData(JSON.parse(result[0].BiddingTrip))
-        // let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
-        // let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-        //  setTripsData({ value: result, error: ''})
-        //  setmobile({ value: result[0].mobile, error: '' })
         setselectedDriver(JSON.parse(result[0].vendorDrivers))
         setselectedCab(JSON.parse(result[0].vendorCabs))
-        //  setEmail({ value:  result[0].email_id, error: '' })
-        //  setAddress({ value:  result[0].address, error: '' })
-        //  console.log( result,"Refrehjson");
         wait(5000).then(() => setRefreshing(false));
       }, []);
 
@@ -249,23 +272,21 @@ return(
       <Text style={{fontSize:16,fontWeight:"bold"}}>Select Driver: </Text>    
       </View>  
         
+
         <Picker
         selectedValue={selectedDriver}
         style={{ height: 50, width: '100%' }}
         onValueChange={(itemValue, itemIndex) => setselectedDriver(itemValue)}
-      >
-
-        {vendorDrivers.length ? vendorDrivers.map((kval,k)=>{
+        >
+          <Picker.Item label={"Select Driver"} value={null} />
+         {vendorDrivers.length ? vendorDrivers.map((kval,k)=>{
            if(kval.status==1){
            return(
               <Picker.Item label={kval.driver_name} value={kval.id} />
             )
            }
         }):null}
-       
-        {/* <Picker.Item label="JavaScript" value="js" /> */}
-
-      </Picker>
+        </Picker>
 
 
       <View style={styles.FileUploadView}>
@@ -277,7 +298,7 @@ return(
         style={{ height: 50, width: '100%' }}
         onValueChange={(itemValue, itemIndex) => setselectedCab(itemValue)}
       >
-
+        <Picker.Item label={"Select Cab"} value={null} />
         {vendorCabs.length ? vendorCabs.map((jval,j)=>{
            if(jval.status==1){
             return(
@@ -285,9 +306,6 @@ return(
             )
            }
         }):null}
-       
-        {/* <Picker.Item label="JavaScript" value="js" /> */}
-
       </Picker>
 
       <SpinnerButton
@@ -303,29 +321,13 @@ return(
     animateRadius={10}
   >
     <Text style={styles.buttonText}>Active Trip</Text>
-  </SpinnerButton>
-
-      {/* { activeIndicator ?
-
-<View style={[styles.container, styles.horizontal]}>
-<ActivityIndicator size="large" color="#ce3232" />
-</View>
-
-: <Button mode="contained" style={styles.button} onPress={()=>Submit(ival)}>
-        Active Trip 
-</Button> } */}
-
-{/* <Button mode="contained" style={styles.button} onPress={()=>CancelTrip1(ival)}>
-        {activeIndicator ? <ActivityIndicator size="large" color="white" /> : "Cancel Trip" }
-</Button> */}
-
-
+</SpinnerButton>
 
 <SpinnerButton
     buttonStyle={styles.buttonStyle,
       { backgroundColor: '#ce3232',width:300 }}
     isLoading={ival.activeindicator1}
-    onPress={()=>ConfirmCancelTrip(ival)}
+    onPress={()=>ConfirmCancelTrip(ival,i)}
     indicatorCount={10}
     spinnerType='BarIndicator'
     disabled={false}

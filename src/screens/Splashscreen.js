@@ -24,7 +24,7 @@ import React, { Component } from 'react';
     var that = this;
     setTimeout(function(){
       that.Hide_Splash_Screen();
-    }, 2000);
+    }, 20000);
    }
 
     render()
@@ -33,8 +33,8 @@ import React, { Component } from 'react';
           <View style={styles.SplashScreen_RootView}>
               <View style={styles.container}>
           <Image
-          style={{width:'100%', height: '100%', resizeMode: 'contain'}}
-          source={require('../../igotaxy.png')}
+          style={{width:'90%',height: '100%', resizeMode: 'contain'}}
+          source={require('../assets/sublogo.jpg')}
           />
           </View>
           </View> )
@@ -56,8 +56,8 @@ import React, { Component } from 'react';
     MainContainer:
     {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        
+        
         paddingTop: ( Platform.OS === 'ios' ) ? 20 : 0
     },
 
@@ -65,7 +65,7 @@ import React, { Component } from 'react';
     {
         justifyContent: 'center',
         flex:1,
-        margin: 10,
+        margin: 17,
         position: 'absolute',
         width: '100%',
         height: '100%',

@@ -287,7 +287,7 @@ export async function RefreshJsons(id){
   let URL = Config.ACCESS_POINT + Config.AppLoginIgotaxy + `/${id}`;
   // console.log(URL,"Refresh JSOn");
   let request = await fetch(URL);
-  console.log(request);
+  // console.log(request);
   let requestJson = await request.json();
    let data = JSON.stringify(requestJson)
   await AsyncStorage.setItem(Stored.userDetail,data);  
@@ -301,11 +301,11 @@ export async function RefreshJsons(id){
 
 export async function TripsJsons(id=null){
   let URL = Config.ACCESS_POINT + Config.NewTripsJson +`/${id}`;
-  console.log(URL,"hello"); 
+  // console.log(URL,"hello"); 
   let request = await fetch(URL);
   let requestJson = await request.json();
  let data = JSON.stringify(requestJson)
- console.log(request,"trips json");
+//  console.log(request,"trips json");
   await AsyncStorage.setItem(Stored.TripsJsob,data);  
   AsyncStorage.setItem("TripsJsob",JSON.stringify(requestJson))
 
@@ -314,6 +314,44 @@ export async function TripsJsons(id=null){
   return data1
 
 }
+
+
+
+
+export async function DeleteDriver(id){
+  let formData={}
+  let URL = Config.ACCESS_POINT + Config.DeleteDriver+`/${id}`;
+  console.log(URL);
+  let request = await fetch(URL);
+    console.log(request);
+        if(request.status == 200){
+
+          let requestJson = await request.json();
+          
+          return requestJson
+
+        }else{
+          return null
+        }
+}
+
+export async function DeleteCab(id){
+  let formData={}
+  let URL = Config.ACCESS_POINT + Config.DeleteCab+`/${id}`;
+  console.log(URL);
+  let request = await fetch(URL);
+    console.log(request);
+        if(request.status == 200){
+
+          let requestJson = await request.json();
+          
+          return requestJson
+
+        }else{
+          return null
+        }
+}
+
 
 
 export async function UploadProfile(formData,id){
@@ -526,25 +564,16 @@ export async function StartandEndTrip(formData,id,vendor_id){
 
         if(request.status == 200){
 
-          let UserDetail = RefreshJsons(vendor_id);
-
-          if(UserDetail){
-
-            let requestJson = await request.json();
-            // let data = JSON.stringify(requestJson)
-  
-            // await AsyncStorage.setItem(Stored.userDetail,data);  
-            // AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
-          
-            // let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
-            // let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-            console.log(requestJson,"541");
-            return requestJson
-
-          }
+          // let UserDetail = RefreshJsons(vendor_id);
 
          
 
+            let requestJson = await request.json();
+            console.log(requestJson,"541");
+            return requestJson
+        }else{
+
+          return false
         }
 }
 
@@ -644,6 +673,54 @@ export async function AddDriverdata(formData){
         }
 
       }
+
+      
+
+      export async function EditCabdata(formData,id){
+        let URL = Config.ACCESS_POINT+Config.EditCabdata+`/${id}`;
+          console.log(URL);
+        let request = await fetch(URL, {
+          method: "PUT",
+          headers: {
+            // "Accept": "application/json",
+            'Content-Type': 'multipart/form-data'
+          },
+          body: formData
+              });
+              console.log(request,"request 679");
+              if(request.status == 200){
+                let requestJson = await request.json();
+                return requestJson
+      
+              }else if(request.status == 400){
+      
+                return false
+              }
+      
+            }
+
+      export async function EditDriverdata(formData,id){
+        let URL = Config.ACCESS_POINT+Config.AddDriverdata+`/${id}`;
+          console.log(URL);
+        let request = await fetch(URL, {
+          method: "PUT",
+          headers: {
+            // "Accept": "application/json",
+            'Content-Type': 'multipart/form-data'
+          },
+          body: formData
+              });
+              console.log(request,"request 679");
+              if(request.status == 200){
+                let requestJson = await request.json();
+                return requestJson
+      
+              }else if(request.status == 400){
+      
+                return false
+              }
+      
+            }
 
 export async function Addcabs1(formData){
   let URL = Config.ACCESS_POINT + Config.Addcabs1;
