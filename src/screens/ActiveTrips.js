@@ -6,19 +6,27 @@ import { Header } from 'react-native-elements';
 import Logo from '../components/Logo';
 import WhatsappandCall from '../components/WhatsappandCall';
 import { RefreshJsons , StartandEndTrip } from '../configuration/functional';
-import Button from '../components/Button';
+import SwipeButton from 'rn-swipe-button';
 import SpinnerButton from 'react-native-spinner-button';
+import Header_New from '../components/Header_New';
 
-export default  function ActiveTrips(navigation){
 
-    const [activeTrips,SetActiveTrips]=useState(navigation.route.params.userDetail.userDetail[0] ? JSON.parse(navigation.route.params.userDetail.userDetail[0].ActiveTrips) : null )
 
-    const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
+export default  function ActiveTrips({navigation,route}){
+
+    const [activeTrips,SetActiveTrips]=useState(route.params.userDetail[0] ? JSON.parse(route.params.userDetail[0].ActiveTrips) : null )
+
+    const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null)
     
     // console.log(activeTrips,"activeTrips")
 
-    
+    useEffect(() => {
+      // Update the document title using the browser API
+      getbeforedateandtimeFunction(activeTrips)
+    },[]);
 
+
+    
 
     const [activeIndicator1,setActiveindicator1] = useState(false)
 
@@ -26,7 +34,7 @@ export default  function ActiveTrips(navigation){
 
     useEffect(() => {
         const backAction = () => {
-            navigation.navigation.navigate('Dashboard')
+            navigation.navigate('Dashboard')
           return true;
         };
     
@@ -54,9 +62,11 @@ export default  function ActiveTrips(navigation){
 
 
        if(result){
-           console.log(result[0],"Refresh JSON");
+           console.log(result[0].ActiveTrips,"Refresh JSON");
 
            SetActiveTrips(JSON.parse(result[0].ActiveTrips))
+
+          await getbeforedateandtimeFunction(JSON.parse(result[0].ActiveTrips));
        }
 
         wait(5000).then(() => setRefreshing(false));
@@ -118,7 +128,7 @@ export default  function ActiveTrips(navigation){
 
             console.log(result,"FormData");
 
-            onRefresh() ; 
+             
 
             // SetActiveTrips(result);
 
@@ -129,17 +139,17 @@ export default  function ActiveTrips(navigation){
                 "All the best for the Trip!",
                 [
                  
-                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                  { text: "OK", onPress: () => onRefresh() }
                 ]
               )
         }else{
-            onRefresh() ; 
+            // onRefresh() ; 
             Alert.alert(
                 "Failed to Start",
                 "Trip Failed to Start !",
                 [
                  
-                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                  { text: "OK", onPress: () => onRefresh() }
                 ]
               )
         }
@@ -147,8 +157,9 @@ export default  function ActiveTrips(navigation){
       }
 
       const formatAMPM=(date)=> {
-          console.log(date,"date")
+          
         var hours = date.getHours();
+        console.log(hours,"hours")
         var minutes = date.getMinutes();
         var ampm = hours >= 12 ? 'pm' : 'am';
         hours = hours % 12;
@@ -159,45 +170,96 @@ export default  function ActiveTrips(navigation){
       }
 
 
-      const getbeforedateandtimeFunction=async(pick)=>{
+      const getbeforedateandtimeFunction=async(Trips)=>{
+
+        let arr = []
+
+          if(Trips.length>0){
+
+            Trips.map((ival,i)=>{
        
-            let Split_it = pick.split(" ");
+              let Split_it = ival.pickup_date.split(" ");
+  
+              let Split_date = Split_it[0].split("-");
+  
+              let Split_time = Split_it[1].split(":");
+  
+              let fullDate = `${Split_date[0]}/${parseInt(Split_date[1])+1}/${Split_date[2]} ${Split_time[0]}:${Split_time[1]}`;
+  
+              let check = new Date(fullDate)
+              console.log(fullDate,"fullDate"); 
+  
+              // Date.UTC(Split_date[0],Split_date[1]-1,Split_date[2],Split_time[0],Split_time[1], 0)
+  
+              // console.log(new Date(fullDate).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3"))
+  
+              var hourago = new Date(check.getTime() - (1000*60*60)); 
+               
+               
 
-            let Split_date = Split_it[0].split("-");
+              let CurrentDate = new Date();
 
-            let Split_time = Split_it[1].split(":");
+              ival.Will_visibleAt = `${hourago.getDate() > 9 ? hourago.getDate() : `0${hourago.getDate()}`}-${hourago.getMonth()>9 ? hourago.getMonth() : `0${hourago.getMonth()}`}-${hourago.getFullYear()} at ${hourago.getHours() >9 ? hourago.getHours() : `0${hourago.getHours()}`}:${hourago.getMinutes() > 9 ? hourago.getMinutes():`0${hourago.getMinutes()}`}`
+              // console.log(ival.Will_visibleAt)
 
-            let fullDate = `${Split_date[0]}-${Split_date[1]}-${Split_date[2]} ${Split_time[0]}:${Split_time[1]}`;
+              // console.log( CurrentDate.getFullYear() , hourago.getFullYear() ,"Year")
+              // console.log( CurrentDate.getMonth() , hourago.getMonth() ,"Month")
+              // console.log( CurrentDate.getDate() , hourago.getDate() ,"Date")
+              // console.log( CurrentDate.getHours() , hourago.getHours() ,"Hours") 
+             
+              if(
+                CurrentDate.getFullYear()==hourago.getFullYear() &&
+                CurrentDate.getMonth()+1 == hourago.getMonth() &&
+                CurrentDate.getDate() >= hourago.getDate() &&
+                CurrentDate.getHours() >= hourago.getHours() 
+              ){
 
-            let check = new Date(Date.UTC(Split_date[0],Split_date[1]-1,Split_date[2],Split_time[0],Split_time[1], 0))
-            console.log(fullDate,"fullDate");
-    
-            // var today = new Date(fullDate);
-            var hourago = new Date(check.getTime() - (1000*60*60)); 
-            let past = formatAMPM(new Date(check.getTime() - (1000*60*60)))
+               
 
-            console.log(hourago,past,"yesterday");      
-      }
+                ival.beforehour = true;
+              }else{
+
+                ival.beforehour = false;
+
+
+              }
+
+             
+
+              arr.push(ival)
+            })
+
+          console.log(arr,"length")
+          SetActiveTrips(arr);
+          }
+
+          
+            
+        }
+
+        
 
     return(
 
         <SafeAreaProvider style={{backgroundColor:"lightgrey"}}> 
 
-<Header
-      placement="left"
-      statusBarProps={{ barStyle: 'light-content' }}
-      barStyle="light-content"
-      leftComponent={<Logo STYLE={ { width:110 , height: 100, marginBottom: 8, } } />}
-      centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
-      rightComponent={ <WhatsappandCall  navigation ={navigation.navigation}   /> }
-      containerStyle={{
-          backgroundColor: 'white',
-          justifyContent: 'space-around',
-          width:'100%',
-          height:'16%'
-        }}
-      />
+<Header_New subtitle="Active Trips" navigation={navigation} />
 
+{/* <Header
+placement="left"
+statusBarProps={{ barStyle: 'light-content' }}
+barStyle="light-content"
+leftComponent={<Logo STYLE={ { width:110 , height: 100, marginBottom: 8, } } />}
+centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
+rightComponent={ <WhatsappandCall  navigation ={navigation.navigation}   /> }
+containerStyle={{
+    backgroundColor: 'white',
+    justifyContent: 'space-around',
+    width:'100%',
+    height:'16%'
+  }}
+/> */}
+ 
 <View style={styles.MainContainer} >
 
 <ScrollView
@@ -212,12 +274,7 @@ onRefresh={onRefresh}
 >
 
 {activeTrips.length ? activeTrips.map((ival,i)=>{
-    
-
-    let getbeforedateandtime = getbeforedateandtimeFunction(ival.pickup_date);
-
-
-
+    console.log(ival.start)
     return(
         <CardView
         cardElevation={5}
@@ -231,17 +288,29 @@ onRefresh={onRefresh}
             </Text>
         </View>
 
-        <View style={styles.HeadData}>
-            <Text style={styles.TextTrip}>Customer Name : {ival.customername}</Text>
-        </View>
+       {
+         ival.beforehour == true ? 
+         <>
 
-        <View style={styles.HeadData}>
+          <View style={styles.HeadData}>
+            <Text style={styles.TextTrip}>Customer Name :{ival.customername}</Text>
+          </View>
+
+          <View style={styles.HeadData}>
             <Text style={styles.TextTrip}>Customer Mobile : {ival.customerMobile}</Text>
-        </View>
+          </View>
 
-        <View style={styles.HeadData}>
+          <View style={styles.HeadData}>
             <Text style={styles.TextTrip}>Customer Address : {ival.address}</Text>
-        </View>
+          </View>
+         
+         </> :
+
+          <View style={{justifyContent:"center",width:500,height:80}}>
+            <Text style={{margin:5,fontSize:15,alignItems:"center"}}>Details Will be Visible on {ival.Will_visibleAt}</Text>
+          </View>
+
+       }
 
         <View style={styles.HeadHaed}>
             <Text style={styles.TextText}>
@@ -304,37 +373,69 @@ onRefresh={onRefresh}
 
         { ival.start == 1 ? 
         
-        <SpinnerButton
-        buttonStyle={styles.buttonStyle,
-        { backgroundColor: '#ce3232',width:300 }}
-        isLoading={ival.activeindicator1}
-        onPress={()=>EndTrip(ival,i)}
-        indicatorCount={10}
-        spinnerType='BarIndicator'
-        disabled={false}
-        animateHeight={50}
-        animateWidth={200}
-        animateRadius={10}
-        >
-        <Text style={styles.buttonText}>End Trip</Text>
-        </SpinnerButton>
+        // <SpinnerButton
+        // buttonStyle={styles.buttonStyle,
+        // { backgroundColor: '#ce3232',width:300 }}
+        // isLoading={ival.activeindicator1}
+        // onPress={()=>EndTrip(ival,i)}
+        // indicatorCount={10}
+        // spinnerType='BarIndicator'
+        // disabled={false}
+        // animateHeight={50}
+        // animateWidth={200}
+        // animateRadius={10}
+        // >
+        // <Text style={styles.buttonText}>End Trip</Text>
+        // </SpinnerButton>
+
+          <View style={{justifyContent:"center",marginLeft:5}}>
+            <SwipeButton
+          enableReverseSwipe
+          onSwipeSuccess={()=>EndTrip(ival,i)}
+          railBackgroundColor="#ce3232"
+          railStyles={{
+          backgroundColor: '#2f991f',
+          borderColor: '#2f991f',
+          }}
+          thumbIconBackgroundColor="#FFFFFF"
+          title="Swipe to End Trip"
+          titleColor="white"
+          width={320}
+          />
+          </View>
 
        : 
        
-       <SpinnerButton
-       buttonStyle={styles.buttonStyle,
-       { backgroundColor: '#ce3232',width:300 }}
-       isLoading={ival.activeindicator}
-       onPress={()=>StartTrip(ival,i)}
-       indicatorCount={10}
-       spinnerType='BarIndicator'
-       disabled={false}
-       animateHeight={50}
-       animateWidth={200}
-       animateRadius={10}
-       >
-       <Text style={styles.buttonText}>Start Trip</Text>
-       </SpinnerButton> }
+      //  <SpinnerButton
+      //  buttonStyle={styles.buttonStyle,
+      //  { backgroundColor: '#ce3232',width:300 }}
+      //  isLoading={ival.activeindicator}
+      //  onPress={()=>StartTrip(ival,i)}
+      //  indicatorCount={10}
+      //  spinnerType='BarIndicator'
+      //  disabled={false}
+      //  animateHeight={50}
+      //  animateWidth={200}
+      //  animateRadius={10}
+      //  >
+      //  <Text style={styles.buttonText}>Start Trip</Text>
+      //  </SpinnerButton>
+      <View style={{justifyContent:"center",marginLeft:5}}>
+      <SwipeButton
+          onSwipeSuccess={()=>StartTrip(ival,i)}
+          railBackgroundColor="#ce3232"
+          disabled={ival.beforehour==true ? false : true }
+          railStyles={{
+          backgroundColor: '#2f991f',
+          borderColor: '#2f991f',
+          }}
+          thumbIconBackgroundColor="#FFFFFF"
+          title="Swipe to Start Trip"
+          titleColor="white"
+          width={320}
+    />
+    </View>
+    }
 
         </View>
 

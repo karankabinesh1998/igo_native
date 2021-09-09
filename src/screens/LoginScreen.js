@@ -70,6 +70,8 @@ export default function LoginScreen({ navigation }) {
 
     return () => backHandler.remove();
   }, []);
+
+
   // console.log(AsyncStorage.getItem(Stored.userDetail),"data displayed");
 
   const onLoginPressed = () => {
@@ -101,7 +103,7 @@ export default function LoginScreen({ navigation }) {
           .then(async responseJson => {
             // console.log(responseJson,"responseKaran")
             if(responseJson.length){
-                console.log(responseJson[0],"hello")
+                // console.log(responseJson[0],"hello")
                 // console.log(responseJson[0].BiddingTrip);
 
                 const formData=new FormData();
@@ -120,12 +122,19 @@ export default function LoginScreen({ navigation }) {
                 })
                 .then(response1 => response1.json())
                 .then(async responseJson1 => {
-                  console.log(responseJson1,"responseJson1");
-                  let data = JSON.stringify(responseJson1)
+
+                  // console.log(responseJson[0].announcement,"responseJson1");
+
+                  let data = JSON.stringify(responseJson)
                   await AsyncStorage.setItem(Stored.userDetail,data);  
-                  AsyncStorage.setItem("Userdetail",JSON.stringify(responseJson1))
-                  await AsyncStorage.setItem(Stored.login_token,responseJson1[0].login_token)
-                  AsyncStorage.setItem("login_token",responseJson1[0].login_token)
+                  AsyncStorage.setItem("Userdetail",JSON.stringify(responseJson))
+
+                  await AsyncStorage.setItem(Stored.login_token,responseJson[0].login_token)
+                  AsyncStorage.setItem("login_token",responseJson[0].login_token)
+
+                  await AsyncStorage.setItem(Stored.announcement,responseJson[0].announcement);  
+                  AsyncStorage.setItem("announcement",responseJson[0].announcement)
+
                   Alert.alert(
                     "Login Success ",
                     "You have successfully Logged In!",
@@ -181,7 +190,7 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <Background>
-      <BackButton goBack={navigation.goBack} />
+      {/* <BackButton goBack={navigation.goBack} /> */}
       <Logo />
       <Header>Welcome back.</Header>
       <TextInput1

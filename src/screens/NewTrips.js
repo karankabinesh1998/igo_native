@@ -12,38 +12,26 @@ import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import { bidamountValidator } from '../helpers/bidamountValidator';
 import { bidandWalletValidator } from '../helpers/bidandWalletValidator';
-import { SegmentedControlIOSComponent } from 'react-native';
+import { Appbar } from 'react-native-paper';
+import Header_New from '../components/Header_New';
 
 
 
 
-export default  function NewTrips(navigation){
-   
+
+export default  function NewTrips({navigation,route}){
   
-  // let TripsJson =  navigation.route.params.TripsJson;
-
-  // console.log(navigation.route.params.userDetail,"TripsJsonTripsJson");
+  // console.log(route,"TripsJsonTripsJson");
   
-  const [TripsData, setTripsData] = useState({ value: navigation.route.params.TripsJson, error: '' })
+  const [TripsData, setTripsData] = useState({ value: route.params.TripsJson, error: '' })
   const [modalVisible, setModalVisible] = useState(false);
   const [bidamount,setBidAmount]=useState({value:'',error:''});
   const [bidData,setbidDAta]=useState(null);
-  const [wallet,setWallet]=useState(navigation.route.params.userDetail.userDetail[0].wallet ? navigation.route.params.userDetail.userDetail[0].wallet : 0 )
-  const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
+  
+  const [wallet,setWallet]=useState(route.params.userDetail[0].wallet ? route.params.userDetail[0].wallet : 0 )
+  const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null)
   
   
-   
-    // const dataa =async()=>{
-    //     let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
-    //     let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : []
-    //     //   console.log(data1," hello");
-    //       setTripsData({value:data1 , error:''})
-
-    //     console.log(navigation.route.params.userDetail.userDetail,"userdeatilsuserdeatils");
-        // console.log(navigation,"navigationnavigation");
-    // }
-
-    // dataa();
 
     const ApplyNewTrip = (value)=>{
         console.log(wallet);
@@ -51,11 +39,13 @@ export default  function NewTrips(navigation){
         setbidDAta(value)
     }
 
+    
+
     const [refreshing, setRefreshing] = React.useState(false);
 
     useEffect(() => {
         const backAction = () => {
-            navigation.navigation.navigate('Dashboard')
+            navigation.navigate('Dashboard')
           return true;
         };
     
@@ -147,9 +137,12 @@ const SubmitBidamount=async()=>{
     )
 
   }
-  
-  
 
+}
+
+
+const updateSwipeStatusMessage =(e)=>{
+  console.log(e);
 }
 
 const ResetModal = () =>{
@@ -226,20 +219,22 @@ const ResetModal = () =>{
 
   </Modal>
 
-<Header
-      placement="left"
-      statusBarProps={{ barStyle: 'light-content' }}
-      barStyle="light-content"
-      leftComponent={<Logo STYLE={ { width:110 , height: 100, marginBottom: 8, } } />}
-      centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
-      rightComponent={ <WhatsappandCall  navigation ={navigation.navigation}   /> }
-      containerStyle={{
-          backgroundColor: 'white',
-          justifyContent: 'space-around',
-          width:'100%',
-          height:'16%'
-        }}
-      />
+<Header_New subtitle="New Trips" navigation={navigation} />
+
+{/* <Header
+placement="left"
+statusBarProps={{ barStyle: 'light-content' }}
+barStyle="light-content"
+leftComponent={<Logo STYLE={ { width:110 , height: 100, marginBottom: 8, } } />}
+centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
+rightComponent={ <WhatsappandCall  navigation ={navigation.navigation}   /> }
+containerStyle={{
+    backgroundColor: 'white',
+    justifyContent: 'space-around',
+    width:'100%',
+    height:'16%'
+  }}
+/> */}
         
         <View style={styles.MainContainer} >
 
@@ -367,10 +362,6 @@ const ResetModal = () =>{
                   
   
                   </View>
-  
-                 
-  
-  
   
               <Button mode="contained" style={styles.button} onPress={() => ApplyNewTrip(ival)}>
               Request New Trip
@@ -553,8 +544,11 @@ const styles = StyleSheet.create({
       backgroundColor:'yellow'
   },
   TextText:{
-      fontSize:25
+      fontSize:15
 
   },
+  containerStyles:{
+    width:340
+  }
 
 })

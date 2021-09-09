@@ -22,7 +22,7 @@ import Stored from '../configuration/storageDetails';
 
 export default function ProfileSCreen({ navigation , userDetail  }) {
          
-    let userDetail_ = userDetail.userDetail[0];
+    let userDetail_ = userDetail[0];
     
     // console.log(userDetail,"21221");
     // let Profile = userDetail_.profile_dp
@@ -105,7 +105,7 @@ const onUpdatePressed =async()=>{
                 "Updated Successfully !",
                 [
                  
-                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                  { text: "OK", onPress: () => onRefresh() }
                 ]
               )
 
@@ -176,12 +176,14 @@ const onRefresh = React.useCallback(async() => {
           let result = await VendorUserLogout(formData,userDetail_.id)
           console.log(result);
           if(result==true){
-
+            console.log(" Not Removed");
             await AsyncStorage.removeItem(Stored.userDetail); 
             await AsyncStorage.removeItem(Stored.TripsJsob); 
             await AsyncStorage.removeItem(Stored.login_token);
-            userDetail.navigation.navigate('LoginScreen');
+            await AsyncStorage.removeItem(Stored.announcement);
             console.log("Removed");
+            navigation.navigate('LoginScreen');
+            
             let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
             console.log(Stored_Data,"TRUETRUETRUE");
             return true;

@@ -285,7 +285,7 @@ import Config from "./config";
 
 export async function RefreshJsons(id){
   let URL = Config.ACCESS_POINT + Config.AppLoginIgotaxy + `/${id}`;
-  // console.log(URL,"Refresh JSOn");
+    console.log(URL,"Refresh JSOn");
   let request = await fetch(URL);
   // console.log(request);
   let requestJson = await request.json();
@@ -297,6 +297,41 @@ export async function RefreshJsons(id){
   let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : []
   return data1
 
+}
+
+
+export async function BackGroundRefreshApp(id,token){
+  let URL = Config.ACCESS_POINT + Config.BackGroundRefreshApp + `/${id}/${token}`;
+    console.log(URL,"Refresh JSOn");
+  let request = await fetch(URL);
+  // console.log(request);
+  let requestJson = await request.json();
+   let data = JSON.stringify(requestJson)
+  await AsyncStorage.setItem(Stored.userDetail,data);  
+  AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
+
+  let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+  let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : []
+  return data1
+
+}
+
+
+
+export async function FetchAnnounce(){
+  let URL = Config.ACCESS_POINT + Config.FetchAnnounce;
+  // console.log(URL,"Refresh JSOn");
+  let request = await fetch(URL);
+  // console.log(request);
+  if(request.status == 200){
+    let requestJson = await request.json();
+    await AsyncStorage.setItem(Stored.announcement,JSON.stringify(requestJson));  
+    AsyncStorage.setItem("announcement",JSON.stringify(requestJson))
+    return requestJson
+  }else{
+    return false
+  }
+  
 }
 
 export async function TripsJsons(id=null){
@@ -405,7 +440,7 @@ export async function UpdateProfileSelect(formData,id){
         
           let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
           let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-          console.log(data1);
+          // console.log(data1);
           return data1
 
         }

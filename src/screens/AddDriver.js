@@ -23,10 +23,11 @@ import { nameValidator } from '../helpers/nameValidator';
 import { mobileValidator } from '../helpers/mobileValidator';
 import { emailValidator } from '../helpers/emailValidator';
 import { driving_license_numberValidator } from '../helpers/driving_license_numberValidator';
+import Header_New from '../components/Header_New';
 
 
 
-export default  function AddDriver(navigation){
+export default  function AddDriver({navigation,route}){
 
       const [state, setState] = React.useState({ open: false });
 
@@ -34,9 +35,9 @@ export default  function AddDriver(navigation){
 
       const { open } = state;
 
-    const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null);
+    const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null);
     // const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
-    const [vendorDrivers,setvendorDrivers]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorDrivers))
+    const [vendorDrivers,setvendorDrivers]=useState(JSON.parse(route.params.userDetail[0].vendorDrivers))
     const [name, setName] = useState({ value: '', error: '' })
     const [mobile, setmobile] = useState({ value: '', error: '' })
     const [email, setEmail] = useState({ value:'', error: '' });
@@ -65,7 +66,7 @@ export default  function AddDriver(navigation){
     // console.log(vendorDrivers,"AddDreiver");
  useEffect(() => {
     const backAction = () => {
-        navigation.navigation.navigate('Dashboard')
+        navigation.navigate('Dashboard')
       return true;
     };
 
@@ -551,7 +552,7 @@ return(
 
     </Modal>
 
-    <Header
+    {/* <Header
     placement="left"
     statusBarProps={{ barStyle: 'light-content' }}
     barStyle="light-content"
@@ -564,7 +565,9 @@ return(
     width:'100%',
     height:'15%'
     }}
-    />
+    /> */}
+
+<Header_New subtitle="Drivers" navigation={navigation} />
     
 <View style={styles.MainContainer}>
 

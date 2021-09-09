@@ -7,10 +7,10 @@ import { RefreshJsons } from '../configuration/functional';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 
 
-export default function AccountandWallet({ navigation , userDetail  }){
+export default function AccountandWallet({ navigation,userDetail }){
 
-    let userDetail_ = userDetail.userDetail[0];
-    console.log(userDetail);
+    let userDetail_ = userDetail[0];
+    // GetTabPage('Account')
     let widthArr =  [80, 80, 80,100, 200]
     let THead = ['Head', 'Head2', 'Head3', 'Head4', 'Head5']
     const [wallet, setWallet] = useState(userDetail_.wallet);
@@ -20,7 +20,7 @@ export default function AccountandWallet({ navigation , userDetail  }){
     const [tableData,settableData]=useState( JSON.parse(userDetail_.wallethistory))
 
   
-console.log(tableData);
+// console.log(tableData);
     
     const wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));

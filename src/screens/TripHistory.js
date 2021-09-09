@@ -8,20 +8,22 @@ import WhatsappandCall from '../components/WhatsappandCall';
 import { RefreshJsons , StartandEndTrip } from '../configuration/functional';
 import Button from '../components/Button';
 
+import Header_New from '../components/Header_New';
 
-export default  function TripHistory(navigation){
+export default  function TripHistory({navigation,route}){
 
-    const [activeTrips,SetActiveTrips]=useState(navigation.route.params.userDetail.userDetail[0] ? JSON.parse(navigation.route.params.userDetail.userDetail[0].TripHistory) : null )
+    const [activeTrips,SetActiveTrips]=useState(route.params.userDetail[0] ? JSON.parse(route.params.userDetail[0].TripHistory) : null )
 
-    const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
+    const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null)
     
     console.log(activeTrips,"activeTrips")
 
     const [refreshing, setRefreshing] = React.useState(false);
 
+    
     useEffect(() => {
         const backAction = () => {
-            navigation.navigation.navigate('Dashboard')
+            navigation.navigate('Dashboard')
           return true;
         };
     
@@ -83,20 +85,22 @@ export default  function TripHistory(navigation){
 
         <SafeAreaProvider style={{backgroundColor:"lightgrey"}}> 
 
-<Header
-      placement="left"
-      statusBarProps={{ barStyle: 'light-content' }}
-      barStyle="light-content"
-      leftComponent={<Logo STYLE={ { width:110 , height: 100, marginBottom: 8, } } />}
-      centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
-      rightComponent={ <WhatsappandCall  navigation ={navigation.navigation}   /> }
-      containerStyle={{
-          backgroundColor: 'white',
-          justifyContent: 'space-around',
-          width:'100%',
-          height:'16%'
-        }}
-      />
+{/* <Header
+placement="left"
+statusBarProps={{ barStyle: 'light-content' }}
+barStyle="light-content"
+leftComponent={<Logo STYLE={ { width:110 , height: 100, marginBottom: 8, } } />}
+centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
+rightComponent={ <WhatsappandCall  navigation ={navigation.navigation}   /> }
+containerStyle={{
+backgroundColor: 'white',
+justifyContent: 'space-around',
+width:'100%',
+height:'16%'
+}}
+/> */}
+
+<Header_New subtitle="Trips History" navigation={navigation} />
 
 <View style={styles.MainContainer} >
 

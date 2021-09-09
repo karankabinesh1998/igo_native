@@ -9,22 +9,25 @@ import { RefreshJsons , AddBidTrips , ConfirmActiveTrip } from '../configuration
 import Button from '../components/Button';
 import { CancelTrip } from '../configuration/functional';
 import SpinnerButton from 'react-native-spinner-button';
+import Header_New from '../components/Header_New';
 
 
 
 
 
-export default  function MyBiddings(navigation){
+export default  function MyBiddings({navigation,route}){
 
-    let [BidData,setBidData]=useState(navigation.route.params.userDetail.userDetail[0].BiddingTrip ? JSON.parse( navigation.route.params.userDetail.userDetail[0].BiddingTrip ) : null);
-    const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
+    let [BidData,setBidData]=useState(route.params.userDetail[0].BiddingTrip ? JSON.parse(route.params.userDetail[0].BiddingTrip ) : null);
+    const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null)
     
     
-    const [vendorDrivers,setvendorDrivers]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorDrivers))
-    const [vendorCabs,setvendorCabs]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorCabs))
+    const [vendorDrivers,setvendorDrivers]=useState(JSON.parse(route.params.userDetail[0].vendorDrivers))
+    const [vendorCabs,setvendorCabs]=useState(JSON.parse(route.params.userDetail[0].vendorCabs))
 
     const [selectedDriver, setselectedDriver] = useState(null);
     const [selectedCab,setselectedCab]=useState(null)
+
+    
 
 
 const Submit =async(e,i)=>{
@@ -169,7 +172,7 @@ const GetDataDriver=(a,b)=>{
 
     useEffect(() => {
         const backAction = () => {
-            navigation.navigation.navigate('Dashboard')
+            navigation.navigate('Dashboard')
           return true;
         };
     
@@ -201,7 +204,7 @@ const GetDataDriver=(a,b)=>{
     return(
         <SafeAreaProvider style={{backgroundColor:"lightgrey"}}> 
 
-<Header
+{/* <Header
       placement="left"
       statusBarProps={{ barStyle: 'light-content' }}
       barStyle="light-content"
@@ -214,7 +217,10 @@ const GetDataDriver=(a,b)=>{
           width:'100%',
           height:'16%'
         }}
-      />
+      /> */}
+
+<Header_New subtitle="My Biddings" navigation={navigation} />
+
 
 <View style={styles.MainContainer} >
 
@@ -426,7 +432,7 @@ const styles = StyleSheet.create({
         backgroundColor:'yellow'
     },
     TextText:{
-        fontSize:25
+        fontSize:15
 
     },
     buttonStyle:{

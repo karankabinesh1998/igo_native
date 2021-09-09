@@ -14,21 +14,38 @@ import PushNotification from "react-native-push-notification";
 import AsyncStorage from "@react-native-community/async-storage";
 import Stored from '../configuration/storageDetails';
 import { RefreshJsons , TripsJsons } from '../configuration/functional';
+import Slider_Carousal from '../components/Slider_Carousal';
 
 
 
 
 
-export default  function HomePage({ userDetail,navigation ,TripsJson, HomePage1 = true}) {
+export default  function HomePage({ userDetail=[],announcement=[],navigation ,TripsJson=[]}) {
     // let Hompage1 = true;
-  // console.log(userDetail.userDetail[0],"14th homepage");
+  // console.log(userDetail,"14th homepage");
   // await AsyncStorage.getItem(Stored.userDetail)
-  const [username,SetUsername]=useState(userDetail.userDetail.length > 0 ? userDetail.userDetail[0].username : "vendor" )
-  let wallet = userDetail.userDetail.length ? userDetail.userDetail[0].wallet : null ;
-    // console.log(username);
-  
+  const [viewCarousl,SetCarsoual]=useState(false)
+  const [cardView1,SetcardView1View ]=useState(announcement)
+  const [username,SetUsername]=useState(userDetail.length > 0 ? userDetail[0].username : "vendor" );
  
 
+
+ 
+  
+  // console.log(cardView1,"card");
+  
+ 
+  useEffect(() => {
+      
+      SetcardView1View(announcement.length==0 ? [] : JSON.parse(announcement));
+
+      if(announcement.length != 0){
+        console.log("effecr");
+        SetCarsoual(true)
+      }
+     
+     
+  },[announcement]);
 
 
 // Must be outside of any component LifeCycle (such as `componentDidMount`).
@@ -40,16 +57,17 @@ PushNotification.configure({
 // (required) Called when a remote is received or opened, or local notification is opened
   onNotification:async function (notification) {
 
-    let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
-    let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+   
 
     let UserJson = await RefreshJsons(data[0].id);
 
     let Tjson = await TripsJsons(data[0].id);
 
     
+    let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+    let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
 
-    await AsyncStorage.getItem(Stored.TripsJsob);
+    // await AsyncStorage.getItem(Stored.TripsJsob);
     let Stored_Data1 = await AsyncStorage.getItem(Stored.TripsJsob);
     let data2 = Stored_Data1 !== null ? JSON.parse(Stored_Data1) : [];
 
@@ -139,6 +157,8 @@ showsVerticalScrollIndicator={true}
 
 >
 
+<Slider_Carousal  Data={cardView1} viewCarousl={viewCarousl}/> 
+
 <View style={styles.MiniCardView}>
 
 
@@ -150,7 +170,7 @@ cornerRadius={5}
 style={styles.miniCard}>
 
 {/* <Image source={require('../assets/newtrip.jpg')} style={{width:'100%',flex: 1,}} />  */}
-<TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson ,userDetail : userDetail })} style={styles.iconstyle}>
+<TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson ,userDetail : userDetail , navigation : navigation })} style={styles.iconstyle}>
 <AntDesign name="dashboard" style={{marginTop:9 }} color={'#ce3232'} size={100}  />
 
 <Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>New Trips</Text>

@@ -1,4 +1,4 @@
-import { View , Text, ScrollView , Picker,ActivityIndicator, RefreshControl,BackHandler, StyleSheet} from 'react-native';
+import { View , Text, ScrollView , Picker,ActivityIndicator,Alert, RefreshControl,BackHandler, StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
@@ -7,22 +7,25 @@ import Header1 from '../components/Header';
 import Logo from '../components/Logo';
 import WhatsappandCall from '../components/WhatsappandCall';
 import { RefreshJsons , StartandEndTrip } from '../configuration/functional';
-import Button from '../components/Button';
+import Button from '../components/Button';  
 import MultiSelectExample from '../components/MultiSelect';
+import Header_New from '../components/Header_New';
+
+import SelectMultiple from 'react-native-select-multiple'
 
 
-export default  function MyLocations(navigation){
+export default  function MyLocations({navigation,route}){
 
-    // console.log(navigation.route.params.userDetail.userDetail[0].state); 
+    console.log(route.params.userDetail[0].state,"Mylocation"); 
 
-    const [state,Setstate]=useState(navigation.route.params.userDetail.userDetail[0] ? JSON.parse(navigation.route.params.userDetail.userDetail[0].state) : null )
-    const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
+    const [state,Setstate]=useState(route.params.userDetail[0] ? JSON.parse(route.params.userDetail[0].state) : null )
+    const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null)
     const [refreshing, setRefreshing] = React.useState(false);
-    const [selectedItems,SetselectedItems]=useState(navigation.route.params.userDetail.userDetail[0] ? JSON.parse(navigation.route.params.userDetail.userDetail[0].travel_location) : [] )
+    const [selectedItems,SetselectedItems]=useState(route.params.userDetail[0] ? JSON.parse(route.params.userDetail[0].travel_location) : [] )
 
     useEffect(() => {
         const backAction = () => {
-            navigation.navigation.navigate('Dashboard')
+            navigation.navigate('Dashboard')
           return true;
         };
     
@@ -55,14 +58,25 @@ export default  function MyLocations(navigation){
       }, []);
 
       const HandleSelect = async(a)=>{
-          console.log(a);
+          // console.log(a);
+          Setstate(JSON.parse(a[0].state))
+          Alert.alert(
+            "Location Updated!",
+            "Location Updated Successfully",
+            [
+             
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ]
+          )
       }
 
 
     return(
         <SafeAreaProvider style={{backgroundColor:"lightgrey"}}> 
 
-        <Header
+<Header_New subtitle="My Location" navigation={navigation} />
+
+        {/* <Header
               placement="left"
               statusBarProps={{ barStyle: 'light-content' }}
               barStyle="light-content"
@@ -75,9 +89,13 @@ export default  function MyLocations(navigation){
                   width:'100%',
                   height:'16%'
                 }}
-              />
+              /> */}
 
 <View style={styles.MainContainer} >
+
+
+{/* <Header style={styles.heading}>Your Profile</Header> */}
+
 
 <ScrollView
 // stickyHeaderIndices={[1]}
@@ -88,8 +106,7 @@ refreshing={refreshing}
 onRefresh={onRefresh}
 />
 }
->
-{/* <Header style={styles.heading}>Your Profile</Header> */}
+> 
 
 <CardView
 cardElevation={5}
@@ -97,11 +114,15 @@ cardMaxElevation={5}
 cornerRadius={5}
 style={styles.cardViewStyle}>
 
+
+
 <Header1 style={styles.heading}>Preferred Location </Header1>
 
 
 
 <MultiSelectExample state={state} id={id} HandleSelect={HandleSelect} selectedItems={selectedItems}/>
+
+
 
 </CardView>
 
@@ -134,7 +155,7 @@ const styles = StyleSheet.create({
        cardViewStyle:{
  
         width: '96%', 
-        height: 600,
+        height: 800,
         flexDirection: "column",
         marginTop:9,
         // marginLeft: 9,

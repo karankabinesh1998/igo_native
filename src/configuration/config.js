@@ -27,7 +27,9 @@ module.exports = {
   VendorUserLogout:'/admin/VendorUserLogout',
   CancelTrip:'/admin/CancelTrip',
   DeleteDriver:'/admin/DeleteDriver',
-  EditCabdata:'/admin/EditCabdata'
+  EditCabdata:'/admin/EditCabdata',
+  FetchAnnounce:'admin/FetchAnnounce',
+  BackGroundRefreshApp:'/admin/BackGroundRefreshApp'
 };
 
 

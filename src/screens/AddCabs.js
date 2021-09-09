@@ -18,18 +18,19 @@ import DocumentDriverPicker from '../components/DocumentDriverPicker';
 // import AccordionTab from '../components/AccordionTab';
 import { FAB, Portal, Provider } from 'react-native-paper';
 import SpinnerButton from 'react-native-spinner-button';
+import Header_New from '../components/Header_New';
 
 
-export default  function AddCabs(navigation){
+export default  function AddCabs({navigation,route}){
 
-    const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null);
+    const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null);
     // const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
     const [state, setState] = React.useState({ open: false });
 
       const onStateChange = ({ open }) => setState({ open });
 
       const { open } = state;
-    const [vendorCabs,setvendorCabs]=useState(JSON.parse(navigation.route.params.userDetail.userDetail[0].vendorCabs))
+    const [vendorCabs,setvendorCabs]=useState(JSON.parse(route.params.userDetail[0].vendorCabs))
     const [modalVisible, setModalVisible] = useState(false);
     const [cab_name, setcab_name] = useState({ value: '', error: '' })
     const [cab_type, setcab_type] = useState({ value: '', error: '' })
@@ -59,7 +60,7 @@ export default  function AddCabs(navigation){
 
  useEffect(() => {
     const backAction = () => {
-        navigation.navigation.navigate('Dashboard')
+        navigation.navigate('Dashboard')
       return true;
     };
 
@@ -492,7 +493,7 @@ return(
 </View>
 
 <View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Upload Cab Side View : </Text>    
+<Text style={{fontSize:16}}>Upload Police Verify Certificate : </Text>    
 </View>  
 
 <View style={styles.FileUploadView}>
@@ -532,7 +533,10 @@ return(
     </View>
 
   </Modal>
-    <Header
+
+  <Header_New subtitle="Cabs" navigation={navigation} />
+
+    {/* <Header
           placement="left"
           statusBarProps={{ barStyle: 'light-content' }}
           barStyle="light-content"
@@ -545,7 +549,7 @@ return(
               width:'100%',
               height:'15%'
             }}
-          />
+          /> */}
     
 <View style={styles.MainContainer} >
 

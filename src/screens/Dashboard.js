@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component , useState , useEffect  } from 'react'
 import  AccountandWallet from '../screens/AccountandWallet';
 import HomePage from '../screens/HomePage';
 import ProfileSCreen from '../screens/ProfileScreen'; 
@@ -10,56 +10,52 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Header } from 'react-native-elements';
 import Logo from '../components/Logo';
-import WhatsappandCall from '../components/WhatsappandCall';
 import AsyncStorage from "@react-native-community/async-storage";
 import Stored from '../configuration/storageDetails';
 import  Config from '../configuration/config';
-import { TripsJsons , RefreshJsons } from '../configuration/functional';
+import { TripsJsons , RefreshJsons, BackGroundRefreshApp } from '../configuration/functional';
 import BackgroundTimer from 'react-native-background-timer';
 import NetInfo from "@react-native-community/netinfo";
-import { Platform , Alert } from "react-native";
-import { Appbar } from 'react-native-paper';
-// const intervalId = BackgroundTimer.setInterval(() => {
-//   // this will be executed every 200 ms
-//   // even when app is the background
-//   console.log('tic 1');
-// }, 200);
+import { Alert } from "react-native";
+import Header_New from '../components/Header_New';
+import Slider_Carousal from '../components/Slider_Carousal';
+// import RNEventSource from 'react-native-event-source';
+import EventSource from "react-native-sse";
 
 const Tab = createBottomTabNavigator();
 
- function MyTabs(userDetail,navigation) {
-  // console.log(userDetail.TripsJson,23);
+
+ function MyTabs({userDetail,navigation,TripsJson,announcement=[]}) {
+
+  // console.log(announcement,"27");
+
+  const [ listening, setListening ] = useState(false);
+  const [ facts, setFacts ] = useState([]);
+
+  
+ 
+
   return (
     <Tab.Navigator
-      initialRouteName="Feed"
+      initialRouteName="Home"
       tabBarOptions={{
         activeTintColor: '#e91e63',
       }}
     >
       <Tab.Screen
         name="Home"
-        children={()=><HomePage userDetail={userDetail} navigation={userDetail.navigation} TripsJson={userDetail.TripsJson}/>}
+        children={()=><HomePage userDetail={userDetail} announcement={announcement} navigation={navigation} TripsJson={TripsJson} />}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color , size }) => (
             <MaterialCommunityIcons name="home" color={'#ce3232'} size={size} />
           ),
-        }}
+         }}
       />
-      {/* <Tab.Screen
-        name="NewTrips"
-        children={()=><NewTrips userDetail={userDetail} navigation={userDetail.navigation} />}
-        options={{
-          tabBarLabel: 'NewTrips',
-          tabBarIcon: ({ color , size }) => (
-            <MaterialCommunityIcons name="home" color={'#ce3232'} size={size} />
-          ),
-        }}
-      /> */}
+      
       <Tab.Screen
         name="Account"
-        children={()=><AccountandWallet  userDetail={userDetail} navigation={userDetail.navigation}/>}
-
+        children={()=><AccountandWallet  userDetail={userDetail} navigation={navigation}/>}
         options={{
           tabBarLabel: 'Account',
           tabBarIcon: ({ color, size }) => (
@@ -71,7 +67,7 @@ const Tab = createBottomTabNavigator();
       <Tab.Screen
         name="Profile"
         // component={ProfileSCreen}
-        children={()=><ProfileSCreen userDetail={userDetail}/>}
+        children={()=><ProfileSCreen userDetail={userDetail} navigation={navigation}/>}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (
@@ -92,7 +88,9 @@ export default class Dashboard extends Component {
         NewTrips1:true,
         connection_Status:"",
         TripsJson:[],
-        ID:null
+        ID:null,
+        PageName:"Dashboard",
+        announcement:[]
       }
     }
 
@@ -100,9 +98,13 @@ export default class Dashboard extends Component {
       // this will be executed every 200 ms
       // even when app is the background
       // let result = await RefreshJsons()
-      this.handleConnectivityChange()
-      this.Runbackground()
+     await this.handleConnectivityChange();
+     
+      if(this.state.ID){
+      await this.Runbackground()
       console.log('tic 1');
+      }
+      
     }, 10000);
   }
 
@@ -111,24 +113,26 @@ export default class Dashboard extends Component {
 Runbackground = async()=>{
    console.log(this.state.ID,"this.state.userdetails");
   let LoginToken = await AsyncStorage.getItem(Stored.login_token);
-  // console.log(LoginToken);
-  if(this.state.userDetail.length && LoginToken != null ){
+      console.log(LoginToken);
+    if(this.state.userDetail.length && this.state.ID != null && LoginToken != null ){
+
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
     let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-
+    // console.log(data[0],"annnn");
     if(data.length){
 
-    let result = await RefreshJsons(5); 
+    let result = await BackGroundRefreshApp(data[0].id,LoginToken); 
 
     if(result.length){
+       
      this.setState({
-        userDetail : result
+        userDetail : result,
+        announcement: result[0].announcement
       })
     }
 
-    let Trip = await TripsJsons(5)
-    console.log(Trip,"TRIp");
-    if(Trip.length){
+    let Trip = await TripsJsons(data[0].id);
+        if(Trip.length){
         this.setState({
           TripsJson:Trip
         })
@@ -142,28 +146,31 @@ Runbackground = async()=>{
 
     let LoginToken = await AsyncStorage.getItem(Stored.login_token);
     
-    console.log(LoginToken,"LoginToken");
+    // console.log(LoginToken,"LoginToken");
     
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
     let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
     // console.log(data[0].id,"Dashboard page 80");
+
+    // let Stored_Data2 = await AsyncStorage.getItem(Stored.announcement);
+    // let data_Announcement = Stored_Data2 !== null ? JSON.parse(Stored_Data) : [];
+
+    // console.log(data[0].announcement,"data_Announcement");
+
+    
    
     if(data.length > 0){
       this.setState({
         userDetail : data,
-        ID:data[0].id
+        ID:data[0].id,
+        announcement: data[0].announcement
       })
     }
 
     if(data.length > 0 && LoginToken != null ){
 
       let Trip = await TripsJsons(data[0].id)
-        console.log(Trip)
-      
-
-
-   
-    
+        // console.log(Trip)
 
     await AsyncStorage.getItem(Stored.TripsJsob);
     let Stored_Data1 = await AsyncStorage.getItem(Stored.TripsJsob);
@@ -172,15 +179,13 @@ Runbackground = async()=>{
      if(data.length){
       this.setState({
         userDetail : data,
-        TripsJson : data2
+        TripsJson : data2,
+        announcement:data[0].announcement
       })
     }
-  
-
-    
-    // console.log(this.state.userDetail[0],"92")
-    let URL = Config.ACCESS_POINT + Config.AppLoginIgotaxy + `/${this.state.userDetail[0].id}`;
-      console.log(URL);
+  // console.log(this.state.userDetail[0],"92")
+    let URL = Config.ACCESS_POINT + Config.AppLoginIgotaxy + `/${data[0].id}`;
+      // console.log(URL);
           fetch(URL, {
             method: "GET",
           
@@ -195,14 +200,9 @@ Runbackground = async()=>{
                 await AsyncStorage.setItem(Stored.userDetail,data);  
                AsyncStorage.setItem("Userdetail",JSON.stringify(responseJson))
 
-               let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
-               let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : []
-           
-               
-              
-               if(data.length){
+                if(data.length){
                  this.setState({
-                   userDetail : data1
+                   userDetail : responseJson
                  })
                }
               }
@@ -210,25 +210,14 @@ Runbackground = async()=>{
             }
             )
 
-          }else{
-            // this.setState({
-            //   userDetail:[],
-            //   TripsJsons:[]
-            // })
           }
 
   }
 
-  renderComponent3=async()=>{
-    // console.log("hello world");
-  }
-
-
-
   handleConnectivityChange = () => {
     NetInfo.addEventListener(state => {
-      console.log("Connection type", state.type);
-      console.log("Is connected?", state.isConnected);
+      // console.log("Connection type", state.type);
+      // console.log("Is connected?", state.isConnected);
 
        if (state.isConnected) {
        
@@ -245,35 +234,34 @@ Runbackground = async()=>{
     })
   };
 
+
   render(){
     // console.log(this.props.navigation,132);
     return (
       <SafeAreaProvider >
        
+      <Header_New subtitle={"Dashboard"} showback={false} />
 
-      <Header
+
+      {/* <Header
       placement="left"
       statusBarProps={{ barStyle: 'light-content' }}
       barStyle="light-content"
-      leftComponent={<Logo STYLE={ { width:110 , height: 100, marginBottom: 8, } } />}
+      leftComponent={{ text: 'Igotaxy', style: { color: '#ce3232',fontSize:25,fontWeight:"bold" } }}
       centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
-      rightComponent={ <WhatsappandCall  navigation ={this.props.navigation}   /> }
+      // rightComponent={ <WhatsappandCall  navigation ={this.props.navigation}   /> }
       containerStyle={{
           backgroundColor: 'white',
           justifyContent: 'space-around',
           width:'100%',
-          height:'16%'
+          height:'12%'
         }}
-      />
-      
-  {/* <Appbar.Header style={{backgroundColor:"red"}}>
+      />*/}
 
-    <Appbar.Content  title="Igotaxy" />
 
-</Appbar.Header> */}
 
-      <NavigationContainer independent={true}>
-         <MyTabs userDetail={this.state.userDetail} navigation ={this.props.navigation} TripsJson={this.state.TripsJson} />
+       <NavigationContainer independent={true}>
+         <MyTabs userDetail={this.state.userDetail} announcement={this.state.announcement} navigation ={this.props.navigation} TripsJson={this.state.TripsJson}/>
       </NavigationContainer>
       </SafeAreaProvider>
     )

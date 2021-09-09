@@ -49,7 +49,7 @@ import Config from './src/configuration/config';
 import { Platform , Alert } from "react-native";
 
 import NetInfo from "@react-native-community/netinfo";
-import { passwordValidator } from './src/helpers/passwordValidator';
+// import { passwordValidator } from './src/helpers/passwordValidator';
 
 
 const Stack = createStackNavigator( )
@@ -63,6 +63,7 @@ export default function App(){
 
   const [netstate,SetNetState]=useState(false)
 
+  
 
   let timer1 = setTimeout(() => setVisible(false), 2000)
 
@@ -222,6 +223,19 @@ const showNotification=(channelId,options)=>{
   });
 }
 
+
+
+
+// useEffect( () => {
+
+//   if (!listening) {
+//     console.log("listin");
+//       let url = 'http://192.168.1.105:5001/events'
+//     const es = new EventSource(url)
+
+//     setListening(true);
+//   }
+// }, [listening, facts]);
 
 
 

@@ -8,5 +8,6 @@ module.exports = {
   login_token: "login_token",
   downloaded: "downloaded",
   serviceid: "serviceid",
-  wallet:"wallet"
+  wallet:"wallet",
+  announcement:"announcement"
 };

@@ -1,39 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, View , Text } from 'react-native'
-import MultiSelect from 'react-native-multiple-select';
+import { StyleSheet, View , Text , ScrollView , Button } from 'react-native'
+// import MultiSelect from 'react-native-multiple-select';
 import { UpdateProfileSelect } from '../configuration/functional';
- 
-// const items = [{
-//     id: '92iijs7yta',
-//     name: 'Ondo'
-//   }, {
-//     id: 'a0s0a8ssbsd',
-//     name: 'Ogun'
-//   }, {
-//     id: '16hbajsabsd',
-//     name: 'Calabar'
-//   }, {
-//     id: 'nahs75a5sg',
-//     name: 'Lagos'
-//   }, {
-//     id: '667atsas',
-//     name: 'Maiduguri'
-//   }, {
-//     id: 'hsyasajs',
-//     name: 'Anambra'
-//   }, {
-//     id: 'djsjudksjd',
-//     name: 'Benue'
-//   }, {
-//     id: 'sdhyaysdj',
-//     name: 'Kaduna'
-//   }, {
-//     id: 'suudydjsjd',
-//     name: 'Abuja'
-//     }
-// ];
+import SelectMultiple from 'react-native-select-multiple'
 
-// const multiSelect = useRef(null)
+
 
 
 class MultiSelectExample extends Component {
@@ -43,7 +14,8 @@ class MultiSelectExample extends Component {
                 selectedItems : [],
                 items:[],
                 id:null,
-                arr:[]
+                arr:[],
+                selectedItems1:[]
               };
         }
  
@@ -51,41 +23,53 @@ class MultiSelectExample extends Component {
 
   async componentDidMount(){
      
-    console.log(this.props,"propsprops ");
+    // console.log(this.props.state,"propsprops ");
 
     //  if(this.props)
 
      this.setState({
       items : this.props.state,
       id : this.props.id,
-      selectedItems:this.props.selectedItems==null ? [] : this.props.selectedItems
+      selectedItems:this.props.selectedItems==null ? [] : this.props.selectedItems,
+      selectedItems1:this.props.selectedItems==null ? [] : this.props.selectedItems,
+
     })
      
-   await  this.ViewData(this.props.selectedItems)
+    await  this.ViewData(this.props.state,this.props.selectedItems)
  }
 
 
-  ViewData = async(data)=>{
+  ViewData = async(data,selectedItems)=>{
     
-    console.log(data,"6060"); 
-    let arr = []
+    let arr = [];
+    
+     let wait = await data.map((ival,i)=>{
+      selectedItems.map((jval,j)=>{
 
-    let wait = await data.map((ival,i)=>{
-       
-      arr.push(this.multiSelect ? this.multiSelect.getSelectedItemsExt([ival]) : null)
+        if(ival.value==jval){
+          arr.push(ival)
+        }
+
+      })
+     
+    
     })
 
-    console.log(arr,"array");
+    await Promise.all(wait)
+
+    // console.log(arr,"arrr");
+
     this.setState({
-        arr
+      selectedItems : arr
     })
+
     }
   
   onSelectedItemsChange = async selectedItems => {
 
     this.setState({ selectedItems })
 
-    console.log(selectedItems);
+    // console.log(selectedItems);
 
     if(selectedItems.length){
 
@@ -102,9 +86,67 @@ class MultiSelectExample extends Component {
     }
 
     };
+
+
+    submit=async()=>{
+      const formData=new FormData();
+
+          formData.append("travel_location",JSON.stringify(this.state.selectedItems1));
+          
+  
+          let result = await UpdateProfileSelect(formData,this.state.id)
+  
+          if(result){
+              this.props.HandleSelect(result)
+          }
+    }
+
+    onSelectionsChange=async(e)=>{
+      // console.log(selectedFruits);
+      
+      let d = []
+      
+     let wait =  e.map((ival,i)=>{
+
+        d.push(ival.value)
+
+      })
+
+      await Promise.all(wait)
+
+      // if(d.length){
+
+      //   const formData=new FormData();
+
+      //   formData.append("travel_location",JSON.stringify(d));
+        
+
+      //   let result = await UpdateProfileSelect(formData,this.state.id)
+
+      //   if(result){
+      //       this.props.HandleSelect(result)
+      //   }
+    // }
+      
+      this.setState({
+        selectedItems : e,
+        selectedItems1:d
+      })
+    }
+
+    renderLabel = (label, style) => {
+      return (
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {/* <Image style={{width: 42, height: 42}} source={{uri: 'https://dummyimage.com/100x100/52c25a/fff&text=S'}} /> */}
+          <View style={{marginLeft: 10}}>
+            <Text style={style}>{label}</Text>
+          </View>
+        </View>
+      )
+    }
  
   render() {
-    const { selectedItems } = this.state;
+    
  
     return (
         <View style={styles.container}>
@@ -113,7 +155,7 @@ class MultiSelectExample extends Component {
         <View style={styles.ViewStyle}>
         <Text style={styles.TextStyle}>Select Your Preferred Location</Text>
         </View>
-        <MultiSelect
+        {/* <MultiSelect
           hideTags
           items={this.state.items}
           uniqueKey="id"
@@ -137,8 +179,21 @@ class MultiSelectExample extends Component {
         />
         
         <View>
-        { this.multiSelect ? this.multiSelect.getSelectedItemsExt(selectedItems) : null}
+        { this.multiSelect ? this.multiSelect.getSelectedItemsExt(selectedItems) : null} */}
+  <ScrollView
+// stickyHeaderIndices={[1]}
+showsVerticalScrollIndicator={false}
+>
+    <SelectMultiple
+        items={this.state.items}
+        selectedItems={this.state.selectedItems}
+        onSelectionsChange={this.onSelectionsChange} 
+        renderLabel={this.renderLabel}
+        />
+<Button mode="contained" style={styles.button} onPress={this.submit} title={"Submit"} />
+   
 
+</ScrollView>
         {/* {this.state.arr.length?this.state.arr.map((ival,i)=>{
             console.log(ival);
             return(
@@ -147,7 +202,7 @@ class MultiSelectExample extends Component {
                     </View>
             )
         }):null} */}
-        </View>
+        {/* </View> */}
         
         </View>
       </View>
@@ -164,7 +219,7 @@ const styles = StyleSheet.create({
       marginTop:10
     },
     multiSelectContainer: {
-      height: 600,
+      height: 800,
       width: '90%'
     },
     ViewStyle:{
@@ -176,7 +231,14 @@ const styles = StyleSheet.create({
         fontSize:15,
         fontWeight:"bold",
         marginBottom:5
-    }
+    },
+    button:{
+
+      backgroundColor:"#ce3232",
+      width:"95%",
+      marginLeft:'2%'
+
+    }, 
   })
 
 export default MultiSelectExample;

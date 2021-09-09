@@ -10,13 +10,13 @@ import Stored from '../configuration/storageDetails';
 import { RefreshJsons } from '../configuration/functional';
 import Button from '../components/Button';
 import DocumentImagePicker from '../components/DocumentImagePicker';
+import Header_New from '../components/Header_New';
 
+export default  function DocumentUpload({navigation,route}){
 
-export default  function DocumentUpload(navigation){
+  // console.log(navigation.route.params.userDetail,"20202020")
 
-  console.log(navigation.route.params.userDetail,"20202020")
-
-    const [userDetail1, setuserDetail] = useState(navigation.route.params.userDetail.userDetail);
+    const [userDetail1, setuserDetail] = useState(route.params.userDetail);
     const [ DocumentationArray , setDocumentationArray ] = useState(JSON.parse(userDetail1[0].Documentation));
     
     const [refreshing, setRefreshing] = React.useState(false);
@@ -29,7 +29,7 @@ export default  function DocumentUpload(navigation){
     const [pancard_front, setpancard_front] = useState(DocumentationArray.length ? DocumentationArray[0].pancard_front : null);
     const [pancard_back, setpancard_back] = useState(DocumentationArray.length ? DocumentationArray[0].pancard_back : null);
 
-
+    
     // setuserDetail(userDetail1[0][0]);
 
         // console.log(DocumentationArray,"DocumentUpload");
@@ -40,7 +40,7 @@ export default  function DocumentUpload(navigation){
 
         useEffect(() => {
             const backAction = () => {
-                navigation.navigation.navigate('Dashboard')
+                navigation.navigate('Dashboard')
               return true;
             };
         
@@ -151,7 +151,9 @@ const wait = (timeout) => {
     return(
         <SafeAreaProvider style={{backgroundColor:"lightgrey"}}>
 
-        <Header
+<Header_New subtitle="Documents" navigation={navigation} />
+
+        {/* <Header
               placement="left"
               statusBarProps={{ barStyle: 'light-content' }}
               barStyle="light-content"
@@ -164,7 +166,7 @@ const wait = (timeout) => {
                   width:'100%',
                   height:'16%'
                 }}
-              />
+              /> */}
 
 <View style={styles.MainContainer} >
 
