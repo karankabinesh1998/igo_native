@@ -2,7 +2,7 @@ import React ,{Component,useCallback} from "react";
 
 import Carousel from 'react-native-snap-carousel';
 
-import { View , Text , StyleSheet  ,Linking, ActivityIndicator , TouchableOpacity} from "react-native";
+import { View , Text , StyleSheet  ,Linking,Alert, ActivityIndicator , TouchableOpacity} from "react-native";
 
 import { Image } from 'react-native-elements';
 
@@ -20,6 +20,7 @@ class Slider_Carousal extends Component {
 
     
          handlePress =async(url)=>{
+             console.log(url);
           // Checking if the link is supported for links with custom URL scheme.
           const supported = await Linking.canOpenURL(url);
       

@@ -73,6 +73,7 @@ export default  function NewTrips({navigation,route}){
         //  setmobile({ value: result[0].mobile, error: '' })
         //  setEmail({ value:  result[0].email_id, error: '' })
         //  setAddress({ value:  result[0].address, error: '' })
+        route.params.OtherPageRefersh("refresh");
          console.log( result ,"Refrehjson");
         wait(5000).then(() => setRefreshing(false));
       }, []);
@@ -102,7 +103,7 @@ const SubmitBidamount=async()=>{
   formDate.append("trip_id",bidData.id);
   formDate.append("trip_id_1",bidData.trip_id);
   formDate.append("req_amount",bidamount.value);
-  formDate.append("vendor_id",id)
+  formDate.append("vendor_id",id);
   formDate.append("pickUp_date",bidData.pickup_date)
   formDate.append("total_amount",parseInt(bidData.trip_kms)*parseInt(bidData.trip_charges))
 
@@ -132,7 +133,7 @@ const SubmitBidamount=async()=>{
       "Successfully Bidded !",
       [
        
-        { text: "OK", onPress: () => console.log("OK Pressed") }
+        { text: "OK", onPress: () => onRefresh() }
       ]
     )
 
@@ -140,10 +141,6 @@ const SubmitBidamount=async()=>{
 
 }
 
-
-const updateSwipeStatusMessage =(e)=>{
-  console.log(e);
-}
 
 const ResetModal = () =>{
    
@@ -258,7 +255,7 @@ containerStyle={{
 
 
       {TripsData.value.length > 0 ? TripsData.value.map((ival,i)=>{
-          console.log(ival.bidding_amount,"ival"); 
+          console.log(ival.drop_date,"ival"); 
           if(ival.trip_assigned_to==null){
 
             return( 
@@ -271,8 +268,8 @@ containerStyle={{
                 
       
                   <View style={styles.Heading}>
-                  <Text style={styles.paraHeading}>TRIP ID:</Text>
-                  <Text style={styles.paraData}>{ival.trip_id}</Text>
+                  <Text style={styles.paraHeadingtrip_id}>TRIP ID:</Text>
+                  <Text style={styles.paraDatatrip_id}>{ival.trip_id}</Text>
   
                   {/* <Text style={styles.paraHeading}>PICKUP FROM:</Text>
                   <Text style={styles.paraData}>{ival.pickuplocation_name}</Text>
@@ -280,33 +277,48 @@ containerStyle={{
                   <Text style={styles.paraHeading}>DROP TO:</Text>
                   <Text style={styles.paraData}>{ival.drop_location_name}</Text> */}
   
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
-              </View>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+                    </View>
   
                   <View style={styles.ViewParallel}>
   
                   <View style={styles.ParallelView}>
-                  <Text style={styles.paraHeading}>PICKUP FROM:</Text>
-                  <Text style={styles.paraData}>{ival.pickuplocation_name}</Text>
+                  {/* <Text style={styles.paraHeading}>PICK UP FROM:</Text> */}
+                  <Text style={styles.paraDatalocation}>{ival.pickuplocation_name}</Text>
                   </View>
   
                   <View style={styles.ParallelView}>
-                  <Text style={styles.paraHeading}>DROP TO:</Text>
-                  <Text style={styles.paraData}>{ival.drop_location_name}</Text>
+                  {/* <Text style={styles.paraHeading}>DROP TO:</Text> */}
+                  <Text style={styles.paraDatalocation}>{ival.drop_location_name}</Text>
                   </View>
                   </View>
   
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
               </View>
+
+                    <View style={styles.ViewParallel}>
   
+                    <View style={styles.ParallelView}> 
                   <Text style={styles.paraHeading}>PICK UP DATE:</Text>
-                  <Text style={styles.paraData}>{ival.pickup_date}</Text>
+                  <Text style={styles.paraData}>{ival.new_pickup_date}</Text>
+                  </View>
+
+                 {ival.trip_type !="One Way" ? <View style={styles.ParallelView}>
+                  <Text style={styles.paraHeading}>DROP DATE:</Text>
+                  <Text style={styles.paraData}>{ival.new_drop_date}</Text>
+                  </View>  : null } 
+                  
   
+                  </View>
+
+
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
                   </View>
+
+
   
                   <View style={styles.ViewParallel}>
   
@@ -327,25 +339,29 @@ containerStyle={{
   
                   <View style={styles.ViewParallel}>
   
-                  <View style={styles.ParallelView1}>
-  
-                  <Text style={styles.paraHeading1}>TRIP KMS:</Text>
+                  <View style={styles.ParallelView}>
+                  <Text style={styles.paraHeading}>TRIP KMS:</Text>
                   <Text style={styles.paraData}>{ival.trip_kms}</Text>
                   </View>
   
-                  <View style={styles.ParallelView1}>
+                  {/*<View style={styles.ParallelView1}>
                   <Text style={styles.paraHeading1}>TRIP CHARGE:</Text>
                   <Text style={styles.paraData}>{ival.trip_charges}</Text>
-                  </View>
+                  </View>*/}
   
-                  <View style={styles.ParallelView1}>
-                  <Text style={styles.paraHeading1}>EXTRACHARGE/KM:</Text>
+                  <View style={styles.ParallelView}>
+                  <Text style={styles.paraHeading}>EXTRA CHARGE/KM:</Text>
                   <Text style={styles.paraData}>{ival.extra_charge}</Text>
                   </View>
   
                   
                   </View>
-  
+
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+                  </View>
+                  
+
                   <View style={styles.ViewParallel}>
   
                   <View style={styles.ParallelView}>
@@ -474,12 +490,7 @@ const styles = StyleSheet.create({
   buttonClose: {
     backgroundColor: "#2196F3",
   },
-
-
-
-
-
-    MainContainer: {
+  MainContainer: {
    
       flex: 1,
       marginTop:4,
@@ -490,7 +501,7 @@ const styles = StyleSheet.create({
      cardViewStyle:{
  
         width: '96%', 
-        height: 450,
+        height: 420,
         flexDirection: "column",
         marginTop:9,
         // marginLeft: 9,
@@ -505,6 +516,12 @@ const styles = StyleSheet.create({
           padding:5
 
       },
+      paraHeadingtrip_id:{
+        fontSize:15,
+        fontWeight:'bold',
+        padding:5,
+        marginLeft:19
+      },
       paraHeading1:{
         fontSize:12,
         fontWeight:'bold',
@@ -512,14 +529,27 @@ const styles = StyleSheet.create({
       },
       paraData:{
         padding:5,
+        fontSize:15,
+        // marginLeft:8,
+        color:"#ce3232"
+       
+      },
+      paraDatalocation:{
+        padding:5,
+        fontSize:18,
+        fontWeight:"bold",
+        marginLeft:10,
+      },
+      paraDatatrip_id:{
+        padding:5,
         fontSize:12,
-        marginLeft:5
+        marginLeft:20,
       },
       ParallelView:{
         flexDirection:"column",
         flex:1,
         marginLeft:20,
-        // justifyContent:"center"
+        //justifyContent:"center"
       },
 
       ParallelView1:{

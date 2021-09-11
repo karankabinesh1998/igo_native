@@ -26,14 +26,21 @@ import Header_New from '../components/Header_New';
 const Tab = createBottomTabNavigator();
 
 
- function MyTabs({userDetail,navigation,TripsJson,announcement=[]}) {
+ function MyTabs({userDetail,navigation,TripsJson,announcement=[] , Runbackground }) {
 
   // console.log(announcement,"27");
 
   const [ listening, setListening ] = useState(false);
   const [ facts, setFacts ] = useState([]);
 
-  
+  // this.Runbackground()
+
+  const Run_onRefreh=()=>{
+
+    console.log("Runbackground");
+
+    Runbackground();
+  }
  
 
   return (
@@ -45,7 +52,7 @@ const Tab = createBottomTabNavigator();
     >
       <Tab.Screen
         name="Home"
-        children={()=><HomePage userDetail={userDetail} announcement={announcement} navigation={navigation} TripsJson={TripsJson} />}
+        children={()=><HomePage userDetail={userDetail} announcement={announcement} Run_onRefreh={Run_onRefreh} navigation={navigation} TripsJson={TripsJson} />}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color , size }) => (
@@ -56,7 +63,7 @@ const Tab = createBottomTabNavigator();
       
       <Tab.Screen
         name="Account"
-        children={()=><AccountandWallet  userDetail={userDetail} navigation={navigation}/>}
+        children={()=><AccountandWallet  userDetail={userDetail} navigation={navigation} OtherPageRefersh={Run_onRefreh}/>}
         options={{
           tabBarLabel: 'Account',
           tabBarIcon: ({ color, size }) => (
@@ -68,7 +75,7 @@ const Tab = createBottomTabNavigator();
       <Tab.Screen
         name="Profile"
         // component={ProfileSCreen}
-        children={()=><ProfileSCreen userDetail={userDetail} navigation={navigation}/>}
+        children={()=><ProfileSCreen userDetail={userDetail} navigation={navigation} OtherPageRefersh={Run_onRefreh}/>}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (
@@ -258,26 +265,8 @@ Runbackground = async()=>{
        
       <Header_New subtitle={"Dashboard"} showback={false} />
 
-
-      {/* <Header
-      placement="left"
-      statusBarProps={{ barStyle: 'light-content' }}
-      barStyle="light-content"
-      leftComponent={{ text: 'Igotaxy', style: { color: '#ce3232',fontSize:25,fontWeight:"bold" } }}
-      centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
-      // rightComponent={ <WhatsappandCall  navigation ={this.props.navigation}   /> }
-      containerStyle={{
-          backgroundColor: 'white',
-          justifyContent: 'space-around',
-          width:'100%',
-          height:'12%'
-        }}
-      />*/}
-
-
-
        <NavigationContainer independent={true}>
-         <MyTabs userDetail={this.state.userDetail} announcement={this.state.announcement} navigation ={this.props.navigation} TripsJson={this.state.TripsJson}/>
+         <MyTabs userDetail={this.state.userDetail} announcement={this.state.announcement} navigation ={this.props.navigation} Runbackground={this.Runbackground} TripsJson={this.state.TripsJson}/>
       </NavigationContainer>
       </SafeAreaProvider>
     )

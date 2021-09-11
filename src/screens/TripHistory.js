@@ -55,9 +55,11 @@ export default  function TripHistory({navigation,route}){
 
            SetActiveTrips(JSON.parse(result[0].TripHistory))
        }
-
+       route.params.OtherPageRefersh("refresh");
         wait(5000).then(() => setRefreshing(false));
       }, []);
+
+      
 
       const EndTrip = async(ival)=>{
 

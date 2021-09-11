@@ -197,7 +197,8 @@ const GetDataDriver=(a,b)=>{
        let result = await RefreshJsons(id);
         setBidData(JSON.parse(result[0].BiddingTrip))
         setselectedDriver(JSON.parse(result[0].vendorDrivers))
-        setselectedCab(JSON.parse(result[0].vendorCabs))
+        setselectedCab(JSON.parse(result[0].vendorCabs));
+        route.params.OtherPageRefersh("refresh");
         wait(5000).then(() => setRefreshing(false));
       }, []);
 
@@ -241,7 +242,7 @@ onRefresh={onRefresh}
 
 {BidData.length > 0 ? BidData.map((ival,i)=>{
 
-console.log(ival,"117");
+// console.log(ival,"117"); 
 if(ival.status=='approved'){
 return(
     <CardView
@@ -261,7 +262,7 @@ return(
         </View>
 
         <View style={styles.HeadData}>
-            <Text style={styles.TextTrip}>Trip Date : {ival.pickUp_date}</Text>
+            <Text style={styles.TextTrip}>Trip Date : {ival.new_pickup_date}</Text>
         </View>
 
         

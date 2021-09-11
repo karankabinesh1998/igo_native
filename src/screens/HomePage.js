@@ -20,7 +20,7 @@ import Slider_Carousal from '../components/Slider_Carousal';
 
 
 
-export default  function HomePage({ userDetail=[],announcement=[],navigation ,TripsJson=[]}) {
+export default  function HomePage({ userDetail=[],announcement=[],navigation ,TripsJson=[] , Run_onRefreh }) {
     // let Hompage1 = true;
   // console.log(navigation,"14th homepage");
   // await AsyncStorage.getItem(Stored.userDetail);
@@ -32,7 +32,7 @@ export default  function HomePage({ userDetail=[],announcement=[],navigation ,Tr
 
  
   
-  console.log(username,"card");
+  // console.log(username,"card");
 
   useEffect(()=>{
     SetUsername(userDetail.length > 0 ? userDetail[0].username : "vendor")
@@ -64,21 +64,21 @@ PushNotification.configure({
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
     let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
 
+    if(data.length!=0){
+
     let UserJson = await RefreshJsons(data[0].id);
 
     let Tjson = await TripsJsons(data[0].id);
 
-    
-   
-
-    // await AsyncStorage.getItem(Stored.TripsJsob);
-    // let Stored_Data1 = await AsyncStorage.getItem(Stored.TripsJsob);
-    // let data2 = Stored_Data1 !== null ? JSON.parse(Stored_Data1) : [];
+  
 
     if(UserJson.length){
       // console.log("onNotify:", UserJson , "UserJsonUserJson ");
       GotoNewTrips(notification,Tjson,UserJson)
     }
+  }else{
+    navigation.navigate('LoginScreen')
+  }
  // console.log(UserJson,"onNotifyUSER");
 
  // process the notification
@@ -104,7 +104,8 @@ PushNotification.configure({
 
   const GotoNewTrips =async(notification,Tjson,UserJson)=>{
 
-    navigation.navigate(`${notification.data.routes}`,{ TripsJson : Tjson ,userDetail : UserJson  })
+
+      navigation.navigate(`${notification.data.routes}`,{ TripsJson : Tjson ,userDetail : UserJson  })
 
   }
 
@@ -152,6 +153,12 @@ PushNotification.configure({
   };
 
 
+  const OtherPageRefersh=async(e)=>{
+    // console.log("Hello Karan",e);
+    Run_onRefreh()
+  }
+
+
     return (
         <View style={styles.container}>
 
@@ -174,7 +181,7 @@ cornerRadius={5}
 style={styles.miniCard}>
 
 {/* <Image source={require('../assets/newtrip.jpg')} style={{width:'100%',flex: 1,}} />  */}
-<TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson ,userDetail : userDetail , navigation : navigation })} style={styles.iconstyle}>
+<TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson ,userDetail : userDetail , navigation : navigation , OtherPageRefersh:OtherPageRefersh })} style={styles.iconstyle}>
 <AntDesign name="dashboard" style={{marginTop:9 }} color={'#ce3232'} size={100}  />
 
 <Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>New Trips</Text>
@@ -188,7 +195,7 @@ cornerRadius={5}
 style={styles.miniCard}>
 
 {/* <Image source={require('../assets/newtrip.jpg')} style={{width:'100%',flex: 1,}} />  */}
-<TouchableOpacity onPress={() => navigation.navigate('MyBiddings',{ TripsJson : TripsJson ,userDetail : userDetail  })} style={styles.iconstyle}>
+<TouchableOpacity onPress={() => navigation.navigate('MyBiddings',{ TripsJson : TripsJson ,userDetail : userDetail , OtherPageRefersh:OtherPageRefersh })} style={styles.iconstyle}>
 <MaterialCommunityIcons name="book-information-variant" style={{marginTop:9 }} color={'#ce3232'} size={100}  />
 
 <Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>My Biddings</Text>
@@ -205,7 +212,7 @@ cardMaxElevation={5}
 cornerRadius={5}
 style={styles.miniCard}>
 
-<TouchableOpacity onPress={() => navigation.navigate('ActiveTrips',{ TripsJson : TripsJson  , userDetail : userDetail })} style={styles.iconstyle}>
+<TouchableOpacity onPress={() => navigation.navigate('ActiveTrips',{ TripsJson : TripsJson  , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh })} style={styles.iconstyle}>
 <FontAwesome5 name="book" color={'#ce3232'} style={{marginTop:9 }}  size={100}  />
 
 <Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>Active Trips</Text>
@@ -217,7 +224,7 @@ cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={5}
 style={styles.miniCard}>
-  <TouchableOpacity onPress={() => navigation.navigate('TripHistory',{ TripsJson : TripsJson , userDetail : userDetail    })} style={styles.iconstyle}>
+  <TouchableOpacity onPress={() => navigation.navigate('TripHistory',{ TripsJson : TripsJson , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh   })} style={styles.iconstyle}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <Fontisto name="history" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
 <Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>Trip History</Text>
@@ -238,7 +245,7 @@ cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={5}
 style={styles.miniCard}>
-  <TouchableOpacity onPress={() => navigation.navigate('DocumentUpload',{ userDetail : userDetail  })} style={styles.iconstyle}>
+  <TouchableOpacity onPress={() => navigation.navigate('DocumentUpload',{ userDetail : userDetail , OtherPageRefersh:OtherPageRefersh })} style={styles.iconstyle}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <Entypo name="upload" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
 <Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>Document Upload</Text>
@@ -250,7 +257,7 @@ cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={5}
 style={styles.miniCard}>
-  <TouchableOpacity onPress={() => navigation.navigate('AddCabs',{ TripsJson : TripsJson , userDetail : userDetail })} style={styles.iconstyle}>
+  <TouchableOpacity onPress={() => navigation.navigate('AddCabs',{ TripsJson : TripsJson , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh })} style={styles.iconstyle}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <FontAwesome name="cab" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
 <Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>My Cabs</Text>
@@ -267,7 +274,7 @@ cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={5}
 style={styles.miniCard}>
-  <TouchableOpacity onPress={() => navigation.navigate('AddDriver',{ TripsJson : TripsJson , userDetail : userDetail  })} style={styles.iconstyle}>
+  <TouchableOpacity onPress={() => navigation.navigate('AddDriver',{ TripsJson : TripsJson , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh  })} style={styles.iconstyle}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <FontAwesome name="drivers-license" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
 <Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>My Drivers</Text>
@@ -279,7 +286,7 @@ cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={5}
 style={styles.miniCard}>
-  <TouchableOpacity onPress={() => navigation.navigate('MyLocations',{ TripsJson : TripsJson , userDetail : userDetail  })} style={styles.iconstyle}>
+  <TouchableOpacity onPress={() => navigation.navigate('MyLocations',{ TripsJson : TripsJson , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh })} style={styles.iconstyle}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <Entypo name="location" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
 <Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>My Locations</Text>

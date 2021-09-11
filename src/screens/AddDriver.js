@@ -1,19 +1,18 @@
-import { View , Text, ScrollView ,ActivityIndicator,
+import { View , Text, ScrollView,
    Modal ,KeyboardAvoidingView, 
    RefreshControl,BackHandler,TouchableWithoutFeedback,
-   Keyboard , Alert,
-   Image ,StyleSheet} from 'react-native';
+   Keyboard , Alert ,StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
 import { Header,Rating } from 'react-native-elements';
 import Header1 from '../components/Header';
-import Logo from '../components/Logo';
-import WhatsappandCall from '../components/WhatsappandCall';
+// import Logo from '../components/Logo';
+// import WhatsappandCall from '../components/WhatsappandCall';
 import { DeleteDriver, EditDriverdata, RefreshJsons} from '../configuration/functional';
 import TextInput from '../components/TextInput';
 import { AddDriverdata } from '../configuration/functional';
-import  Config from '../configuration/config';
+// import  Config from '../configuration/config';
 import DocumentDriverPicker from '../components/DocumentDriverPicker';
 // import AccordionTab from '../components/AccordionTab';
 import Button from '../components/Button';
@@ -24,6 +23,7 @@ import { mobileValidator } from '../helpers/mobileValidator';
 import { emailValidator } from '../helpers/emailValidator';
 import { driving_license_numberValidator } from '../helpers/driving_license_numberValidator';
 import Header_New from '../components/Header_New';
+import { TouchableOpacity , Linking } from 'react-native';
 
 
 
@@ -43,6 +43,9 @@ export default  function AddDriver({navigation,route}){
     const [email, setEmail] = useState({ value:'', error: '' });
     const [d_front, setd_front] = useState({ value:null, error: '' });
     const [d_front1, setd_front1] = useState('');
+    const [driver_image, setdriver_image] = useState({ value:null, error: '' });
+    const [driver_image1, setdriver_image1] = useState('');
+    
     const [modalVisible, setModalVisible] = useState(false);
     const [driving_license_number,Setdriving_license_number]=useState({value:'',error:''})
     const [d_back, setd_back] = useState({ value:null, error: '' });
@@ -80,22 +83,28 @@ export default  function AddDriver({navigation,route}){
 
 
   const handleChange=(e)=>{
-    console.log(e,"4747");
+    // console.log(e,"4747");
     setd_front({value:e,error:''});
     setd_front1(e.name);
   }
 
   const handleChange1=(e)=>{
-    console.log(e,"4747");
+    // console.log(e,"4747");
     setd_back({value:e,error:''});
     setd_back1(e.name);
     // setActiveindicator(false)
   }
 
   const handleChange2=(e)=>{
-    console.log(e,"4747");
+    // console.log(e,"4747");
     setpolice_verify({value:e,error:''});
     setpolice_verify1(e.name);
+  }
+
+  const handleChange3=(e)=>{
+    console.log(e,"4747");
+    setdriver_image({value:e,error:''});
+    setdriver_image1(e.name);
   }
  
 
@@ -121,7 +130,8 @@ export default  function AddDriver({navigation,route}){
     formData.append("driver_name",name.value);
     formData.append("driver_mobile",mobile.value);
     formData.append("driver_email",email.value);
-    formData.append("driving_license_number",driving_license_number.value)
+    formData.append("driving_license_number",driving_license_number.value);
+    formData.append("driver_image",driver_image1);
     formData.append("driving_license_front",d_front1);
     formData.append("driving_license_back",d_back1);
     formData.append("police_verify",police_verify1);
@@ -130,6 +140,7 @@ export default  function AddDriver({navigation,route}){
     formData.append("d_front",d_front.value)
     formData.append("d_back",d_back.value)
     formData.append("police_c",police_verify.value)
+    formData.append("driver_image1",driver_image.value)
 
     let result = await EditDriverdata(formData,driverid);
 
@@ -152,19 +163,20 @@ export default  function AddDriver({navigation,route}){
 
         setpolice_verify({ value:null, error: '' });
         setpolice_verify1('');
-
+        setdriver_image({ value:null, error: '' });
+        setdriver_image1('');
         setexp(0);
         Setdriving_license_number({ value: '', error: '' })
         setModalVisible(false)
         SetEditstate(false)
         setdriverid(null)
-        onRefresh()
+        
         Alert.alert(
           "Successfully Updated",
           "The Driver was Updated successfully!",
           [
            
-            { text: "OK", onPress: () => console.log("OK Pressed") }
+            { text: "OK", onPress: () => onRefresh() }
           ]
         )
 
@@ -175,7 +187,7 @@ export default  function AddDriver({navigation,route}){
         "The Driver was already Exists!",
         [
          
-          { text: "OK", onPress: () =>  setActiveindicator(false)}
+          { text: "OK", onPress: () =>onRefresh()}
         ]
       )
 
@@ -205,15 +217,17 @@ export default  function AddDriver({navigation,route}){
     formData.append("driver_name",name.value);
     formData.append("driver_mobile",mobile.value);
     formData.append("driver_email",email.value);
+    formData.append("driver_image",driver_image1);
     formData.append("driving_license_number",driving_license_number.value)
     formData.append("driving_license_front",d_front1);
     formData.append("driving_license_back",d_back1);
     formData.append("police_verify",police_verify1);
     formData.append("overall_exp",exp);
-    formData.append("file",JSON.stringify(["file1","file2","file3"]))
+    formData.append("file",JSON.stringify(["file1","file2","file3","file4"]))
     formData.append("file1",d_front.value)
     formData.append("file2",d_back.value)
     formData.append("file3",police_verify.value)
+    formData.append("file4",driver_image.value)
 
 
     console.log(formData);
@@ -230,6 +244,10 @@ export default  function AddDriver({navigation,route}){
         setName({ value: '', error: '' })
         setmobile({ value: '', error: '' })
         setEmail({ value:'', error: '' });
+
+        setdriver_image({ value:null, error: '' });
+        setdriver_image1('');
+
         setd_front({ value:null, error: '' });
         setd_front1('');
 
@@ -248,7 +266,7 @@ export default  function AddDriver({navigation,route}){
           "The Driver was added successfully!",
           [
            
-            { text: "OK", onPress: () => console.log("OK Pressed") }
+            { text: "OK", onPress: () => onRefresh() }
           ]
         )
 
@@ -259,7 +277,7 @@ export default  function AddDriver({navigation,route}){
         "The Driver was already Exists!",
         [
          
-          { text: "OK", onPress: () =>  setActiveindicator(false)}
+          { text: "OK", onPress: () =>onRefresh()}
         ]
       )
 
@@ -277,7 +295,7 @@ export default  function AddDriver({navigation,route}){
   
    let result = await RefreshJsons(id);
      setvendorDrivers(JSON.parse(result[0].vendorDrivers))
-    // console.log(JSON.parse(result[0].vendorDrivers),"Refrehjson");
+     route.params.OtherPageRefersh("refresh");
     wait(5000).then(() => setRefreshing(false));
   }, []);
 
@@ -290,6 +308,8 @@ export default  function AddDriver({navigation,route}){
     setd_front1('');
     setd_back({ value:null, error: '' });
     setd_back1('');
+    setdriver_image({ value:null, error: '' });
+        setdriver_image1('');
 
     setpolice_verify({ value:null, error: '' });
     setpolice_verify1('');
@@ -300,6 +320,27 @@ export default  function AddDriver({navigation,route}){
 
     SetEditstate(false)
 }
+
+
+const callNumber = (phone) => {
+  console.log('callNumber ----> ', phone);
+  let phoneNumber = phone;
+  if (Platform.OS !== 'android') {
+    phoneNumber = `telprompt:${phone}`;
+  }
+  else  {
+    phoneNumber = `tel:${phone}`;
+  }
+  Linking.canOpenURL(phoneNumber)
+  .then(supported => {
+    if (!supported) {
+      Alert.alert('Phone number is not available');
+    } else {
+      return Linking.openURL(phoneNumber);
+    }
+  })
+  .catch(err => console.log(err));
+};
 
 
 const EditDriver =(ival)=>{
@@ -504,7 +545,17 @@ return(
         />
 
 <View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Upload Driving Licence Front : </Text>    
+<Text style={{fontSize:16}}>Driver Image  : </Text>    
+</View>   
+
+<View style={styles.FileUploadView}>
+  <DocumentDriverPicker Profile={driver_image} handleChange={handleChange3}/>
+<Text style={{margin:6,fontSize:12}}>{driver_image1 ? driver_image1.substring(0,14) : null } </Text>
+</View>
+
+
+<View style={styles.FileUploadView}>
+<Text style={{fontSize:16}}>Driving Licence Front : </Text>    
 </View>   
 
     <View style={styles.FileUploadView}>
@@ -513,7 +564,7 @@ return(
     </View>
 
 <View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Upload Driving Licence Back : </Text>    
+<Text style={{fontSize:16}}>Driving Licence Back : </Text>    
 </View>    
 <View style={styles.FileUploadView}>
 <DocumentDriverPicker Profile={d_back} handleChange={handleChange1}/>
@@ -521,7 +572,7 @@ return(
 </View>
 
 <View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Upload Police Certificate : </Text>    
+<Text style={{fontSize:16}}>Police Certificate : </Text>    
 </View>    
 <View style={styles.FileUploadView}>
 <DocumentDriverPicker Profile={police_verify} handleChange={handleChange2}/>
@@ -640,26 +691,25 @@ style={styles.cardViewStyle}
       />
       
       <View style={styles.DriverHead}>
-          <Text style={styles.DriverText}>
-          Driver Name : 
-          </Text>
-          <Text style={styles.DriverText1}>
+         <Text style={styles.Driver_driver_name}>
           {ival.driver_name}
           </Text>
       </View>
       
-      <View style={styles.DriverHead}>
+      <View  >
+      <TouchableOpacity style={styles.DriverHead} onPress={()=>callNumber(ival.driver_mobile)} >
           <Text style={styles.DriverText}>
-          Driver Mobile : 
+            Mobile : 
           </Text>
           <Text style={styles.DriverText1}>
           {ival.driver_mobile} 
           </Text>
+          </TouchableOpacity>
       </View>
       
-      {/* <View style={styles.DriverHead}>
+      <View style={styles.DriverHead}>
           <Text style={styles.DriverText}>
-          Driver Email : 
+           Email : 
           </Text>
       
           <Text style={styles.DriverText1}>
@@ -670,16 +720,16 @@ style={styles.cardViewStyle}
       
       <View style={styles.DriverHead}>
           <Text style={styles.DriverText}>
-          Driving Experience : 
+          Driver Joining Date : 
           </Text>
       
           <Text style={styles.DriverText1}>
-          {ival.overall_exp} 
+          {ival.driver_created_at} 
           </Text>
          
-      </View> */}
+      </View>
       
-      <View style={styles.DriverHead}>
+      {/* <View style={styles.DriverHead}>
           <Text style={styles.DriverText}>
           Driving License Front :  
           </Text>
@@ -720,7 +770,7 @@ style={styles.cardViewStyle}
       }}
       />
         
-      </View>
+      </View> */}
 
       <View style={{flexDirection:"row"}}>
         <Button mode="contained" style={styles.buttonstyle} onPress={()=>EditDriver(ival)} >
@@ -794,7 +844,7 @@ style={styles.cardViewStyle}
            cardViewStyle:{
      
             width: '96%', 
-            height: 330,
+            height: 250,
             flexDirection: "column",
             // alignContent:"center",
             // alignItems:"center",
@@ -821,14 +871,20 @@ style={styles.cardViewStyle}
               flexDirection:"row"
           },
           DriverText:{
-              fontSize:10,
+              fontSize:15,
               fontWeight:"500"
           },
           DriverText1:{
-            fontSize:10,
+            fontSize:15,
             marginLeft:2,
+            color:"#ce3232"
             // margin:3
             // fontWeight:"500"
+          },
+          Driver_driver_name:{
+            fontSize:20,
+            fontWeight:"bold",
+            marginLeft:2,
           },
           InputText:{
             width: '95%',

@@ -20,7 +20,7 @@ import Stored from '../configuration/storageDetails';
 
  
 
-export default function ProfileSCreen({ navigation , userDetail  }) {
+export default function ProfileSCreen({ navigation , userDetail ,OtherPageRefersh }) {
          
     let userDetail_ = userDetail[0];
     
@@ -159,7 +159,8 @@ const onRefresh = React.useCallback(async() => {
    setProfile(result[0].profile_dp)
    setRating(result[0].rating)
    setActiveindicator(false)
-   console.log( result,"Refrehjson");
+   OtherPageRefersh("refresh");
+  //  console.log( result,"Refrehjson");
   wait(5000).then(() => setRefreshing(false));
 }, []);
 

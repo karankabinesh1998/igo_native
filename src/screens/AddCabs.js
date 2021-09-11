@@ -182,6 +182,7 @@ export default  function AddCabs({navigation,route}){
    let result = await RefreshJsons(id);
     setvendorCabs(JSON.parse(result[0].vendorCabs))
      console.log(JSON.parse(result[0].vendorDrivers),"Refrehjson");
+     route.params.OtherPageRefersh("refresh");
     wait(5000).then(() => setRefreshing(false));
   }, []);
 
@@ -473,7 +474,7 @@ return(
 
 
 <View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Upload Cab Front View : </Text>    
+<Text style={{fontSize:16}}>Cab Number Plate : </Text>    
 </View>    
 
 <View style={styles.FileUploadView}>
@@ -484,7 +485,7 @@ return(
 
 
 <View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Upload Cab Back View : </Text>    
+<Text style={{fontSize:16}}>Cab Image : </Text>    
 </View>  
 
 <View style={styles.FileUploadView}>
@@ -493,7 +494,7 @@ return(
 </View>
 
 <View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Upload Police Verify Certificate : </Text>    
+<Text style={{fontSize:16}}>Pollution Verify Certificate : </Text>    
 </View>  
 
 <View style={styles.FileUploadView}>
@@ -502,7 +503,7 @@ return(
 </View>
 
 <View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Upload Cab Insurance : </Text>    
+<Text style={{fontSize:16}}>Cab Insurance : </Text>    
 </View>  
 
 <View style={styles.FileUploadView}>
@@ -620,8 +621,8 @@ if(ival.hide_show == 1 ){
       />
 
 <View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Cab Name : {ival.cab_name}
+    <Text style={styles.Driver_driver_name}>
+     {ival.cab_name}
     </Text>
 </View>
 
@@ -655,7 +656,7 @@ if(ival.hide_show == 1 ){
     </Text>
    
 </View>
-
+{/* 
 <View style={styles.DriverHead}>
     <Text style={styles.DriverText}>
     Cab Image Front :  
@@ -682,7 +683,7 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_image_back}/${id}`,
 }}
 />
   
-</View>
+</View> */}
 {/* <View style={styles.DriverHead}>
     <Text style={styles.DriverText}>
     Cab Image Side :
@@ -696,7 +697,7 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_image_side}/${id}`,
 />
   
 </View> */}
-
+{/* 
 <View style={styles.DriverHead}>
     <Text style={styles.DriverText}>
     Cab Insurance :
@@ -707,9 +708,9 @@ style={styles.tinyLogo}
 source={{
 uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
 }}
-/>
+/> 
   
-</View>
+</View>*/}
 <View style={{flexDirection:"row"}}>
         <Button mode="contained" style={styles.buttonstyle} onPress={()=>EditCab(ival)} >
         Edit
@@ -772,7 +773,7 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
            cardViewStyle:{
      
             width: '96%', 
-            height: 380,
+            height: 240,
             flexDirection: "column",
             marginLeft:6,
             alignContent:"center",
@@ -801,12 +802,13 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
               flexDirection:"row"
           },
           DriverText:{
-              fontSize:10,
+              fontSize:15,
               fontWeight:"500"
           },
           DriverText1:{
-            fontSize:10,
-            margin:1
+            fontSize:15,
+            marginLeft:2,
+            color:"#ce3232"
             // fontWeight:"500"
           },
           buttonstyle:{
@@ -862,9 +864,15 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
             shadowOpacity: 0.15,
             shadowRadius: 10,
             elevation: 25
-          },buttonText:{
+          },
+          buttonText:{
             fontSize: 15,
             textAlign: 'center',
             color: 'white',
-            }
+            },
+            Driver_driver_name:{
+              fontSize:20,
+              fontWeight:"bold",
+              marginLeft:2,
+            },
     })

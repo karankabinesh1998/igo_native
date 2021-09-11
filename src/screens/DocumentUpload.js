@@ -144,6 +144,7 @@ const wait = (timeout) => {
       setShowButton(DocumentationArray.length ? true : false)
       setApproval(DocumentationArray[0].approval)
      console.log(DocumentationArray ,"Refrehjson");
+     route.params.OtherPageRefersh("refresh");
     wait(5000).then(() => setRefreshing(false));
   }, []);
 

@@ -18,7 +18,7 @@ export default  function ActiveTrips({navigation,route}){
 
     const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null)
     
-    // console.log(activeTrips,"activeTrips")
+    // console.log(,"activeTrips")
 
 
 
@@ -70,6 +70,8 @@ export default  function ActiveTrips({navigation,route}){
 
           await getbeforedateandtimeFunction(JSON.parse(result[0].ActiveTrips));
          }
+
+         route.params.OtherPageRefersh("refresh");
 
         wait(5000).then(() => setRefreshing(false));
       }, []);
@@ -196,7 +198,9 @@ export default  function ActiveTrips({navigation,route}){
 
               let CurrentDate = new Date();
 
-              ival.Will_visibleAt = `${hourago.getDate() > 9 ? hourago.getDate() : `0${hourago.getDate()}`}-${hourago.getMonth()>9 ? hourago.getMonth() : `0${hourago.getMonth()}`}-${hourago.getFullYear()} at ${hourago.getHours() >9 ? hourago.getHours() : `0${hourago.getHours()}`}:${hourago.getMinutes() > 9 ? hourago.getMinutes():`0${hourago.getMinutes()}`}`
+              let timed = formatAMPM(hourago);
+
+              ival.Will_visibleAt = `${hourago.getDate() > 9 ? hourago.getDate() : `0${hourago.getDate()}`}-${hourago.getMonth()>9 ? hourago.getMonth() : `0${hourago.getMonth()}`}-${hourago.getFullYear()} at ${timed}`
               
               if(
                 CurrentDate.getFullYear()==hourago.getFullYear() &&
@@ -324,12 +328,12 @@ onRefresh={onRefresh}
         </View>
 
         <View style={styles.HeadData}>
-            <Text style={styles.TextTrip}>Pick-up Date : {ival.pickup_date}</Text>
+            <Text style={styles.TextTrip}>Pick up Date : {ival.new_pickup_date}</Text>
         </View>
 
         { ival.trip_type == "One Way" ? null : 
          <View style={styles.HeadData}>
-            <Text style={styles.TextTrip}>Drop Date : {ival.drop_date}</Text>
+            <Text style={styles.TextTrip}>Drop Date : {ival.new_drop_date}</Text>
         </View> }
 
         <View style={styles.HeadData}>

@@ -7,7 +7,7 @@ import { RefreshJsons } from '../configuration/functional';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 
 
-export default function AccountandWallet({ navigation,userDetail }){
+export default function AccountandWallet({ navigation,userDetail,OtherPageRefersh }){
 
     let userDetail_ = userDetail[0];
     // GetTabPage('Account')
@@ -36,6 +36,7 @@ export default function AccountandWallet({ navigation,userDetail }){
         settableData(JSON.parse(result[0].wallethistory))
          
          console.log( JSON.parse(result[0].wallethistory),"Refrehjson");
+         OtherPageRefersh()
         wait(5000).then(() => setRefreshing(false));
       }, []);
 
