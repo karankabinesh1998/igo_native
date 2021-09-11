@@ -1,17 +1,17 @@
-import { View , Text, ScrollView , Picker,ActivityIndicator,Alert, RefreshControl,BackHandler, StyleSheet} from 'react-native';
+import { View , Text, ScrollView , FlatList ,Alert, RefreshControl,BackHandler, StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
-import { Header } from 'react-native-elements';
+// import { Header } from 'react-native-elements';
 import Header1 from '../components/Header';
-import Logo from '../components/Logo';
-import WhatsappandCall from '../components/WhatsappandCall';
+// import Logo from '../components/Logo';
+// import WhatsappandCall from '../components/WhatsappandCall';
 import { RefreshJsons , StartandEndTrip } from '../configuration/functional';
-import Button from '../components/Button';  
+// import Button from '../components/Button';  
 import MultiSelectExample from '../components/MultiSelect';
 import Header_New from '../components/Header_New';
-
-import SelectMultiple from 'react-native-select-multiple'
+import Button from '../components/Button';
+// import SelectMultiple from 'react-native-select-multiple'
 
 
 export default  function MyLocations({navigation,route}){
@@ -74,7 +74,7 @@ export default  function MyLocations({navigation,route}){
     return(
         <SafeAreaProvider style={{backgroundColor:"lightgrey"}}> 
 
-<Header_New subtitle="My Location" navigation={navigation} />
+        <Header_New subtitle="My Location" navigation={navigation} />
 
         {/* <Header
               placement="left"
@@ -97,16 +97,7 @@ export default  function MyLocations({navigation,route}){
 {/* <Header style={styles.heading}>Your Profile</Header> */}
 
 
-<ScrollView
-// stickyHeaderIndices={[1]}
-showsVerticalScrollIndicator={false}
-refreshControl={
-<RefreshControl
-refreshing={refreshing}
-onRefresh={onRefresh}
-/>
-}
-> 
+
 
 <CardView
 cardElevation={5}
@@ -114,7 +105,16 @@ cardMaxElevation={5}
 cornerRadius={5}
 style={styles.cardViewStyle}>
 
-
+<ScrollView
+// stickyHeaderIndices={[1]}
+showsVerticalScrollIndicator={false}
+// refreshControl={
+// <RefreshControl
+// refreshing={refreshing}
+// onRefresh={onRefresh}
+// />
+// }
+> 
 
 <Header1 style={styles.heading}>Preferred Location </Header1>
 
@@ -122,11 +122,12 @@ style={styles.cardViewStyle}>
 
 <MultiSelectExample state={state} id={id} HandleSelect={HandleSelect} selectedItems={selectedItems}/>
 
-
-
-</CardView>
+{/* <Button mode="contained" style={styles.button} >Submit</Button> */}
 
 </ScrollView>
+</CardView>
+
+
 
 </View>
 
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
        cardViewStyle:{
  
         width: '96%', 
-        height: 800,
+        height: 1300,
         flexDirection: "column",
         marginTop:9,
         // marginLeft: 9,

@@ -341,6 +341,7 @@ const styles = StyleSheet.create({
        HeadingView1:{
         marginLeft:1,
         borderWidth:1,
+        flex:1,
         // borderColor:"red", 
         alignItems:"center"
     },

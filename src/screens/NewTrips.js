@@ -34,7 +34,7 @@ export default  function NewTrips({navigation,route}){
   
 
     const ApplyNewTrip = (value)=>{
-        console.log(wallet);
+        // console.log(wallet);
         setModalVisible(!modalVisible);
         setbidDAta(value)
     }

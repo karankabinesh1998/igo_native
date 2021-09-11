@@ -158,7 +158,7 @@ const onRefresh = React.useCallback(async() => {
    setAddress({ value:  result[0].address, error: '' })
    setProfile(result[0].profile_dp)
    setRating(result[0].rating)
-   setActiveindicator(true)
+   setActiveindicator(false)
    console.log( result,"Refrehjson");
   wait(5000).then(() => setRefreshing(false));
 }, []);

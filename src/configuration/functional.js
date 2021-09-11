@@ -284,7 +284,10 @@ import Config from "./config";
 // }
 
 export async function RefreshJsons(id){
-  let URL = Config.ACCESS_POINT + Config.AppLoginIgotaxy + `/${id}`;
+
+  let LoginToken = await AsyncStorage.getItem(Stored.login_token);
+
+  let URL = Config.ACCESS_POINT + Config.BackGroundRefreshApp + `/${id}/${LoginToken}`;
     console.log(URL,"Refresh JSOn");
   let request = await fetch(URL);
   // console.log(request);

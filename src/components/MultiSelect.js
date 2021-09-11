@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, View , Text , ScrollView , Button } from 'react-native'
+import { StyleSheet, View , Text , ScrollView , Image} from 'react-native'
 // import MultiSelect from 'react-native-multiple-select';
 import { UpdateProfileSelect } from '../configuration/functional';
 import SelectMultiple from 'react-native-select-multiple'
-
+import Button from '../components/Button';
 
 
 
@@ -155,56 +155,23 @@ class MultiSelectExample extends Component {
         <View style={styles.ViewStyle}>
         <Text style={styles.TextStyle}>Select Your Preferred Location</Text>
         </View>
-        {/* <MultiSelect
-          hideTags
-          items={this.state.items}
-          uniqueKey="id"
-          ref={(component) => { this.multiSelect = component }}
-          onSelectedItemsChange={this.onSelectedItemsChange}
-          selectedItems={this.state.selectedItems}
-          selectText="Pick up Your Location"
-          searchInputPlaceholderText="Search Locations..."
-          onChangeInput={ (text)=> console.log(text)}
-          altFontFamily="ProximaNova-Light"
-          tagRemoveIconColor="#CCC"
-          tagBorderColor="#CCC"
-          tagTextColor="#CCC"
-          selectedItemTextColor="#CCC"
-          selectedItemIconColor="#CCC"
-          itemTextColor="#000"
-          displayKey="name"
-          searchInputStyle={{ color: '#CCC' }}
-          submitButtonColor="#ce3232"
-          submitButtonText="Select"
-        />
-        
-        <View>
-        { this.multiSelect ? this.multiSelect.getSelectedItemsExt(selectedItems) : null} */}
-  <ScrollView
-// stickyHeaderIndices={[1]}
-showsVerticalScrollIndicator={false}
->
+         
+ <View>
+ <ScrollView showsVerticalScrollIndicator={false} > 
+   
     <SelectMultiple
+        style={{height:480}}
         items={this.state.items}
         selectedItems={this.state.selectedItems}
         onSelectionsChange={this.onSelectionsChange} 
         renderLabel={this.renderLabel}
         />
-<Button mode="contained" style={styles.button} onPress={this.submit} title={"Submit"} />
-   
 
+<Button mode="contained" style={styles.button} onPress={this.submit}>Submit</Button>
 </ScrollView>
-        {/* {this.state.arr.length?this.state.arr.map((ival,i)=>{
-            console.log(ival);
-            return(
-                <View>
-                    {ival} 
-                    </View>
-            )
-        }):null} */}
-        {/* </View> */}
-        
-        </View>
+</View>
+
+     </View>
       </View>
     );
   }

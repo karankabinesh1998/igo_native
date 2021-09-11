@@ -16,11 +16,12 @@ import  Config from '../configuration/config';
 import { TripsJsons , RefreshJsons, BackGroundRefreshApp } from '../configuration/functional';
 import BackgroundTimer from 'react-native-background-timer';
 import NetInfo from "@react-native-community/netinfo";
-import { Alert } from "react-native";
+import { Alert , AppState } from "react-native";
 import Header_New from '../components/Header_New';
-import Slider_Carousal from '../components/Slider_Carousal';
+// import Slider_Carousal from '../components/Slider_Carousal';
 // import RNEventSource from 'react-native-event-source';
-import EventSource from "react-native-sse";
+// import EventSource from "react-native-sse";
+
 
 const Tab = createBottomTabNavigator();
 
@@ -90,30 +91,56 @@ export default class Dashboard extends Component {
         TripsJson:[],
         ID:null,
         PageName:"Dashboard",
-        announcement:[]
+        announcement:[],
+        appState: AppState.currentState
       }
     }
 
-    BackgroundTimer.setInterval(async() => {
-      // this will be executed every 200 ms
-      // even when app is the background
-      // let result = await RefreshJsons()
-     await this.handleConnectivityChange();
-     
-      if(this.state.ID){
-      await this.Runbackground()
-      console.log('tic 1');
-      }
       
-    }, 10000);
+
+    BackgroundTimer.setInterval(async() => {
+      // this will be executed every 200 ms;
+      // even when app is the background;
+      // let result = await RefreshJsons();
+
+     await this.handleConnectivityChange();
+
+       
+
+
+
+     this.appStateSubscription = AppState.addEventListener(
+      "change",
+      async(nextAppState) => {
+        if (
+          this.state.appState.match(/inactive|background/) &&
+          nextAppState === "active"
+        ) {
+
+
+          console.log("App has come to the foreground!");
+
+          if(this.state.ID){
+            await this.Runbackground();
+            console.log('tic 1');
+            }
+
+        }
+        this.setState({ appState: nextAppState });
+      }
+    );
+     
+     
+      
+    }, 20000);
   }
 
-
+   
   
 Runbackground = async()=>{
-   console.log(this.state.ID,"this.state.userdetails");
+  //  console.log(this.state.ID,"this.state.userdetails");
   let LoginToken = await AsyncStorage.getItem(Stored.login_token);
-      console.log(LoginToken);
+      // console.log(LoginToken);
     if(this.state.userDetail.length && this.state.ID != null && LoginToken != null ){
 
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
@@ -150,16 +177,7 @@ Runbackground = async()=>{
     
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
     let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-    // console.log(data[0].id,"Dashboard page 80");
-
-    // let Stored_Data2 = await AsyncStorage.getItem(Stored.announcement);
-    // let data_Announcement = Stored_Data2 !== null ? JSON.parse(Stored_Data) : [];
-
-    // console.log(data[0].announcement,"data_Announcement");
-
-    
-   
-    if(data.length > 0){
+     if(data.length > 0){
       this.setState({
         userDetail : data,
         ID:data[0].id,
@@ -193,12 +211,10 @@ Runbackground = async()=>{
             .then(response => response.json())
             .then(async responseJson => {
               if(responseJson.length){
-                let data = JSON.stringify(responseJson)
-                // this.setState({
-                //   userDetail : [{"userdetail":data}]
-                // })
+                let data = JSON.stringify(responseJson);
+
                 await AsyncStorage.setItem(Stored.userDetail,data);  
-               AsyncStorage.setItem("Userdetail",JSON.stringify(responseJson))
+                 AsyncStorage.setItem("Userdetail",JSON.stringify(responseJson))
 
                 if(data.length){
                  this.setState({
@@ -212,7 +228,7 @@ Runbackground = async()=>{
 
           }
 
-  }
+   }
 
   handleConnectivityChange = () => {
     NetInfo.addEventListener(state => {
@@ -236,7 +252,7 @@ Runbackground = async()=>{
 
 
   render(){
-    // console.log(this.props.navigation,132);
+    //console.log(this.props.navigation,132);
     return (
       <SafeAreaProvider >
        

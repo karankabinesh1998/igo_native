@@ -7,7 +7,8 @@ import { Image } from 'react-native-elements';
 
 
 const styles = StyleSheet.create({
-    tinyLogo: {
+   
+  tinyLogo: {
       width: 165,
       // marginTop:5,
       height:100,

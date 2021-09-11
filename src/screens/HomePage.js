@@ -22,8 +22,8 @@ import Slider_Carousal from '../components/Slider_Carousal';
 
 export default  function HomePage({ userDetail=[],announcement=[],navigation ,TripsJson=[]}) {
     // let Hompage1 = true;
-  // console.log(userDetail,"14th homepage");
-  // await AsyncStorage.getItem(Stored.userDetail)
+  // console.log(navigation,"14th homepage");
+  // await AsyncStorage.getItem(Stored.userDetail);
   const [viewCarousl,SetCarsoual]=useState(false)
   const [cardView1,SetcardView1View ]=useState(announcement)
   const [username,SetUsername]=useState(userDetail.length > 0 ? userDetail[0].username : "vendor" );
@@ -32,7 +32,11 @@ export default  function HomePage({ userDetail=[],announcement=[],navigation ,Tr
 
  
   
-  // console.log(cardView1,"card");
+  console.log(username,"card");
+
+  useEffect(()=>{
+    SetUsername(userDetail.length > 0 ? userDetail[0].username : "vendor")
+  },[userDetail])
   
  
   useEffect(() => {
@@ -57,19 +61,19 @@ PushNotification.configure({
 // (required) Called when a remote is received or opened, or local notification is opened
   onNotification:async function (notification) {
 
-   
+    let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+    let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
 
     let UserJson = await RefreshJsons(data[0].id);
 
     let Tjson = await TripsJsons(data[0].id);
 
     
-    let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
-    let data = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+   
 
     // await AsyncStorage.getItem(Stored.TripsJsob);
-    let Stored_Data1 = await AsyncStorage.getItem(Stored.TripsJsob);
-    let data2 = Stored_Data1 !== null ? JSON.parse(Stored_Data1) : [];
+    // let Stored_Data1 = await AsyncStorage.getItem(Stored.TripsJsob);
+    // let data2 = Stored_Data1 !== null ? JSON.parse(Stored_Data1) : [];
 
     if(UserJson.length){
       // console.log("onNotify:", UserJson , "UserJsonUserJson ");
@@ -100,7 +104,7 @@ PushNotification.configure({
 
   const GotoNewTrips =async(notification,Tjson,UserJson)=>{
 
-    navigation.navigate(`${notification.data.routes}`,{ TripsJson : Tjson ,userDetail : {userDetail:UserJson}  })
+    navigation.navigate(`${notification.data.routes}`,{ TripsJson : Tjson ,userDetail : UserJson  })
 
   }
 
