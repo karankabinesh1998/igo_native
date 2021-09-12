@@ -61,7 +61,7 @@ const Tab = createBottomTabNavigator();
          }}
       />
       
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Account"
         children={()=><AccountandWallet  userDetail={userDetail} navigation={navigation} OtherPageRefersh={Run_onRefreh}/>}
         options={{
@@ -70,11 +70,11 @@ const Tab = createBottomTabNavigator();
             <MaterialCommunityIcons name="wallet" color={'#ce3232'} size={size} />
           ),
         }}
-      />
+      /> */}
       
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Profile"
-        // component={ProfileSCreen}
+       
         children={()=><ProfileSCreen userDetail={userDetail} navigation={navigation} OtherPageRefersh={Run_onRefreh}/>}
         options={{
           tabBarLabel: 'Profile',
@@ -82,7 +82,7 @@ const Tab = createBottomTabNavigator();
             <MaterialCommunityIcons name="account" color={'#ce3232'} size={size} />
           ),
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }
@@ -263,7 +263,22 @@ Runbackground = async()=>{
     return (
       <SafeAreaProvider >
        
-      <Header_New subtitle={"Dashboard"} showback={false} />
+      <Header_New subtitle={"IGOTAXY"} showback={false} Wallet={this.state.userDetail.length>0 ? this.state.userDetail[0].wallet :0 }/>
+
+      {/* <Header 
+            placement="left"
+            statusBarProps={{ barStyle: 'light-content' }}
+            barStyle="light-content"
+            leftComponent={{ text: 'IGOTAXY', style: { color: '#ce3232',fontSize:30,fontWeight:"bold" } }}
+            // centerComponent={{ icon: 'arrow', style: { color: '#fff' } }}
+            rightComponent={{ text: `Wallet : Rs:${this.state.userDetail.length>0 ? this.state.userDetail[0].wallet :0}`, style: { color: '#ce3232',fontSize:15,fontWeight:"bold" ,margin:9} } }
+            containerStyle={{
+                backgroundColor: 'white',
+                justifyContent: 'space-around',
+                width:'100%',
+                height:'14%'
+              }}
+            /> */}
 
        <NavigationContainer independent={true}>
          <MyTabs userDetail={this.state.userDetail} announcement={this.state.announcement} navigation ={this.props.navigation} Runbackground={this.Runbackground} TripsJson={this.state.TripsJson}/>

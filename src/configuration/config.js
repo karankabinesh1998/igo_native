@@ -30,7 +30,8 @@ module.exports = {
   DeleteDriver:'/admin/DeleteDriver',
   EditCabdata:'/admin/EditCabdata',
   FetchAnnounce:'admin/FetchAnnounce',
-  BackGroundRefreshApp:'/admin/BackGroundRefreshApp'
+  BackGroundRefreshApp:'/admin/BackGroundRefreshApp',
+  DeleteCab:'/admin/DeleteCab'
 };
 
 

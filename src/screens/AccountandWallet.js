@@ -1,16 +1,18 @@
 import React , { useEffect , useState } from 'react';
-import { View , Text , StyleSheet ,RefreshControl, ScrollView } from 'react-native'
+import { View , Text , StyleSheet ,RefreshControl, ScrollView , BackHandler } from 'react-native'
 import CardView from 'react-native-cardview';
 // import AsyncStorage from "@react-native-community/async-storage";
 // import Stored from '../configuration/storageDetails';
 import { RefreshJsons } from '../configuration/functional';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import Header_New from '../components/Header_New';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+export default function AccountandWallet({ navigation,route }){
 
-export default function AccountandWallet({ navigation,userDetail,OtherPageRefersh }){
-
-    let userDetail_ = userDetail[0];
+    let userDetail_ = route.params.userDetail[0];
     // GetTabPage('Account')
+    console.log(navigation);
     let widthArr =  [80, 80, 80,100, 200]
     let THead = ['Head', 'Head2', 'Head3', 'Head4', 'Head5']
     const [wallet, setWallet] = useState(userDetail_.wallet);
@@ -26,6 +28,22 @@ export default function AccountandWallet({ navigation,userDetail,OtherPageRefers
         return new Promise(resolve => setTimeout(resolve, timeout));
       }
 
+      useEffect(() => {
+        const backAction = () => {
+            navigation.navigate('Dashboard')
+          return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+          "hardwareBackPress",
+          backAction
+        ); 
+    
+        return () => backHandler.remove();
+      }, []);
+
+
+
 
       const onRefresh = React.useCallback(async() => {
 
@@ -36,7 +54,7 @@ export default function AccountandWallet({ navigation,userDetail,OtherPageRefers
         settableData(JSON.parse(result[0].wallethistory))
          
          console.log( JSON.parse(result[0].wallethistory),"Refrehjson");
-         OtherPageRefersh()
+         route.params.OtherPageRefersh()
         wait(5000).then(() => setRefreshing(false));
       }, []);
 
@@ -51,6 +69,8 @@ export default function AccountandWallet({ navigation,userDetail,OtherPageRefers
       }
 
 return(
+<SafeAreaProvider style={{backgroundColor:"lightgrey"}}> 
+<Header_New subtitle="My Account" navigation={navigation} />
 
 <View style={styles.MainContainer} >
 
@@ -122,6 +142,9 @@ style={styles.cardViewStyle1}
 </CardView>
 
 </View>
+
+</SafeAreaProvider>
+
 
     )
 }

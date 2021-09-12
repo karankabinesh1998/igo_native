@@ -165,6 +165,8 @@ class MultiSelectExample extends Component {
         selectedItems={this.state.selectedItems}
         onSelectionsChange={this.onSelectionsChange} 
         renderLabel={this.renderLabel}
+        // selectedCheckboxStyle={{backgroundColor:"lightgreen",color:"white"}}
+        selectedRowStyle={{ backgroundColor:"lightgreen" ,color:"red" }}
         />
 
 <Button mode="contained" style={styles.button} onPress={this.submit}>Submit</Button>

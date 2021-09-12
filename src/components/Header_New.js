@@ -4,7 +4,7 @@ import { Appbar } from 'react-native-paper';
 
 import { Header } from 'react-native-elements';
 
-export default  function Header_New({navigation,subtitle = null , showback = true }){
+export default  function Header_New({navigation,subtitle = null , showback = true , Wallet=0 }){
 
 
     const _goBack=()=>{
@@ -12,31 +12,23 @@ export default  function Header_New({navigation,subtitle = null , showback = tru
         return true;
       }
 
+      
+        return(
 
-    return(
-        <Appbar.Header style={{backgroundColor:"white",height:70}}>
             
-        { showback ? <Appbar.BackAction onPress={_goBack}  color="#ce3232"/> : null }
 
-        <Appbar.Content title={subtitle}  color="#ce3232"/>
-
-        {/* <Appbar.Action icon="dots-vertical"  color="#ce3232"/> */}
-        </Appbar.Header>
-
-    //     <Header 
-    //   placement="left"
-    //   statusBarProps={{ barStyle: 'light-content' }}
-    //   barStyle="light-content"
-    //   leftComponent={{ text: 'Igotaxy', style: { color: '#ce3232',fontSize:30,fontWeight:"bold" } }}
-    //   // centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
-    //   rightComponent={{ text: subtitle, style: { color: '#ce3232',fontSize:15 ,margin:9} } }
-    //   containerStyle={{
-    //       backgroundColor: 'white',
-    //       justifyContent: 'space-around',
-    //       width:'100%',
-    //       height:'14%'
-    //     }}
-    //   />
-    )
+            <Appbar.Header style={{backgroundColor:"white",height:70}}>
+            
+            { showback ? <Appbar.BackAction onPress={_goBack}  color="#ce3232"/> : null }
+    
+            <Appbar.Content title={subtitle} titleStyle={{fontSize:25}}  color="#ce3232"/>
+    
+    
+            {subtitle=="IGOTAXY" ? <Appbar.Content title={`Wallet : Rs:${Wallet}`} titleStyle={{fontSize:15,marginLeft:10}} color="#ce3232"/> : null }
+            
+    
+            </Appbar.Header>
+        )
+      
 
 }

@@ -12,11 +12,11 @@ import Button from '../components/Button';
 import DocumentImagePicker from '../components/DocumentImagePicker';
 import Header_New from '../components/Header_New';
 
-export default  function DocumentUpload({navigation,route}){
+export default  function DocumentUpload({navigation,route,userDetail , OtherPageRefersh}){
 
-  // console.log(navigation.route.params.userDetail,"20202020")
+  // console.log(OtherPageRefersh,"20202020")
 
-    const [userDetail1, setuserDetail] = useState(route.params.userDetail);
+    const [userDetail1, setuserDetail] = useState(userDetail);
     const [ DocumentationArray , setDocumentationArray ] = useState(JSON.parse(userDetail1[0].Documentation));
     
     const [refreshing, setRefreshing] = React.useState(false);
@@ -131,6 +131,7 @@ const wait = (timeout) => {
     setRefreshing(true);
   
     let result = await RefreshJsons(userDetail1[0].id);
+    console.log(result);
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
     let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
      
@@ -144,7 +145,7 @@ const wait = (timeout) => {
       setShowButton(DocumentationArray.length ? true : false)
       setApproval(DocumentationArray[0].approval)
      console.log(DocumentationArray ,"Refrehjson");
-     route.params.OtherPageRefersh("refresh");
+     OtherPageRefersh("refresh");
     wait(5000).then(() => setRefreshing(false));
   }, []);
 
@@ -152,7 +153,7 @@ const wait = (timeout) => {
     return(
         <SafeAreaProvider style={{backgroundColor:"lightgrey"}}>
 
-<Header_New subtitle="Documents" navigation={navigation} />
+{/* <Header_New subtitle="Documents" navigation={navigation} /> */}
 
         {/* <Header
               placement="left"
@@ -269,7 +270,7 @@ style={styles.cardViewStyle}>
     <DocumentImagePicker Profile={pancard_front} docname={'pancard_front'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
 </View>
 <View style={styles.HeadingView1}>
-    <Text style={styles.TextView}>Pan Card Back </Text>
+    <Text style={styles.TextView}>Police Verify Certificate </Text>
     <DocumentImagePicker Profile={pancard_back} docname={'pancard_back'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
 </View>    
 </View>

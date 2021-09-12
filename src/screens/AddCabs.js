@@ -105,6 +105,11 @@ export default  function AddCabs({navigation,route}){
 
     // setActiveindicator(true)
 
+    if(!cab_name.value){
+      setcab_name({ ...cab_name, error: "Cab name cannot be emty" })
+      return
+    }
+
     const formData=new FormData();
     formData.append("vendor",id);
     formData.append("cab_name",cab_name.value);
@@ -181,8 +186,8 @@ export default  function AddCabs({navigation,route}){
   
    let result = await RefreshJsons(id);
     setvendorCabs(JSON.parse(result[0].vendorCabs))
-     console.log(JSON.parse(result[0].vendorDrivers),"Refrehjson");
-     route.params.OtherPageRefersh("refresh");
+     console.log(JSON.parse(result[0].vendorCabs),"Refrehjson");
+     route.params.OtherPageRefersh();
     wait(5000).then(() => setRefreshing(false));
   }, []);
 
@@ -485,7 +490,7 @@ return(
 
 
 <View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Cab Image : </Text>    
+<Text style={{fontSize:16}}>Cab Rc Book : </Text>    
 </View>  
 
 <View style={styles.FileUploadView}>

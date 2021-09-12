@@ -49,6 +49,8 @@ import Config from './src/configuration/config';
 import { Platform , Alert } from "react-native";
 
 import NetInfo from "@react-native-community/netinfo";
+import NewProfile from './src/screens/NewProfile';
+import AccountandWallet from './src/screens/AccountandWallet';
 // import { passwordValidator } from './src/helpers/passwordValidator';
 
 
@@ -269,6 +271,8 @@ const showNotification=(channelId,options)=>{
           <Stack.Screen name="MyLocations" component={MyLocations} />
           <Stack.Screen name="WhatsappandCall" component={WhatsappandCall} />
           <Stack.Screen name="TripHistory" component={TripHistory} />
+          <Stack.Screen name="NewProfile" component={NewProfile} />
+          <Stack.Screen name="AccountandWallet" component={AccountandWallet}/>
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

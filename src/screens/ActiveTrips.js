@@ -1,4 +1,4 @@
-import { View , Text, ScrollView ,Alert, RefreshControl,BackHandler, StyleSheet} from 'react-native';
+import { View , Text, ScrollView ,Alert, RefreshControl,BackHandler,Linking, StyleSheet ,TouchableOpacity } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
@@ -226,6 +226,26 @@ export default  function ActiveTrips({navigation,route}){
           }
  }
 
+ const callNumber = (phone) => {
+  console.log('callNumber ----> ', phone);
+  let phoneNumber = phone;
+  if (Platform.OS !== 'android') {
+    phoneNumber = `telprompt:${phone}`;
+  }
+  else  {
+    phoneNumber = `tel:${phone}`;
+  }
+  Linking.canOpenURL(phoneNumber)
+  .then(supported => {
+    if (!supported) {
+      Alert.alert('Phone number is not available');
+    } else {
+      return Linking.openURL(phoneNumber);
+    }
+  })
+  .catch(err => console.log(err));
+};
+
         
 
     return(
@@ -282,15 +302,20 @@ onRefresh={onRefresh}
          <>
 
           <View style={styles.HeadData}>
-            <Text style={styles.TextTrip}>Customer Name :{ival.customername}</Text>
+            <Text style={styles.TextTripT}>Customer Name :{ival.customername}</Text>
           </View>
 
-          <View style={styles.HeadData}>
-            <Text style={styles.TextTrip}>Customer Mobile : {ival.customerMobile}</Text>
-          </View>
+          {/* <View style={{flexDirection:"row"}}> 
+          <Text style={styles.paraHeadingtrip_id}>CUSTOMER NAME :</Text>
+          <Text style={styles.paraDatatrip_id}>{ival.trip_id}</Text>
+          </View> */}
+
+          <TouchableOpacity style={styles.HeadData} onPress={()=>callNumber(ival.customerMobile)}>
+            <Text style={styles.TextTripT}>Customer Mobile : {ival.customerMobile}</Text>
+          </TouchableOpacity>
 
           <View style={styles.HeadData}>
-            <Text style={styles.TextTrip}>Customer Address : {ival.address}</Text>
+            <Text style={styles.TextTripT}>Customer Address : {ival.address}</Text>
           </View>
          
          </> :
@@ -451,7 +476,7 @@ const styles = StyleSheet.create({
        cardViewStyle:{
  
         width: '96%', 
-        height: 480,
+        height: 460,
         flexDirection: "column",
         marginTop:10,
         // marginLeft: 9,
@@ -472,7 +497,7 @@ const styles = StyleSheet.create({
         // fontSize:15
       },
       ButtView:{
-          flex:1,
+          // flex:1,
           flexDirection:"row"
       },
         FileUploadView:{
@@ -500,7 +525,13 @@ const styles = StyleSheet.create({
 
       },
       TextTrip:{
-          fontSize:10
+          fontSize:12,
+          color:"black"
+      },
+      TextTripT:{
+        fontSize:14,
+        color:"skyblue",
+        fontWeight:"bold"
       },
       buttonText:{
         fontSize: 15,

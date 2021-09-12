@@ -20,7 +20,7 @@ import Stored from '../configuration/storageDetails';
 
  
 
-export default function ProfileSCreen({ navigation , userDetail ,OtherPageRefersh }) {
+export default function ProfileSCreen({ navigation ,userDetail ,OtherPageRefersh }) {
          
     let userDetail_ = userDetail[0];
     
@@ -33,7 +33,8 @@ export default function ProfileSCreen({ navigation , userDetail ,OtherPageRefers
   const [address, setAddress] = useState({ value:userDetail_.address, error: '' })
   const [profile_dp, setProfile] = useState(userDetail_.profile_dp);
   const [activeIndicator,setActiveindicator] = useState(false);
-  const [rating,setRating]=useState(userDetail_.rating)
+  const [rating,setRating]=useState(userDetail_.rating);
+  const [gpay_number,setgpay_number]=useState({ value: userDetail_.gpay_number, error: '' })
 
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -67,6 +68,7 @@ const onUpdatePressed =async()=>{
     formData.append("alternate_mobile",alternate_mobile.value)
     formData.append("email_id",email.value)
     formData.append("address",address.value)
+    formData.append("gpay_number",gpay_number.value)
 
     let arr={}
     arr.username = name.value;
@@ -99,7 +101,8 @@ const onUpdatePressed =async()=>{
               setalternate_mobile({ value:  data[0].alternate_mobile, error: '' })
               setEmail({ value:  data[0].email_id, error: '' })
               setAddress({ value:  data[0].address, error: '' })
-              setProfile(data[0].profile_dp)
+              setProfile(data[0].profile_dp);
+              setgpay_number({ value:  data[0].gpay_number, error: '' })
               Alert.alert(
                 "Profile has been Updated",
                 "Updated Successfully !",
@@ -305,6 +308,8 @@ const AlertLogout = () =>
     errorText={mobile.error}
     />
 
+
+
   <TextInput
     label="Alternative Mobile"
     keyboardType="numeric"
@@ -315,6 +320,19 @@ const AlertLogout = () =>
     onChangeText={(value) => setalternate_mobile({ value: value, error: '' })} 
     error={!!alternate_mobile.error}
     errorText={alternate_mobile.error}
+    />
+
+<TextInput
+    label="Gpay Number"
+    keyboardType="numeric"
+    // style={[styles.textInput, { width: '100%' }]}
+    maxLength={10}
+    container={styles.InputText}
+    value={gpay_number.value}
+    placeholder='Gpay number'
+    onChangeText={(value) => setgpay_number({ value: value, error: '' })} 
+    error={!!gpay_number.error}
+    errorText={gpay_number.error}
     />
 
   <TextInput

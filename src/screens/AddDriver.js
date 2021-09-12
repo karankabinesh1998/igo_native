@@ -295,7 +295,7 @@ export default  function AddDriver({navigation,route}){
   
    let result = await RefreshJsons(id);
      setvendorDrivers(JSON.parse(result[0].vendorDrivers))
-     route.params.OtherPageRefersh("refresh");
+     route.params.OtherPageRefersh();
     wait(5000).then(() => setRefreshing(false));
   }, []);
 

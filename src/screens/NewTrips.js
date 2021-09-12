@@ -1,10 +1,10 @@
-import { View , Text, ScrollView , Modal ,Pressable, RefreshControl,BackHandler,Alert, StyleSheet} from 'react-native';
+import { View , Text, ScrollView , Modal ,Image, RefreshControl,BackHandler,Alert, StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
-import { Header } from 'react-native-elements';
-import Logo from '../components/Logo';
-import WhatsappandCall from '../components/WhatsappandCall';
+// import { Header } from 'react-native-elements';
+// import Logo from '../components/Logo';
+// import WhatsappandCall from '../components/WhatsappandCall';
 import AsyncStorage from "@react-native-community/async-storage";
 import Stored from '../configuration/storageDetails';
 import { TripsJsons , AddBidTrips } from '../configuration/functional';
@@ -12,26 +12,44 @@ import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import { bidamountValidator } from '../helpers/bidamountValidator';
 import { bidandWalletValidator } from '../helpers/bidandWalletValidator';
-import { Appbar } from 'react-native-paper';
+// import { Appbar } from 'react-native-paper';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Header_New from '../components/Header_New';
+import { ApprovalValidator } from '../helpers/ApprovalValidator';
+import { CheckDriverValidator } from '../helpers/CheckDriverValidator';
+import { CheckCabValidator } from '../helpers/CheckCabValidator';
 
+ 
 
+import HomePage from './HomePage';
 
 
 
 export default  function NewTrips({navigation,route}){
   
-  // console.log(route,"TripsJsonTripsJson");
+  // console.log(route.params.OtherPageRefersh(),"TripsJsonTripsJson");
   
   const [TripsData, setTripsData] = useState({ value: route.params.TripsJson, error: '' })
   const [modalVisible, setModalVisible] = useState(false);
   const [bidamount,setBidAmount]=useState({value:'',error:''});
   const [bidData,setbidDAta]=useState(null);
   
-  const [wallet,setWallet]=useState(route.params.userDetail[0].wallet ? route.params.userDetail[0].wallet : 0 )
-  const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null)
+  const [wallet,setWallet]=useState(route.params.userDetail[0].wallet ? route.params.userDetail[0].wallet : 0 );
+  const [id,setId]=useState(route.params.userDetail.length>0 ? route.params.userDetail[0].id :null);
   
-  
+  const [UserDeatils,SetUserDeatils]=useState(route.params.userDetail.length > 0 ? JSON.parse(route.params.userDetail[0].Documentation) : []);
+
+  const [vendorDrivers,SetvendorDrivers]=useState(route.params.userDetail.length > 0 ? JSON.parse(route.params.userDetail[0].vendorDrivers) : []);
+
+  const [vendorCabs,SetvendorCabs]=useState(route.params.userDetail.length > 0 ? JSON.parse(route.params.userDetail[0].vendorCabs) : []);
+
+  // console.log(vendorCabs,"doc");
+
+
+
+
+
+
 
     const ApplyNewTrip = (value)=>{
         // console.log(wallet);
@@ -83,21 +101,42 @@ const SubmitBidamount=async()=>{
 
   const BidAmount = bidamountValidator(bidamount.value);
 
-  const Validator = bidandWalletValidator(wallet,bidamount.value)
+  const Validator = bidandWalletValidator(wallet,bidamount.value);
+
+  const Approval = ApprovalValidator(UserDeatils[0].approval);
+  
+  const CheckDriver = CheckDriverValidator(vendorDrivers.length);
+
+  const CheckCab =  CheckCabValidator(vendorCabs.length)
+
+  if(Approval){
+    setBidAmount({ ...bidamount, error: Approval })
+    return
+  }
+
+  if(CheckDriver){
+    setBidAmount({ ...bidamount, error: CheckDriver })
+    return
+  }
+
+  if(CheckCab){
+    setBidAmount({ ...bidamount, error: CheckCab })
+    return
+  }
 
   if (BidAmount) {
     setBidAmount({ ...bidamount, error: BidAmount })
     return
   }
 
-  // console.log(wallet , bidamount.value );
+
 
   if(Validator){
     setBidAmount({ ...bidamount, error: Validator })
     return
   }
 
-  // console.log(bidData);
+ 
 
   const formDate = new FormData();
   formDate.append("trip_id",bidData.id);
@@ -255,7 +294,7 @@ containerStyle={{
 
 
       {TripsData.value.length > 0 ? TripsData.value.map((ival,i)=>{
-          console.log(ival.drop_date,"ival"); 
+          // console.log(ival,"ival"); 
           if(ival.trip_assigned_to==null){
 
             return( 
@@ -268,8 +307,11 @@ containerStyle={{
                 
       
                   <View style={styles.Heading}>
+
+                   <View style={{flexDirection:"row"}}> 
                   <Text style={styles.paraHeadingtrip_id}>TRIP ID:</Text>
                   <Text style={styles.paraDatatrip_id}>{ival.trip_id}</Text>
+                  </View>
   
                   {/* <Text style={styles.paraHeading}>PICKUP FROM:</Text>
                   <Text style={styles.paraData}>{ival.pickuplocation_name}</Text>
@@ -285,13 +327,14 @@ containerStyle={{
   
                   <View style={styles.ParallelView}>
                   {/* <Text style={styles.paraHeading}>PICK UP FROM:</Text> */}
-                  <Text style={styles.paraDatalocation}>{ival.pickuplocation_name}</Text>
+                  <Text style={styles.paraDatalocation}>{ival.pickuplocation_name} - {ival.drop_location_name} </Text>
                   </View>
   
-                  <View style={styles.ParallelView}>
-                  {/* <Text style={styles.paraHeading}>DROP TO:</Text> */}
+                  {/* <View style={styles.ParallelView}>
+                  <Text style={styles.paraHeading}>DROP TO:</Text>
                   <Text style={styles.paraDatalocation}>{ival.drop_location_name}</Text>
-                  </View>
+                  </View> */}
+
                   </View>
   
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -375,9 +418,49 @@ containerStyle={{
                   <Text style={styles.paraData}>{ival.bidding_amount =='No bidding' ?  ival.bidding_amount : `Rs.${ival.bidding_amount}`}/-</Text>
                   </View>
   
+
+                  {/* <Ionicons name="person" color={'#ce3232'} style={{marginTop:9 }} size={100}  /> */}
                   
   
                   </View>
+
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+                  </View>
+
+                  <View style={styles.ViewParallelExe}> 
+
+                  <View style={{marginLeft:20 ,flexDirection:"column",alignItems:"center",marginTop:12}} >
+                  {ival.parking==0 ? <Image source={require('../assets/nopark.jpg')} style={{width:40,height:37}} />: <FontAwesome5 name="parking" color={'#ce3232'} style={{marginTop:9 }} size={30}  />}
+                  <Text style={{ fontSize:10 }}>{ival.parking==0 ? "Parking" : "Parking" }</Text>
+                  <Text style={{ fontSize:10 }}>{ival.parking==0 ? "Excluded" : "Included" }</Text>
+                  </View>
+
+                  
+                  <View style={{marginLeft:20,alignItems:"center",flexDirection:"column",marginTop:12}} >
+                  <Image source={require('../assets/moon_up.png')} style={{width:40,height:37}} />
+                  <Text style={{ fontSize:10 }}>{ival.night_pick_up==0 ? "night pickup" : "night pickup" }</Text>
+                  <Text style={{ fontSize:10 }}>{ival.night_pick_up==0 ? "Excluded" : "Included" }</Text>
+                  </View>
+
+                  <View style={{marginLeft:20,alignItems:"center",flexDirection:"column",marginTop:12}} >
+                  <Image source={require('../assets/moon_down.png')} style={{width:40,height:37}} />
+                  <Text style={{ fontSize:10 }}>{ival.night_drop_up==0 ? "Night Drop" : "Night Drop" }</Text>
+                  <Text style={{ fontSize:10 }}>{ival.night_drop_up==0 ? "Excluded" : "Included" }</Text>
+                  </View>
+
+                  <View style={{marginLeft:20,alignItems:"center",flexDirection:"column",marginTop:12}} >
+                  <Image source={require('../assets/toll_plaza.jpg')} style={{width:40,height:37}} />
+                  <Text style={{ fontSize:10 }}>{ival.toll_plaza==0 ? "Toll Charges" : "Toll Charges" }</Text>
+                  <Text style={{ fontSize:10 }}>{ival.toll_plaza==0 ? "Excluded" : "Included" }</Text>
+                  </View>
+
+                  </View>
+
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+                  </View>
+
   
               <Button mode="contained" style={styles.button} onPress={() => ApplyNewTrip(ival)}>
               Request New Trip
@@ -406,10 +489,12 @@ containerStyle={{
       </CardView>
     }
 
+
+
         </ScrollView>
         </View>
      
-
+        
       </SafeAreaProvider>
     )
 }
@@ -501,7 +586,7 @@ const styles = StyleSheet.create({
      cardViewStyle:{
  
         width: '96%', 
-        height: 420,
+        height: 430,
         flexDirection: "column",
         marginTop:9,
         // marginLeft: 9,
@@ -511,13 +596,13 @@ const styles = StyleSheet.create({
           alignItems:"flex-start"
       },
       paraHeading:{
-          fontSize:15,
+          fontSize:12,
           fontWeight:'bold',
           padding:5
 
       },
       paraHeadingtrip_id:{
-        fontSize:15,
+        fontSize:13,
         fontWeight:'bold',
         padding:5,
         marginLeft:19
@@ -529,21 +614,24 @@ const styles = StyleSheet.create({
       },
       paraData:{
         padding:5,
-        fontSize:15,
+        fontSize:12,
         // marginLeft:8,
-        color:"#ce3232"
+        color:"#ce3232",
+        fontWeight:'bold',
        
       },
       paraDatalocation:{
         padding:5,
-        fontSize:18,
+        fontSize:15,
         fontWeight:"bold",
-        marginLeft:10,
+        marginLeft:2,
+        color:"#ce3232"
       },
       paraDatatrip_id:{
         padding:5,
-        fontSize:12,
-        marginLeft:20,
+        fontSize:13,
+        color:"#ce3232",
+        fontWeight:"bold",
       },
       ParallelView:{
         flexDirection:"column",
@@ -562,6 +650,12 @@ const styles = StyleSheet.create({
       ViewParallel:{
       flexDirection:"row",
       justifyContent:"space-between"
+    },
+    ViewParallelExe:{
+      flexDirection:"row",
+      justifyContent:"space-between",
+      marginBottom:8,
+      
     },
     button:{
       backgroundColor:"#ce3232",

@@ -7,6 +7,7 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 // import Zocial from 'react-native-vector-icons/Zocial'
 // import AsyncStorage from "@react-native-community/async-storage";
 // import  NewTrips from '../screens/NewTrips';
@@ -27,7 +28,7 @@ export default  function HomePage({ userDetail=[],announcement=[],navigation ,Tr
   const [viewCarousl,SetCarsoual]=useState(false)
   const [cardView1,SetcardView1View ]=useState(announcement)
   const [username,SetUsername]=useState(userDetail.length > 0 ? userDetail[0].username : "vendor" );
- 
+  const [Wallet,SetWallet]=useState(userDetail.length > 0 ? userDetail[0].wallet : 0 );
 
 
  
@@ -35,7 +36,8 @@ export default  function HomePage({ userDetail=[],announcement=[],navigation ,Tr
   // console.log(username,"card");
 
   useEffect(()=>{
-    SetUsername(userDetail.length > 0 ? userDetail[0].username : "vendor")
+    SetUsername(userDetail.length > 0 ? userDetail[0].username : "vendor");
+    SetWallet(userDetail.length > 0 ? userDetail[0].wallet : 0)
   },[userDetail])
   
  
@@ -56,9 +58,10 @@ export default  function HomePage({ userDetail=[],announcement=[],navigation ,Tr
 PushNotification.configure({
   // (optional) Called when Token is generated (iOS and Android)
   onRegister: function (token) {
-    // console.log("USERTOKEN:", token);
+    console.log("USERTOKEN:", token);
   },
 // (required) Called when a remote is received or opened, or local notification is opened
+
   onNotification:async function (notification) {
 
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
@@ -69,23 +72,18 @@ PushNotification.configure({
     let UserJson = await RefreshJsons(data[0].id);
 
     let Tjson = await TripsJsons(data[0].id);
-
-  
-
     if(UserJson.length){
-      // console.log("onNotify:", UserJson , "UserJsonUserJson ");
+     
       GotoNewTrips(notification,Tjson,UserJson)
     }
   }else{
     navigation.navigate('LoginScreen')
   }
- // console.log(UserJson,"onNotifyUSER");
 
- // process the notification
- // (required) Called when a remote is received or opened, or local notification is opened
-    // notification.finish(PushNotificationIOS.FetchResult.NoData);
+
+ 
   },
-// (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
+//(optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
   onAction: function (notification) {
     console.log("ACTION:", notification.action);
     console.log("onActionNotify:", notification);
@@ -168,6 +166,21 @@ showsVerticalScrollIndicator={true}
 
 >
 
+{/* <CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={50}
+style={styles.miniCard_Main}>
+  
+<View style={{ flexDirection:"row" , justifyContent:"center" }}>
+
+<Text style={{textAlign:"center",fontSize:18,color:"white",fontWeight:"bold",marginBottom:8}}>Your Wallet Amount is </Text>
+<Text style={{textAlign:"center",fontSize:18,color:"white",fontWeight:"bold",marginBottom:8}}>Rs:{Wallet}</Text>
+
+</View>
+</CardView> */}
+
+
 <Slider_Carousal  Data={cardView1} viewCarousl={viewCarousl}/> 
 
 <View style={styles.MiniCardView}>
@@ -184,7 +197,7 @@ style={styles.miniCard}>
 <TouchableOpacity onPress={() => navigation.navigate('NewTrips',{ TripsJson : TripsJson ,userDetail : userDetail , navigation : navigation , OtherPageRefersh:OtherPageRefersh })} style={styles.iconstyle}>
 <AntDesign name="dashboard" style={{marginTop:9 }} color={'#ce3232'} size={100}  />
 
-<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>New Trips</Text>
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8,fontWeight:"bold"}}>New Trips</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -195,10 +208,10 @@ cornerRadius={5}
 style={styles.miniCard}>
 
 {/* <Image source={require('../assets/newtrip.jpg')} style={{width:'100%',flex: 1,}} />  */}
-<TouchableOpacity onPress={() => navigation.navigate('MyBiddings',{ TripsJson : TripsJson ,userDetail : userDetail , OtherPageRefersh:OtherPageRefersh })} style={styles.iconstyle}>
+<TouchableOpacity onPress={() => navigation.navigate('MyBiddings',{ TripsJson : TripsJson ,userDetail : userDetail , OtherPageRefersh:OtherPageRefersh , navigation : navigation })} style={styles.iconstyle}>
 <MaterialCommunityIcons name="book-information-variant" style={{marginTop:9 }} color={'#ce3232'} size={100}  />
 
-<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>My Biddings</Text>
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8,fontWeight:"bold"}}>My Biddings</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -212,10 +225,10 @@ cardMaxElevation={5}
 cornerRadius={5}
 style={styles.miniCard}>
 
-<TouchableOpacity onPress={() => navigation.navigate('ActiveTrips',{ TripsJson : TripsJson  , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh })} style={styles.iconstyle}>
+<TouchableOpacity onPress={() => navigation.navigate('ActiveTrips',{ TripsJson : TripsJson  , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh , navigation : navigation })} style={styles.iconstyle}>
 <FontAwesome5 name="book" color={'#ce3232'} style={{marginTop:9 }}  size={100}  />
 
-<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>Active Trips</Text>
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8,fontWeight:"bold"}}>Active Trips</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -224,10 +237,10 @@ cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={5}
 style={styles.miniCard}>
-  <TouchableOpacity onPress={() => navigation.navigate('TripHistory',{ TripsJson : TripsJson , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh   })} style={styles.iconstyle}>
+  <TouchableOpacity onPress={() => navigation.navigate('TripHistory',{ TripsJson : TripsJson , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh , navigation : navigation  })} style={styles.iconstyle}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <Fontisto name="history" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
-<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>Trip History</Text>
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8,fontWeight:"bold"}}>Trip History</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -240,15 +253,27 @@ style={styles.miniCard}>
 
 <View style={styles.MiniCardView}>
 
-<CardView
+{/* <CardView
 cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={5}
 style={styles.miniCard}>
   <TouchableOpacity onPress={() => navigation.navigate('DocumentUpload',{ userDetail : userDetail , OtherPageRefersh:OtherPageRefersh })} style={styles.iconstyle}>
-{/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
+
 <Entypo name="upload" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
 <Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>Document Upload</Text>
+</TouchableOpacity>
+</CardView> */}
+
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.miniCard}>
+  <TouchableOpacity onPress={() => navigation.navigate('AddDriver',{ TripsJson : TripsJson , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh , navigation : navigation })} style={styles.iconstyle}>
+{/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
+<FontAwesome name="drivers-license" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8,fontWeight:"bold"}}>My Drivers</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -257,10 +282,10 @@ cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={5}
 style={styles.miniCard}>
-  <TouchableOpacity onPress={() => navigation.navigate('AddCabs',{ TripsJson : TripsJson , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh })} style={styles.iconstyle}>
+  <TouchableOpacity onPress={() => navigation.navigate('AddCabs',{ TripsJson : TripsJson , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh , navigation : navigation })} style={styles.iconstyle}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <FontAwesome name="cab" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
-<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>My Cabs</Text>
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8,fontWeight:"bold"}}>My Cabs</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -269,15 +294,25 @@ style={styles.miniCard}>
 
 <View style={styles.MiniCardView}>
 
-<CardView
+{/* <CardView
 cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={5}
 style={styles.miniCard}>
   <TouchableOpacity onPress={() => navigation.navigate('AddDriver',{ TripsJson : TripsJson , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh  })} style={styles.iconstyle}>
-{/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <FontAwesome name="drivers-license" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
 <Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>My Drivers</Text>
+</TouchableOpacity>
+</CardView> */}
+
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.miniCard}>
+<TouchableOpacity onPress={() => navigation.navigate('NewProfile',{ TripsJson : TripsJson ,navigation:navigation, userDetail : userDetail , OtherPageRefersh:OtherPageRefersh , navigation : navigation })} style={styles.iconstyle}>
+<Ionicons name="person" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8,fontWeight:"bold"}}>Profile</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -286,10 +321,9 @@ cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={5}
 style={styles.miniCard}>
-  <TouchableOpacity onPress={() => navigation.navigate('MyLocations',{ TripsJson : TripsJson , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh })} style={styles.iconstyle}>
-{/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
+  <TouchableOpacity onPress={() => navigation.navigate('MyLocations',{ TripsJson : TripsJson , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh , navigation : navigation })} style={styles.iconstyle}>
 <Entypo name="location" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
-<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>My Locations</Text>
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8,fontWeight:"bold"}}>My Locations</Text>
 </TouchableOpacity>
 </CardView>
 
@@ -307,9 +341,24 @@ style={styles.miniCard}>
   <TouchableOpacity onPress={callNumber} style={styles.iconstyle}>
 {/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
 <FontAwesome name="whatsapp" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
-<Text style={{textAlign:"center",fontSize:14,marginBottom:8}}>Contact</Text>
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8,fontWeight:"bold"}}>Contact</Text>
 </TouchableOpacity>
 </CardView>
+
+
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.miniCard}>
+<TouchableOpacity onPress={() => navigation.navigate('AccountandWallet',{ TripsJson : TripsJson , userDetail : userDetail , OtherPageRefersh:OtherPageRefersh , navigation : navigation })} style={styles.iconstyle}>
+{/* <Image source={require('../assets/approvetrips.jpg')} style={{width:'100%',flex: 1,}} />  */}
+<FontAwesome5 name="wallet" color={'#ce3232'} style={{marginTop:9 }} size={100}  />
+<Text style={{textAlign:"center",fontSize:16,marginBottom:8,fontWeight:"bold"}}>Account Wallet</Text>
+</TouchableOpacity>
+</CardView>
+
+
 
 </View>
 
@@ -387,6 +436,14 @@ const styles = StyleSheet.create({
         // marginTop:16,
         // marginLeft:2
         margin:20
+      },
+      miniCard_Main:{
+        width: '95%',
+        height:60,
+        margin:10,
+        backgroundColor:"white",
+        justifyContent:"center",
+        backgroundColor:"#ce3232"
       },
 
       MiniCardView:{

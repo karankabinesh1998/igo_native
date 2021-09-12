@@ -152,11 +152,15 @@ onRefresh={onRefresh}
 
         <View style={styles.HeadData}>
             <Text style={styles.TextTrip}>Trip Id : {ival.Id_trip}</Text>
+            
         </View>
 
         <View style={styles.HeadData}>
             <Text style={styles.TextTrip}>Trip Type : {ival.trip_type}</Text>
         </View>
+
+
+        
 
         <View style={styles.HeadData}>
             <Text style={styles.TextTrip}>Cab Type : {ival.cab_type}</Text>
@@ -290,7 +294,7 @@ const styles = StyleSheet.create({
       },
       HeadData:{
         margin:6,
-        marginLeft:15
+        marginLeft:15,
       },
       HeadHaed:{
           alignItems:"center",
@@ -301,7 +305,8 @@ const styles = StyleSheet.create({
 
       },
       TextTrip:{
-          fontSize:10
+          fontSize:10,
+          fontWeight:"bold"
       }
 
 })
