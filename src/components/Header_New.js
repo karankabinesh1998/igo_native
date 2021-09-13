@@ -14,9 +14,7 @@ export default  function Header_New({navigation,subtitle = null , showback = tru
 
       
         return(
-
-            
-
+          
             <Appbar.Header style={{backgroundColor:"white",height:70}}>
             
             { showback ? <Appbar.BackAction onPress={_goBack}  color="#ce3232"/> : null }
@@ -28,6 +26,7 @@ export default  function Header_New({navigation,subtitle = null , showback = tru
             
     
             </Appbar.Header>
+
         )
       
 

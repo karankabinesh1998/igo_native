@@ -28,7 +28,8 @@ export default  function DocumentUpload({navigation,route,userDetail , OtherPage
     const [driving_licence_back, setdriving_licence_back] = useState(DocumentationArray.length ? DocumentationArray[0].driving_licence_back : null);
     const [pancard_front, setpancard_front] = useState(DocumentationArray.length ? DocumentationArray[0].pancard_front : null);
     const [pancard_back, setpancard_back] = useState(DocumentationArray.length ? DocumentationArray[0].pancard_back : null);
-
+    const [account_details,Setaccount_details]=useState(DocumentationArray.length ? DocumentationArray[0].account_details : null )
+    
     
     // setuserDetail(userDetail1[0][0]);
 
@@ -108,13 +109,26 @@ export default  function DocumentUpload({navigation,route,userDetail , OtherPage
             }else if(a=='pancard_back'){
               setpancard_back(b)
               Alert.alert(
-                `Pan Card Back`,
-                "Pan Card Back Uploaded Successfully!",
+                `Police Verify Certificate`,
+                "Police Verify Certificate Uploaded Successfully!",
                 [
                  
                   { text: "OK", onPress: () => console.log("OK Pressed") }
                 ]
               )
+            }else if(a=="account_details"){
+
+            Setaccount_details(b);
+
+                Alert.alert(
+                  `Account PassBook`,
+                  "Account PassBook Uploaded Successfully!",
+                  [
+                  
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                  ]
+                )
+
             }
 
            
@@ -143,7 +157,8 @@ const wait = (timeout) => {
       setpancard_front(DocumentationArray[0].pancard_front)
       setpancard_back(DocumentationArray[0].pancard_back)
       setShowButton(DocumentationArray.length ? true : false)
-      setApproval(DocumentationArray[0].approval)
+      setApproval(DocumentationArray[0].approval);
+      Setaccount_details(DocumentationArray[0].account_details)
      console.log(DocumentationArray ,"Refrehjson");
      OtherPageRefersh("refresh");
     wait(5000).then(() => setRefreshing(false));
@@ -170,10 +185,18 @@ const wait = (timeout) => {
                 }}
               /> */}
 
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.cardViewStyle12}>              
+
 <View style={styles.MainContainer} >
 
+
+
+
 <ScrollView
-// stickyHeaderIndices={[1]}
 showsVerticalScrollIndicator={false}
 refreshControl={
 <RefreshControl
@@ -278,9 +301,48 @@ style={styles.cardViewStyle}>
 </CardView>  
 
 
-</ScrollView>
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.cardViewStyle}>
+
+<View style={styles.HeadingView}>
+<View style={styles.HeadingView1}>
+    <Text style={styles.TextView}>Account PassBook</Text>
+    <DocumentImagePicker Profile={account_details} docname={'account_details'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
+</View>
+{/* <View style={styles.HeadingView1}>
+    <Text style={styles.TextView}>Police Verify Certificate </Text>
+    <DocumentImagePicker Profile={pancard_back} docname={'pancard_back'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
+</View>     */}
 </View>
 
+</CardView> 
+
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.cardViewStyle}>
+
+{/* <View style={styles.HeadingView}>
+<View style={styles.HeadingView1}>
+    <Text style={styles.TextView}>Pan Card Front </Text>
+    <DocumentImagePicker Profile={pancard_front} docname={'pancard_front'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
+</View>
+<View style={styles.HeadingView1}>
+    <Text style={styles.TextView}>Police Verify Certificate </Text>
+    <DocumentImagePicker Profile={pancard_back} docname={'pancard_back'} id={userDetail1[0].id} handleUserDeatils={handleUserDeatils} />
+</View>    
+</View> */}
+
+</CardView>
+
+
+</ScrollView>
+</View>
+</CardView>
               </SafeAreaProvider>
     )
 }
@@ -294,7 +356,7 @@ const styles = StyleSheet.create({
       marginTop:4,
       marginLeft: 9,
       width: '100%', 
-      height: 80 ,
+      height: 800 ,
      },
      cardViewStyle:{
  
@@ -303,6 +365,20 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         marginTop:9,
         
+       },
+       ViewcardBelow1:{
+        marginTop:5,
+        marginBottom:5,
+        // height:150,
+        position:'relative',
+        
+      },
+      cardViewStyle12:{
+        width: '100%', 
+        height: '100%' ,
+        flexDirection: "column",
+        // alignContent:"center",
+        // marginTop:9,
        },
        cardViewStyle1:{
  

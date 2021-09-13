@@ -1,25 +1,25 @@
-import { View , Text, ScrollView ,ActivityIndicator, Modal ,KeyboardAvoidingView, 
+import { View , Text, ScrollView ,TouchableOpacity, Modal ,KeyboardAvoidingView, 
   RefreshControl,BackHandler,Alert,Keyboard,TouchableWithoutFeedback,Image ,StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
 import { Header , Rating} from 'react-native-elements';
 import Header1 from '../components/Header';
-import Logo from '../components/Logo';
-import WhatsappandCall from '../components/WhatsappandCall';
+// import Logo from '../components/Logo';
+// import WhatsappandCall from '../components/WhatsappandCall';
 // import AsyncStorage from "@react-native-community/async-storage";
 // import Stored from '../configuration/storageDetails';
 import { DeleteCab, EditCabdata, RefreshJsons } from '../configuration/functional';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import { Addcabs1 } from '../configuration/functional';
-import  Config from '../configuration/config';
+// import  Config from '../configuration/config';
 import DocumentDriverPicker from '../components/DocumentDriverPicker';
 // import AccordionTab from '../components/AccordionTab';
 import { FAB, Portal, Provider } from 'react-native-paper';
 import SpinnerButton from 'react-native-spinner-button';
 import Header_New from '../components/Header_New';
-
+import Entypo from 'react-native-vector-icons/Entypo'
 
 export default  function AddCabs({navigation,route}){
 
@@ -186,7 +186,7 @@ export default  function AddCabs({navigation,route}){
   
    let result = await RefreshJsons(id);
     setvendorCabs(JSON.parse(result[0].vendorCabs))
-     console.log(JSON.parse(result[0].vendorCabs),"Refrehjson");
+    //  console.log(JSON.parse(result[0].vendorCabs),"Refrehjson");
      route.params.OtherPageRefersh();
     wait(5000).then(() => setRefreshing(false));
   }, []);
@@ -412,6 +412,7 @@ return(
               small: false,
             },
           ]}
+          style={{position:'relative', top: 350, left: 0}}
           onStateChange={onStateChange}
           onPress={() => setModalVisible(!modalVisible)}
         />
@@ -560,7 +561,7 @@ return(
 <View style={styles.MainContainer} >
 
 
-<ScrollView
+{/* <ScrollView
 // stickyHeaderIndices={[1]}
 showsVerticalScrollIndicator={false}
 refreshControl={
@@ -569,7 +570,7 @@ refreshing={refreshing}
 onRefresh={onRefresh}
 />
 }
->
+> */}
 
 
 <CardView
@@ -584,6 +585,14 @@ style={styles.cardViewStyle12}>
   </Text>
 </View> 
 
+<ScrollView 
+refreshControl={
+  <RefreshControl
+  refreshing={refreshing}
+  onRefresh={onRefresh}
+  />
+  }
+>
 
 { vendorCabs.length ? vendorCabs.map((ival,i)=>{
 // console.log(ival,"246");
@@ -596,7 +605,7 @@ if(ival.hide_show == 1 ){
       cardMaxElevation={5}
       cornerRadius={5}
       style={styles.cardViewStyle}
-      
+      key={ival.id}
       >
 
       <View>
@@ -729,17 +738,21 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
     )
 }
 }) :null}
-    
-</CardView>
-
-
 
 </ScrollView>
+</CardView>
+{/* </ScrollView> */}
 
 </View>
 
 
  </Provider>
+ <View style={styles.headerFooterStyle}>
+<TouchableOpacity style={styles.iconstyle} onPress={()=>navigation.navigate('Dashboard')}>
+<Entypo name="home" color={'#ce3232'}  size={22}  />
+<Text style={{textAlign:"center",fontSize:10,marginTop:5,fontWeight:"bold",color:"#ce3232"}}>Home</Text>
+</TouchableOpacity>
+</View>
 </SafeAreaProvider>
 )
 
@@ -770,7 +783,7 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
            },
            cardViewStyle12:{
             width: '96%', 
-            height: '100%',
+            height: '93%',
             flexDirection: "column",
             // alignContent:"center",
             marginTop:9,
@@ -879,5 +892,23 @@ uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
               fontSize:20,
               fontWeight:"bold",
               marginLeft:2,
+            }
+            ,
+            headerFooterStyle: {
+              width: '100%',
+              height: 45,
+              backgroundColor: '#ffff',
+              position: 'absolute', left: 0, right: 0, bottom: 0
             },
+            textStyle: {
+              textAlign: 'center',
+              color: '#fff',
+              fontSize: 18,
+              padding: 7,
+            },
+            iconstyle:{
+              alignItems:"center",
+              flexDirection:"column",
+              // flex:1
+            }
     })

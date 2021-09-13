@@ -259,10 +259,9 @@ const AlertLogout = () =>
         cornerRadius={5}
         style={styles.cardViewStyle}>
 
-            <View style={styles.ViewcardBelow}>
+     
 
     <ScrollView
-    // stickyHeaderIndices={[1]}
     showsVerticalScrollIndicator={false}
     refreshControl={
       <RefreshControl
@@ -349,30 +348,17 @@ const AlertLogout = () =>
     keyboardType="email-address"
   />
 
-
-{/* 
-  <TextInput
-  // multiline={true}
-  label="Address"
-  returnKeyType="next"
-  container={styles.InputText}
-  // numberOfLines={4}
-  error={!!name.error}
-  errorText={name.error}
-  onChangeText={(text) => setAddress({value: text, error: ''})}
-  value={address.value}/> */}
-
-          <TextInput
-            label="Address"
-            multiline={true}
-            returnKeyType="next"
-            numberOfLines={4}
-            value={address.value}
-            container={styles.InputText}
-            onChangeText={(text) => setAddress({ value: text, error: '' })}
-            error={!!address.error}
-            errorText={address.error}
-          />
+<TextInput
+    label="Address"
+    multiline={true}
+    returnKeyType="next"
+    numberOfLines={4}
+    value={address.value}
+    container={styles.InputText}
+    onChangeText={(text) => setAddress({ value: text, error: '' })}
+    error={!!address.error}
+    errorText={address.error}
+  />
 
 
 { activeIndicator ?
@@ -385,13 +371,13 @@ const AlertLogout = () =>
         Update Profile
 </Button> }
 
-<Button mode="contained" style={styles.button} onPress={AlertLogout}>
+<Button mode="contained" style={styles.button1} onPress={AlertLogout}>
         Logout
 </Button>
           
         
         </ScrollView>
-             </View>
+             {/* </View> */}
 
           
 
@@ -413,20 +399,27 @@ const styles = StyleSheet.create({
     button:{
       backgroundColor:"#ce3232",
       width:"95%",
-      marginLeft:'2%'
+      marginLeft:'2%',
+      marginBottom:1
 
+    },
+    button1:{
+      backgroundColor:"#ce3232",
+      width:"95%",
+      marginLeft:'2%',
+      marginBottom:20
     },
     cardViewStyle:{
         width: '100%', 
-        marginTop:10,
-        height: '97%',
+        // marginTop:10,
+        height: 560,
     },
     InputText:{
         width: '95%',
        marginVertical: 5,
        marginLeft:5,
         alignContent:"center",
-        // height:60
+        height:55
     }, 
     ViewcardBelow:{
       // alignItems:'center'
@@ -440,7 +433,7 @@ const styles = StyleSheet.create({
     },
     heading:{
       alignSelf:'center',
-      fontSize:30,
+      fontSize:20,
       color:'#ce3232',
       fontWeight: 'bold',
       // position:'absolute'

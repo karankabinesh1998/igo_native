@@ -1,13 +1,13 @@
-import { View , Text, ScrollView , Picker,ActivityIndicator, RefreshControl,BackHandler, StyleSheet} from 'react-native';
+import { View , Text, ScrollView , TouchableOpacity , RefreshControl,BackHandler, StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
-import { Header } from 'react-native-elements';
-import Logo from '../components/Logo';
-import WhatsappandCall from '../components/WhatsappandCall';
+// import { Header } from 'react-native-elements';
+// import Logo from '../components/Logo';
+// import WhatsappandCall from '../components/WhatsappandCall';
 import { RefreshJsons , StartandEndTrip } from '../configuration/functional';
-import Button from '../components/Button';
-
+// import Button from '../components/Button';
+import Entypo from 'react-native-vector-icons/Entypo';
 import Header_New from '../components/Header_New';
 
 export default  function TripHistory({navigation,route}){
@@ -55,33 +55,13 @@ export default  function TripHistory({navigation,route}){
 
            SetActiveTrips(JSON.parse(result[0].TripHistory))
        }
-       route.params.OtherPageRefersh("refresh");
+       route.params.OtherPageRefersh();
         wait(5000).then(() => setRefreshing(false));
       }, []);
 
       
-
-      const EndTrip = async(ival)=>{
-
-        // StartandEndTrip
-
-        const formData=new FormData();
-        // formData.append("vendor",id);
-        formData.append("end",1);
-        // formData.append("driver_mobile",mobile.value);
-
-        let result = await StartandEndTrip(formData,ival.id,id);
-
-        if(result){
-            console.log(result,"FormData");
-
-        }
-
-      }
-
-      const StartTrip = async()=>{
-          
-      }
+      
+   
 
     return(
 
@@ -229,6 +209,14 @@ onRefresh={onRefresh}
 
 </View>
 
+<View style={styles.headerFooterStyle}>
+<TouchableOpacity style={styles.iconstyle} onPress={()=>navigation.navigate('Dashboard')}>
+<Entypo name="home" color={'#ce3232'}  size={22}  />
+<Text style={{textAlign:"center",fontSize:10,marginTop:5,fontWeight:"bold",color:"#ce3232"}}>Home</Text>
+</TouchableOpacity>
+</View>
+
+
 </SafeAreaProvider>
     )
 
@@ -307,6 +295,23 @@ const styles = StyleSheet.create({
       TextTrip:{
           fontSize:10,
           fontWeight:"bold"
+      },
+      headerFooterStyle: {
+        width: '100%',
+        height: 45,
+        backgroundColor: '#ffff',
+        position: 'absolute', left: 0, right: 0, bottom: 0
+      },
+      textStyle: {
+        textAlign: 'center',
+        color: '#fff',
+        fontSize: 18,
+        padding: 7,
+      },
+      iconstyle:{
+        alignItems:"center",
+        flexDirection:"column",
+        // flex:1
       }
 
 })

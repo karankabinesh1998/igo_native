@@ -24,7 +24,7 @@ import { emailValidator } from '../helpers/emailValidator';
 import { driving_license_numberValidator } from '../helpers/driving_license_numberValidator';
 import Header_New from '../components/Header_New';
 import { TouchableOpacity , Linking } from 'react-native';
-
+import Entypo from 'react-native-vector-icons/Entypo';
 
 
 export default  function AddDriver({navigation,route}){
@@ -466,6 +466,7 @@ return(
               small: false,
             },
           ]}
+          style={{position:'relative', top: 350, left: 0}}
           onStateChange={onStateChange}
           onPress={() => setModalVisible(!modalVisible)}
         />
@@ -623,8 +624,7 @@ return(
 <View style={styles.MainContainer}>
 
 
-<ScrollView
-// stickyHeaderIndices={[1]}
+{/* <ScrollView
 showsVerticalScrollIndicator={false}
 refreshControl={
 <RefreshControl
@@ -632,7 +632,7 @@ refreshing={refreshing}
 onRefresh={onRefresh}
 />
 }
->
+> */}
 
 
 
@@ -648,6 +648,15 @@ style={styles.cardViewStyle12}>
   </Text>
 </View>  
 
+<ScrollView  
+
+refreshControl={
+  <RefreshControl
+  refreshing={refreshing}
+  onRefresh={onRefresh}
+  />
+}
+>
 { vendorDrivers.length ? vendorDrivers.map((ival,i)=>{
     // console.log(ival,"246");
 
@@ -783,25 +792,25 @@ style={styles.cardViewStyle}
 
       </View>
 </CardView>
-  
+
     )
 }
 
 }) :null  }
-    
+</ScrollView>    
 </CardView>
 
-
-
-
-
-
-</ScrollView>
+{/* </ScrollView> */}
 
 </View>
 
 </Provider>
-
+<View style={styles.headerFooterStyle}>
+<TouchableOpacity style={styles.iconstyle} onPress={()=>navigation.navigate('Dashboard')}>
+<Entypo name="home" color={'#ce3232'}  size={22}  />
+<Text style={{textAlign:"center",fontSize:10,marginTop:5,fontWeight:"bold",color:"#ce3232"}}>Home</Text>
+</TouchableOpacity>
+</View>
 </SafeAreaProvider>
 )
 
@@ -836,7 +845,7 @@ style={styles.cardViewStyle}
            },
            cardViewStyle12:{
             width: '96%', 
-            height: '100%',
+            height: '92%',
             flexDirection: "column",
             // alignContent:"center",
             marginTop:9,
@@ -956,6 +965,23 @@ style={styles.cardViewStyle}
             fontSize: 15,
             textAlign: 'center',
             color: 'white',
+            },
+            headerFooterStyle: {
+              width: '100%',
+              height: 45,
+              backgroundColor: '#ffff',
+              position: 'absolute', left: 0, right: 0, bottom: 0
+            },
+            textStyle: {
+              textAlign: 'center',
+              color: '#fff',
+              fontSize: 18,
+              padding: 7,
+            },
+            iconstyle:{
+              alignItems:"center",
+              flexDirection:"column",
+              // flex:1
             }
         
     })

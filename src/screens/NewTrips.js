@@ -1,4 +1,4 @@
-import { View , Text, ScrollView , Modal ,Image, RefreshControl,BackHandler,Alert, StyleSheet} from 'react-native';
+import { View , Text, ScrollView , Modal ,Image,TouchableOpacity, RefreshControl,BackHandler,Alert, StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
@@ -13,12 +13,13 @@ import TextInput from '../components/TextInput';
 import { bidamountValidator } from '../helpers/bidamountValidator';
 import { bidandWalletValidator } from '../helpers/bidandWalletValidator';
 // import { Appbar } from 'react-native-paper';
+import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Header_New from '../components/Header_New';
 import { ApprovalValidator } from '../helpers/ApprovalValidator';
 import { CheckDriverValidator } from '../helpers/CheckDriverValidator';
 import { CheckCabValidator } from '../helpers/CheckCabValidator';
-
+import {Provider } from 'react-native-paper';
  
 
 import HomePage from './HomePage';
@@ -191,7 +192,7 @@ const ResetModal = () =>{
     return(
         
         <SafeAreaProvider style={{backgroundColor:"lightgrey"}}>
-
+<Provider>
 
   <Modal
   animationType="fade"
@@ -274,7 +275,11 @@ containerStyle={{
         
         <View style={styles.MainContainer} >
 
-
+        <CardView
+              cardElevation={5}
+              cardMaxElevation={5}
+              cornerRadius={5}
+              style={styles.cardViewStyle12}>
 
 
         <ScrollView
@@ -287,13 +292,7 @@ containerStyle={{
       />
     }
     >
-
-
-
-
-
-
-      {TripsData.value.length > 0 ? TripsData.value.map((ival,i)=>{
+ {TripsData.value.length > 0 ? TripsData.value.map((ival,i)=>{
           // console.log(ival,"ival"); 
           if(ival.trip_assigned_to==null){
 
@@ -313,27 +312,15 @@ containerStyle={{
                   <Text style={styles.paraDatatrip_id}>{ival.trip_id}</Text>
                   </View>
   
-                  {/* <Text style={styles.paraHeading}>PICKUP FROM:</Text>
-                  <Text style={styles.paraData}>{ival.pickuplocation_name}</Text>
-  
-                  <Text style={styles.paraHeading}>DROP TO:</Text>
-                  <Text style={styles.paraData}>{ival.drop_location_name}</Text> */}
-  
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
                     </View>
   
                   <View style={styles.ViewParallel}>
   
                   <View style={styles.ParallelView}>
-                  {/* <Text style={styles.paraHeading}>PICK UP FROM:</Text> */}
-                  <Text style={styles.paraDatalocation}>{ival.pickuplocation_name} - {ival.drop_location_name} </Text>
+                   <Text style={styles.paraDatalocation}>{ival.pickuplocation_name} - {ival.drop_location_name} </Text>
                   </View>
-  
-                  {/* <View style={styles.ParallelView}>
-                  <Text style={styles.paraHeading}>DROP TO:</Text>
-                  <Text style={styles.paraDatalocation}>{ival.drop_location_name}</Text>
-                  </View> */}
 
                   </View>
   
@@ -387,11 +374,7 @@ containerStyle={{
                   <Text style={styles.paraData}>{ival.trip_kms}</Text>
                   </View>
   
-                  {/*<View style={styles.ParallelView1}>
-                  <Text style={styles.paraHeading1}>TRIP CHARGE:</Text>
-                  <Text style={styles.paraData}>{ival.trip_charges}</Text>
-                  </View>*/}
-  
+                  
                   <View style={styles.ParallelView}>
                   <Text style={styles.paraHeading}>EXTRA CHARGE/KM:</Text>
                   <Text style={styles.paraData}>{ival.extra_charge}</Text>
@@ -417,10 +400,6 @@ containerStyle={{
                   <Text style={styles.paraHeading}>BIDDING FAIR:</Text>
                   <Text style={styles.paraData}>{ival.bidding_amount =='No bidding' ?  ival.bidding_amount : `Rs.${ival.bidding_amount}`}/-</Text>
                   </View>
-  
-
-                  {/* <Ionicons name="person" color={'#ce3232'} style={{marginTop:9 }} size={100}  /> */}
-                  
   
                   </View>
 
@@ -492,8 +471,15 @@ containerStyle={{
 
 
         </ScrollView>
+        </CardView>
         </View>
-     
+        </Provider>
+<View style={styles.headerFooterStyle}>
+<TouchableOpacity style={styles.iconstyle} onPress={()=>navigation.navigate('Dashboard')}>
+<Entypo name="home" color={'#ce3232'}  size={22}  />
+<Text style={{textAlign:"center",fontSize:10,marginTop:5,fontWeight:"bold",color:"#ce3232"}}>Home</Text>
+</TouchableOpacity>
+</View>
         
       </SafeAreaProvider>
     )
@@ -532,6 +518,13 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 15
   },
+  cardViewStyle12:{
+    width: '96%', 
+    height: '95%',
+    flexDirection: "column",
+    // alignContent:"center",
+    // marginTop:9,
+   },
   Alignbutton:{
     flexDirection:"row",
     // width:500
@@ -589,7 +582,7 @@ const styles = StyleSheet.create({
         height: 430,
         flexDirection: "column",
         marginTop:9,
-        // marginLeft: 9,
+        marginLeft: 8,
      
       },
       Heading:{
@@ -673,6 +666,23 @@ const styles = StyleSheet.create({
   },
   containerStyles:{
     width:340
+  },
+   headerFooterStyle: {
+    width: '100%',
+    height: 45,
+    backgroundColor: '#ffff',
+    position: 'absolute', left: 0, right: 0, bottom: 0
+  },
+  textStyle: {
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 18,
+    padding: 7,
+  },
+  iconstyle:{
+    alignItems:"center",
+    flexDirection:"column",
+    // flex:1
   }
 
 })

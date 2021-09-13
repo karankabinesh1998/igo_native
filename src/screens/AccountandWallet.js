@@ -1,5 +1,5 @@
 import React , { useEffect , useState } from 'react';
-import { View , Text , StyleSheet ,RefreshControl, ScrollView , BackHandler } from 'react-native'
+import { View , Text , StyleSheet ,RefreshControl, ScrollView ,TouchableOpacity, BackHandler } from 'react-native'
 import CardView from 'react-native-cardview';
 // import AsyncStorage from "@react-native-community/async-storage";
 // import Stored from '../configuration/storageDetails';
@@ -7,14 +7,16 @@ import { RefreshJsons } from '../configuration/functional';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import Header_New from '../components/Header_New';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {Provider } from 'react-native-paper';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 export default function AccountandWallet({ navigation,route }){
 
     let userDetail_ = route.params.userDetail[0];
     // GetTabPage('Account')
     console.log(navigation);
-    let widthArr =  [80, 80, 80,100, 200]
-    let THead = ['Head', 'Head2', 'Head3', 'Head4', 'Head5']
+    let widthArr =  [80, 80, 80,100, 200];
+    let THead = ['Head', 'Head2', 'Head3', 'Head4', 'Head5'];
     const [wallet, setWallet] = useState(userDetail_.wallet);
     // const [userid,setUserDetail] = useState(null);
     const [refreshing, setRefreshing] = React.useState(false);
@@ -70,6 +72,7 @@ export default function AccountandWallet({ navigation,route }){
 
 return(
 <SafeAreaProvider style={{backgroundColor:"lightgrey"}}> 
+<Provider>
 <Header_New subtitle="My Account" navigation={navigation} />
 
 <View style={styles.MainContainer} >
@@ -142,7 +145,14 @@ style={styles.cardViewStyle1}
 </CardView>
 
 </View>
+</Provider>
 
+<View style={styles.headerFooterStyle}>
+<TouchableOpacity style={styles.iconstyle} onPress={()=>navigation.navigate('Dashboard')}>
+<Entypo name="home" color={'#ce3232'}  size={22}  />
+<Text style={{textAlign:"center",fontSize:10,marginTop:5,fontWeight:"bold",color:"#ce3232"}}>Home</Text>
+</TouchableOpacity>
+</View>
 </SafeAreaProvider>
 
 
@@ -226,6 +236,23 @@ style={styles.cardViewStyle1}
   rowW: { 
     height: 40, 
     backgroundColor: '#F7F8FA' 
+  } ,
+  headerFooterStyle: {
+    width: '100%',
+    height: 45,
+    backgroundColor: '#ffff',
+    position: 'absolute', left: 0, right: 0, bottom: 0
+  },
+  textStyle: {
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 18,
+    padding: 7,
+  },
+  iconstyle:{
+    alignItems:"center",
+    flexDirection:"column",
+    // flex:1
   }
 
   })

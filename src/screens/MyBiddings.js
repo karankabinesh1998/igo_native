@@ -1,17 +1,17 @@
-import { View , Text, ScrollView , Picker,ActivityIndicator,Alert, RefreshControl,BackHandler, StyleSheet} from 'react-native';
+import { View , Text, ScrollView , Picker,TouchableOpacity,Alert, RefreshControl,BackHandler, StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState , useEffect  } from 'react';
 import CardView from 'react-native-cardview';
-import { Header } from 'react-native-elements';
-import Logo from '../components/Logo';
-import WhatsappandCall from '../components/WhatsappandCall';
+// import { Header } from 'react-native-elements';
+// import Logo from '../components/Logo';
+// import WhatsappandCall from '../components/WhatsappandCall';
 import { RefreshJsons , AddBidTrips , ConfirmActiveTrip } from '../configuration/functional';
-import Button from '../components/Button';
+// import Button from '../components/Button';
 import { CancelTrip } from '../configuration/functional';
 import SpinnerButton from 'react-native-spinner-button';
 import Header_New from '../components/Header_New';
-
-
+import {Provider } from 'react-native-paper';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 
 
@@ -204,7 +204,7 @@ const GetDataDriver=(a,b)=>{
 
     return(
         <SafeAreaProvider style={{backgroundColor:"lightgrey"}}> 
-
+<Provider>
 {/* <Header
       placement="left"
       statusBarProps={{ barStyle: 'light-content' }}
@@ -228,16 +228,23 @@ const GetDataDriver=(a,b)=>{
 
 
 
-<ScrollView
-// stickyHeaderIndices={[1]}
-showsVerticalScrollIndicator={false}
-refreshControl={
-<RefreshControl
-refreshing={refreshing}
-onRefresh={onRefresh}
-/>
-}
->
+<CardView
+  cardElevation={5}
+  cardMaxElevation={5}
+  cornerRadius={5}
+  style={styles.cardViewStyle12}>
+
+
+        <ScrollView
+    // stickyHeaderIndices={[1]}
+    showsVerticalScrollIndicator={false}
+   refreshControl={
+      <RefreshControl
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
+    }
+    >
 
 
 {BidData.length > 0 ? BidData.map((ival,i)=>{
@@ -368,11 +375,18 @@ style={styles.cardViewStyle}>
 
 
     </ScrollView>
-
+</CardView>
     </View>
 
-      
+    
+</Provider>
 
+<View style={styles.headerFooterStyle}>
+<TouchableOpacity style={styles.iconstyle} onPress={()=>navigation.navigate('Dashboard')}>
+<Entypo name="home" color={'#ce3232'}  size={22}  />
+<Text style={{textAlign:"center",fontSize:10,marginTop:5,fontWeight:"bold",color:"#ce3232"}}>Home</Text>
+</TouchableOpacity>
+</View>
         </SafeAreaProvider>
     )
 
@@ -400,7 +414,7 @@ const styles = StyleSheet.create({
         height: 490,
         flexDirection: "column",
         marginTop:9,
-        // marginLeft: 9,
+        marginLeft: 8,
      
       },
       button:{
@@ -414,7 +428,13 @@ const styles = StyleSheet.create({
         margin:5,
         
     },
-
+    cardViewStyle12:{
+      width: '96%', 
+      height: '95%',
+      flexDirection: "column",
+      // alignContent:"center",
+      // marginTop:9,
+     },
       Headings:{
           backgroundColor:"#008000",
           alignItems:"center"
@@ -446,6 +466,23 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'center',
     color: 'white',
+    }
+    ,headerFooterStyle: {
+      width: '100%',
+      height: 45,
+      backgroundColor: '#ffff',
+      position: 'absolute', left: 0, right: 0, bottom: 0
+    },
+    textStyle: {
+      textAlign: 'center',
+      color: '#fff',
+      fontSize: 18,
+      padding: 7,
+    },
+    iconstyle:{
+      alignItems:"center",
+      flexDirection:"column",
+      // flex:1
     }
 
 })

@@ -28,12 +28,6 @@ const Tab = createBottomTabNavigator();
 
  function MyTabs({userDetail,navigation,TripsJson,announcement=[] , Runbackground }) {
 
-  // console.log(announcement,"27");
-
-  const [ listening, setListening ] = useState(false);
-  const [ facts, setFacts ] = useState([]);
-
-  // this.Runbackground()
 
   const Run_onRefreh=()=>{
 
@@ -105,12 +99,12 @@ export default class Dashboard extends Component {
 
       
 
-    BackgroundTimer.setInterval(async() => {
+    BackgroundTimer.setInterval(() => {
       // this will be executed every 200 ms;
       // even when app is the background;
       // let result = await RefreshJsons();
 
-     await this.handleConnectivityChange();
+      this.handleConnectivityChange();
 
        
 
@@ -128,8 +122,8 @@ export default class Dashboard extends Component {
           console.log("App has come to the foreground!");
 
           if(this.state.ID){
-            await this.Runbackground();
-            console.log('tic 1');
+             this.Runbackground();
+             console.log('tic 1');
             }
 
         }
@@ -166,6 +160,7 @@ Runbackground = async()=>{
     }
 
     let Trip = await TripsJsons(data[0].id);
+    console.log(Trip);
         if(Trip.length){
         this.setState({
           TripsJson:Trip

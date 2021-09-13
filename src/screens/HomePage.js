@@ -166,7 +166,7 @@ showsVerticalScrollIndicator={true}
 
 >
 
-{/* <CardView
+{/*<CardView
 cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={50}
@@ -178,7 +178,7 @@ style={styles.miniCard_Main}>
 <Text style={{textAlign:"center",fontSize:18,color:"white",fontWeight:"bold",marginBottom:8}}>Rs:{Wallet}</Text>
 
 </View>
-</CardView> */}
+</CardView>*/}
 
 
 <Slider_Carousal  Data={cardView1} viewCarousl={viewCarousl}/> 
