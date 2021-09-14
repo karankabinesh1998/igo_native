@@ -11,6 +11,7 @@ import SwipeButton from 'rn-swipe-button';
 import Header_New from '../components/Header_New';
 import {Provider } from 'react-native-paper';
 import Entypo from 'react-native-vector-icons/Entypo';
+import CountDown from 'react-native-countdown-component';
 
 export default  function ActiveTrips({navigation,route}){
 
@@ -18,13 +19,18 @@ export default  function ActiveTrips({navigation,route}){
 
     const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null)
     
-    // console.log(,"activeTrips")
+     console.log(route.params.userDetail[0].ActiveTrips,"activeTrips")
 
 
 
-    useEffect(() => {
+    useEffect(async() => {
       // Update the document title using the browser API
-      getbeforedateandtimeFunction(activeTrips)
+      if(activeTrips.length==0){
+        // SetActiveTrips(route.params.userDetail ? JSON.parse(route.params.userDetail[0].ActiveTrips) : null)
+      }
+      // SetActiveTrips(route.params.userDetail[0].ActiveTrips)  
+      // await getbeforedateandtimeFunction(activeTrips);
+      // onRefresh()
     },[]);
 
 
@@ -57,7 +63,7 @@ export default  function ActiveTrips({navigation,route}){
 
 
       
-      const onRefresh = React.useCallback(async() => {
+      const onRefresh = React.useCallback(async() => { 
       
         setRefreshing(true);
       
@@ -68,7 +74,7 @@ export default  function ActiveTrips({navigation,route}){
 
            SetActiveTrips(JSON.parse(result[0].ActiveTrips))
 
-          await getbeforedateandtimeFunction(JSON.parse(result[0].ActiveTrips));
+          // await getbeforedateandtimeFunction(JSON.parse(result[0].ActiveTrips));
          }
 
          route.params.OtherPageRefersh("refresh");
@@ -174,14 +180,14 @@ export default  function ActiveTrips({navigation,route}){
 
 
       const getbeforedateandtimeFunction=async(Trips)=>{
-
+          console.log(Trips);
         let arr = []
 
           if(Trips.length>0){
 
             Trips.map((ival,i)=>{
        
-              let Split_it = ival.pickup_date.split(" ");
+              let Split_it = ival.pickup_date.split("");
   
               let Split_date = Split_it[0].split("-");
   
@@ -190,37 +196,51 @@ export default  function ActiveTrips({navigation,route}){
               let fullDate = `${Split_date[0]}/${parseInt(Split_date[1])+1}/${Split_date[2]} ${Split_time[0]}:${Split_time[1]}`;
   
               let check = new Date(fullDate)
-              console.log(fullDate,"fullDate"); 
-  
                var hourago = new Date(check.getTime() - (1000*60*60)); 
-               
-               
+               let CurrentDate = new Date();
+               let timed = formatAMPM(hourago);
 
-              let CurrentDate = new Date();
-
-              let timed = formatAMPM(hourago);
-
-              ival.Will_visibleAt = `${hourago.getDate() > 9 ? hourago.getDate() : `0${hourago.getDate()}`}-${hourago.getMonth()>9 ? hourago.getMonth() : `0${hourago.getMonth()}`}-${hourago.getFullYear()} at ${timed}`
+               ival.Will_visibleAt = `${hourago.getDate() > 9 ? hourago.getDate() : `0${hourago.getDate()}`}-${hourago.getMonth()>9 ? hourago.getMonth() : `0${hourago.getMonth()}`}-${hourago.getFullYear()} at ${timed}`
               
+                 
+                 console.log( CurrentDate.getDate() , hourago.getDate());
+
               if(
                 CurrentDate.getFullYear()==hourago.getFullYear() &&
                 CurrentDate.getMonth()+1 == hourago.getMonth() &&
-                CurrentDate.getDate() >= hourago.getDate() &&
-                CurrentDate.getHours() >= hourago.getHours() 
+                CurrentDate.getDate() >= hourago.getDate()  
+
               ){
 
-                ival.beforehour = true;
+                if( CurrentDate.getDate() == hourago.getDate() && CurrentDate.getHours() >= hourago.getHours() ){
+                  ival.beforehour = true;
+                }else{
+                  ival.beforehour = true;
+                }
+                
+                // ival.beforehour = true;
+
               }else{
 
                 ival.beforehour = false;
 
 
               }
+              
+
+
+
+
+              let timeDiff = hourago.getTime() - CurrentDate.getTime()
+
+                 ival.Count_down = Math.floor( parseInt(timeDiff) / 10000); 
+
+                console.log(ival.Count_down,"hello"); 
 
               arr.push(ival)
             })
 
-          console.log(arr,"length")
+          // console.log(arr,"length")
 
           SetActiveTrips(arr);
           }
@@ -288,7 +308,7 @@ onRefresh={onRefresh}
 >
 
 {activeTrips.length ? activeTrips.map((ival,i)=>{
-          // console.log(ival.start)
+          console.log(ival.Will_visibleAt)
     return(
         <CardView
         key={`${ival.id}`}
@@ -326,8 +346,20 @@ onRefresh={onRefresh}
          
          </> :
 
-          <View style={{justifyContent:"center",width:500,height:80}}>
+          <View style={{height:80,flexDirection:"column"}}>
+            <View>
             <Text style={{margin:5,fontSize:15,alignItems:"center"}}>Details Will be Visible on {ival.Will_visibleAt}</Text>
+            </View>
+            <View>
+            <CountDown
+            until={ival.Count_down}
+            //  onPress={() => alert('hello')}
+            size={13}
+            style={{alignItems:"center"}}
+            timeToShow={['D', 'H', 'M', 'S']}
+            timeLabels={{d: 'Days', h: 'Hours', m: 'Minutes', s: 'Seconds'}}
+             />
+            </View>
           </View>
 
        }
@@ -491,7 +523,7 @@ const styles = StyleSheet.create({
        cardViewStyle:{
  
         width: '96%', 
-        height: 480,
+        height: 515,
         flexDirection: "column",
         marginTop:10,
         marginLeft: 9,
@@ -524,6 +556,8 @@ const styles = StyleSheet.create({
       width: '96%', 
       height: '95%',
       flexDirection: "column",
+
+       // backgroundColor:"lightgrey"
       // alignContent:"center",
       // marginTop:9,
      },

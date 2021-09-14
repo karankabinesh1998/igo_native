@@ -271,6 +271,7 @@ export default  function AddDriver({navigation,route}){
         )
 
     }else{
+      console.log(result)
       
       Alert.alert(
         "Already Exists",

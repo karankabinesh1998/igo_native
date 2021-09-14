@@ -4,7 +4,7 @@ import { StyleSheet, View , Text , ScrollView , Image} from 'react-native'
 import { UpdateProfileSelect } from '../configuration/functional';
 import SelectMultiple from 'react-native-select-multiple'
 import Button from '../components/Button';
-
+import {  Provider } from 'react-native-paper';
 
 
 class MultiSelectExample extends Component {
@@ -23,15 +23,11 @@ class MultiSelectExample extends Component {
 
   async componentDidMount(){
      
-    // console.log(this.props.state,"propsprops ");
-
-    //  if(this.props)
-
      this.setState({
-      items : this.props.state,
+      items : [{value:0,label:"Select All"},...this.props.state],
       id : this.props.id,
-      selectedItems:this.props.selectedItems==null ? [] : this.props.selectedItems,
-      selectedItems1:this.props.selectedItems==null ? [] : this.props.selectedItems,
+      selectedItems:this.props.selectedItems== null ? [] : this.props.selectedItems,
+      selectedItems1:this.props.selectedItems== null ? [] : this.props.selectedItems,
 
     })
      
@@ -57,9 +53,7 @@ class MultiSelectExample extends Component {
 
     await Promise.all(wait)
 
-    // console.log(arr,"arrr");
-
-    this.setState({
+     this.setState({
       selectedItems : arr
     })
 
@@ -69,9 +63,7 @@ class MultiSelectExample extends Component {
 
     this.setState({ selectedItems })
 
-    // console.log(selectedItems);
-
-    if(selectedItems.length){
+     if(selectedItems.length){
 
         const formData=new FormData();
 
@@ -102,42 +94,54 @@ class MultiSelectExample extends Component {
     }
 
     onSelectionsChange=async(e)=>{
-      // console.log(selectedFruits);
-      
-      let d = []
-      
-     let wait =  e.map((ival,i)=>{
+      // console.log(e);
+        let d = [];
 
-        d.push(ival.value)
+        let check_obj = [] ;
 
-      })
-
-      await Promise.all(wait)
-
-      // if(d.length){
-
-      //   const formData=new FormData();
-
-      //   formData.append("travel_location",JSON.stringify(d));
+        // console.log(Object.keys(check_obj).length,"obj");
         
+        check_obj.push(await e.find(o => o.value === 0 ))
 
-      //   let result = await UpdateProfileSelect(formData,this.state.id)
+        console.log(check_obj,check_obj.length,"send adata");
 
-      //   if(result){
-      //       this.props.HandleSelect(result)
-      //   }
-    // }
+        if(check_obj[0] !== undefined){
+
+           e = this.state.items.filter((item) => item.value !== 0 );
+
+        }
+
+        let wait =  e.map((ival,i)=>{
+
+            if(ival.value !=0 ){
+              
+              d.push(ival.value);
+            }
+          })
+
+          await Promise.all(wait);
+
+      
+
+      // console.log(e,"filteredPeople");
+
       
       this.setState({
         selectedItems : e,
-        selectedItems1:d
+        selectedItems1: d
       })
+
+    }
+
+    Select_All=()=>{
+        this.setState({
+          selectedItems : this.state.items
+        })
     }
 
     renderLabel = (label, style) => {
       return (
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          {/* <Image style={{width: 42, height: 42}} source={{uri: 'https://dummyimage.com/100x100/52c25a/fff&text=S'}} /> */}
           <View style={{marginLeft: 10}}>
             <Text style={style}>{label}</Text>
           </View>
@@ -149,16 +153,17 @@ class MultiSelectExample extends Component {
     
  
     return (
+      <Provider>
         <View style={styles.container}>
-          
+         
         <View style={styles.multiSelectContainer}>
         <View style={styles.ViewStyle}>
         <Text style={styles.TextStyle}>Select Your Preferred Location</Text>
         </View>
          
  <View>
- <ScrollView showsVerticalScrollIndicator={false} > 
-   
+ {/* <ScrollView showsVerticalScrollIndicator={false} >  */}
+ 
     <SelectMultiple
         style={{height:480}}
         items={this.state.items}
@@ -168,13 +173,15 @@ class MultiSelectExample extends Component {
         // selectedCheckboxStyle={{backgroundColor:"lightgreen",color:"white"}}
         selectedRowStyle={{ backgroundColor:"lightgreen" ,color:"red" }}
         />
-
+{/* <Button mode="contained" style={styles.button} >Select All Location</Button> */}
 <Button mode="contained" style={styles.button} onPress={this.submit}>Submit</Button>
-</ScrollView>
+{/* </ScrollView> */}
 </View>
 
      </View>
+     
       </View>
+      </Provider>
     );
   }
 }

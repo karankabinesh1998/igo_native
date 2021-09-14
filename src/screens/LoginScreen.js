@@ -17,7 +17,8 @@ import Stored from '../configuration/storageDetails';
 import { TextInput } from 'react-native-paper';
 import  firebase  from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging'
-import { cos } from 'react-native-reanimated';
+// import AnimatedLoader from "react-native-animated-loader";
+
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' });
@@ -123,7 +124,7 @@ export default function LoginScreen({ navigation }) {
                 .then(response1 => response1.json())
                 .then(async responseJson1 => {
 
-                  // console.log(responseJson[0].announcement,"responseJson1");
+                  console.log(responseJson[0].ActiveTrips,"responseJson1");
 
                   let data = JSON.stringify(responseJson)
                   await AsyncStorage.setItem(Stored.userDetail,data);  

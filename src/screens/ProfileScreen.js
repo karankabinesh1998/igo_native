@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
        marginVertical: 5,
        marginLeft:5,
         alignContent:"center",
-        height:55
+        // height:55
     }, 
     ViewcardBelow:{
       // alignItems:'center'

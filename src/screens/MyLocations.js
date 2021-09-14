@@ -10,8 +10,9 @@ import { RefreshJsons , StartandEndTrip } from '../configuration/functional';
 // import Button from '../components/Button';  
 import MultiSelectExample from '../components/MultiSelect';
 import Header_New from '../components/Header_New';
-import Button from '../components/Button';
+// import Button from '../components/Button';
 // import SelectMultiple from 'react-native-select-multiple'
+
 
 
 export default  function MyLocations({navigation,route}){
@@ -51,10 +52,10 @@ export default  function MyLocations({navigation,route}){
 
            console.log(result[0].state,"Refresh JSON");
 
-        Setstate(JSON.parse(result[0].state))
+            Setstate(JSON.parse(result[0].state))
        }
-       route.params.OtherPageRefersh("refresh");
-        wait(5000).then(() => setRefreshing(false));
+              route.params.OtherPageRefersh("refresh");
+              wait(5000).then(() => setRefreshing(false));
       }, []);
 
       const HandleSelect = async(a)=>{
@@ -93,38 +94,27 @@ export default  function MyLocations({navigation,route}){
 
 <View style={styles.MainContainer} >
 
-
-{/* <Header style={styles.heading}>Your Profile</Header> */}
-
-
-
-
 <CardView
 cardElevation={5}
 cardMaxElevation={5}
 cornerRadius={5}
 style={styles.cardViewStyle}>
 
-<ScrollView
-// stickyHeaderIndices={[1]}
+{/* <ScrollView
+stickyHeaderIndices={[1]}
 showsVerticalScrollIndicator={false}
-// refreshControl={
-// <RefreshControl
-// refreshing={refreshing}
-// onRefresh={onRefresh}
-// />
-// }
-> 
+refreshControl={
+<RefreshControl
+refreshing={refreshing}
+onRefresh={onRefresh}
+/>
+}
+>  */}
 
 <Header1 style={styles.heading}>Preferred Location </Header1>
 
-
-
 <MultiSelectExample state={state} id={id} HandleSelect={HandleSelect} selectedItems={selectedItems}/>
-
-{/* <Button mode="contained" style={styles.button} >Submit</Button> */}
-
-</ScrollView>
+{/* </ScrollView> */}
 </CardView>
 
 
@@ -132,7 +122,7 @@ showsVerticalScrollIndicator={false}
 </View>
 
 
-              </SafeAreaProvider>
+</SafeAreaProvider>
     )
 
 }
@@ -154,9 +144,9 @@ const styles = StyleSheet.create({
         height: 80 ,
        },
        cardViewStyle:{
- 
+        
         width: '96%', 
-        height: 1300,
+        height: 832,
         flexDirection: "column",
         marginTop:9,
         // marginLeft: 9,
