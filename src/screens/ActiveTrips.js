@@ -19,9 +19,9 @@ export default  function ActiveTrips({navigation,route}){
 
     const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null)
     
-     console.log(route.params.userDetail[0].ActiveTrips,"activeTrips")
+    //  console.log(route.params.userDetail[0].ActiveTrips,"activeTrips")
 
-
+  
 
     useEffect(async() => {
       // Update the document title using the browser API
@@ -30,7 +30,7 @@ export default  function ActiveTrips({navigation,route}){
       }
       // SetActiveTrips(route.params.userDetail[0].ActiveTrips)  
       // await getbeforedateandtimeFunction(activeTrips);
-      // onRefresh()
+      onRefresh()
     },[]);
 
 

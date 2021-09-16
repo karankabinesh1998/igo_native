@@ -1,4 +1,4 @@
-import { View , Text , StyleSheet ,ScrollView, BackHandler , TouchableOpacity , Alert , Linking , Image, Platform } from 'react-native'
+import { View , Text , StyleSheet ,ScrollView, BackHandler , TouchableOpacity , Alert , Linking , RefreshControl, Platform } from 'react-native'
 import React , { useEffect,useState } from 'react';
 import CardView from 'react-native-cardview';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -29,9 +29,12 @@ export default  function HomePage({ userDetail=[],announcement=[],navigation ,Tr
   const [cardView1,SetcardView1View ]=useState(announcement)
   const [username,SetUsername]=useState(userDetail.length > 0 ? userDetail[0].username : "vendor" );
   const [Wallet,SetWallet]=useState(userDetail.length > 0 ? userDetail[0].wallet : 0 );
-
+  const [refreshing, setRefreshing] = React.useState(false);
 
  
+  useEffect(()=>{
+    onRefresh()
+  },[])
   
   // console.log(username,"card");
 
@@ -53,6 +56,16 @@ export default  function HomePage({ userDetail=[],announcement=[],navigation ,Tr
      
   },[announcement]);
 
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+  
+  const onRefresh = React.useCallback(async() => {
+  
+       setRefreshing(true);
+       Run_onRefreh()
+       wait(5000).then(() => setRefreshing(false));
+  }, []);
 
 // Must be outside of any component LifeCycle (such as `componentDidMount`).
 PushNotification.configure({
@@ -163,7 +176,12 @@ PushNotification.configure({
 <ScrollView
 // stickyHeaderIndices={[1]}
 showsVerticalScrollIndicator={true}
-
+refreshControl={
+  <RefreshControl
+  refreshing={refreshing}
+  onRefresh={onRefresh}
+  />
+  }
 >
 
 {/*<CardView

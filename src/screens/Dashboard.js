@@ -258,7 +258,7 @@ Runbackground = async()=>{
     return (
       <SafeAreaProvider >
        
-      <Header_New subtitle={"IGOTAXY"} showback={false} Wallet={this.state.userDetail.length>0 ? this.state.userDetail[0].wallet :0 }/>
+      <Header_New subtitle={"I Go Taxi"} showback={false} Wallet={this.state.userDetail.length>0 ? this.state.userDetail[0].wallet :0 }/>
 
       {/* <Header 
             placement="left"

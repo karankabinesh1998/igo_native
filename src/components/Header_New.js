@@ -22,7 +22,7 @@ export default  function Header_New({navigation,subtitle = null , showback = tru
             <Appbar.Content title={subtitle} titleStyle={{fontSize:25}}  color="#ce3232"/>
     
     
-            {subtitle=="IGOTAXY" ? <Appbar.Content title={`Wallet : Rs:${Wallet}`} titleStyle={{fontSize:15,marginLeft:10}} color="#ce3232"/> : null }
+            {subtitle=="I Go Taxi" ? <Appbar.Content title={`Wallet : Rs:${Wallet}`} titleStyle={{fontSize:15,marginLeft:20}} color="#ce3232"/> : null }
             
     
             </Appbar.Header>

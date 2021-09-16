@@ -25,6 +25,10 @@ export default function AccountandWallet({ navigation,route }){
 
   
 // console.log(tableData);
+
+useEffect(()=>{
+    onRefresh()
+},[])
     
     const wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));

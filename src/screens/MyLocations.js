@@ -17,13 +17,19 @@ import Header_New from '../components/Header_New';
 
 export default  function MyLocations({navigation,route}){
 
-    console.log(route.params.userDetail[0].state,"Mylocation"); 
+    // console.log(route.params.userDetail[0].state,"Mylocation"); 
 
     const [state,Setstate]=useState(route.params.userDetail[0] ? JSON.parse(route.params.userDetail[0].state) : null )
     const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null)
     const [refreshing, setRefreshing] = React.useState(false);
     const [selectedItems,SetselectedItems]=useState(route.params.userDetail[0] ? JSON.parse(route.params.userDetail[0].travel_location) : [] )
 
+    // console.log(state);
+
+    useEffect(()=>{
+      onRefresh()
+    },[])
+    
     useEffect(() => {
         const backAction = () => {
             navigation.navigate('Dashboard')
@@ -45,21 +51,21 @@ export default  function MyLocations({navigation,route}){
       
       const onRefresh = React.useCallback(async() => {
       
-        setRefreshing(true);
+           setRefreshing(true);
       
-       let result = await RefreshJsons(id);
-        if(result){
+      let result = await RefreshJsons(id);
+      if(result){
 
-           console.log(result[0].state,"Refresh JSON");
+        // console.log(result[0].state,"Refresh JSON");
 
-            Setstate(JSON.parse(result[0].state))
-       }
-              route.params.OtherPageRefersh("refresh");
-              wait(5000).then(() => setRefreshing(false));
+        Setstate(JSON.parse(result[0].state))
+      }
+          route.params.OtherPageRefersh("refresh");
+          wait(5000).then(() => setRefreshing(false));
       }, []);
 
       const HandleSelect = async(a)=>{
-          // console.log(a);
+          console.log(a);
           Setstate(JSON.parse(a[0].state))
           Alert.alert(
             "Location Updated!",
@@ -101,7 +107,10 @@ cornerRadius={5}
 style={styles.cardViewStyle}>
 
 {/* <ScrollView
-stickyHeaderIndices={[1]}
+// stickyHeaderIndices={[1]}
+>  */}
+<View>
+<ScrollView
 showsVerticalScrollIndicator={false}
 refreshControl={
 <RefreshControl
@@ -109,11 +118,13 @@ refreshing={refreshing}
 onRefresh={onRefresh}
 />
 }
->  */}
-
+// contentContainerStyle={{backgroundColor:"red"}}
+>
 <Header1 style={styles.heading}>Preferred Location </Header1>
-
-<MultiSelectExample state={state} id={id} HandleSelect={HandleSelect} selectedItems={selectedItems}/>
+</ScrollView>
+</View>
+{/* </ScrollView> */}
+<MultiSelectExample state={state} id={id} HandleSelect={HandleSelect} refreshing={refreshing} onRefresh={onRefresh} selectedItems={selectedItems}/>
 {/* </ScrollView> */}
 </CardView>
 
@@ -203,7 +214,6 @@ const styles = StyleSheet.create({
         color:'#ce3232',
         fontWeight: 'bold',
         // position:'absolute'
-  
-      },
+         },
 
 })

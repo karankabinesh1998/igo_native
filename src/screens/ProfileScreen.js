@@ -251,6 +251,8 @@ const AlertLogout = () =>
         return () => backHandler.remove();
       }, []);
     return (
+
+
         <View style={styles.container}>
 
         <CardView
@@ -269,6 +271,12 @@ const AlertLogout = () =>
         onRefresh={onRefresh}
       />}
     >
+
+<CardView
+cardElevation={5}
+cardMaxElevation={5}
+cornerRadius={5}
+style={styles.cardViewStyle12}>  
            
             <Header style={styles.heading}>Your Profile</Header>
 
@@ -374,7 +382,8 @@ const AlertLogout = () =>
 <Button mode="contained" style={styles.button1} onPress={AlertLogout}>
         Logout
 </Button>
-          
+
+    </CardView>      
         
         </ScrollView>
              {/* </View> */}
@@ -412,7 +421,11 @@ const styles = StyleSheet.create({
     cardViewStyle:{
         width: '100%', 
         // marginTop:10,
-        height: 560,
+        height: '100%',
+    },
+    cardViewStyle12:{
+      width:'100%',
+      height:900
     },
     InputText:{
         width: '95%',
