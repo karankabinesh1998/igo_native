@@ -63,7 +63,7 @@ export default  function HomePage({ userDetail=[],announcement=[],navigation ,Tr
   const onRefresh = React.useCallback(async() => {
   
        setRefreshing(true);
-       Run_onRefreh()
+       Run_onRefreh();
        wait(5000).then(() => setRefreshing(false));
   }, []);
 

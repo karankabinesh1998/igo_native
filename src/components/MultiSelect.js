@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, View , Text , ScrollView , RefreshControl} from 'react-native'
 // import MultiSelect from 'react-native-multiple-select';
-import { UpdateProfileSelect } from '../configuration/functional';
+import { RefreshJsons, UpdateProfileSelect } from '../configuration/functional';
 import SelectMultiple from 'react-native-select-multiple'
 import Button from '../components/Button';
 import {  Provider } from 'react-native-paper';
-import { stat } from 'react-native-fs';
+// import { stat } from 'react-native-fs';
+// import { RefreshJsons }
 
 
 class MultiSelectExample extends Component {
@@ -17,69 +18,58 @@ class MultiSelectExample extends Component {
                 id:null,
                 arr:[],
                 selectedItems1:[],
-                refreshing:false
+                refreshing:false,
+                SelectAll:false
               };
         }
  
  
 
-   componentDidMount(){
+  async componentDidMount(){
     
-    console.log(this.props.state,"state");
+    let result = await  RefreshJsons(this.props.id);
+
+     if(result.length>0){
+
+      let state_Data = JSON.parse(result[0].state)
+      let Travel_location = JSON.parse(result[0].travel_location)
+
+      this.setState({
+        items : [{value:0,label:"Select All"},...state_Data],
+        id : result[0].id,
+        selectedItems:Travel_location,
+        selectedItems1:Travel_location,
+       })
+       
+        if(state_Data.length>0 && Travel_location.length > 0 ){
+           await  this.ViewData(state_Data,Travel_location)
+        }
+    }
     
-     this.setState({
-      items : [{value:0,label:"Select All"},...this.props.state],
-      id : this.props.id,
-      selectedItems:this.props.selectedItems== null ? [] : this.props.selectedItems,
-      selectedItems1:this.props.selectedItems== null ? [] : this.props.selectedItems,
-      refreshing:this.props.refreshing
-    })
      
-      this.ViewData(this.props.state,this.props.selectedItems)
 
     }
 
 
 static getDerivedStateFromProps(props,state){
-  // console.log(state,"Props STate");
-
-  if(state.items.length == 0 ){
-    // this.ViewData(props.state,props.selectedItems)
-    return {
+ if(state.items.length == 0 ){
+   return {
           items : [{value:0,label:"Select All"},...props.state],
           id : props.id,
-          selectedItems:props.selectedItems== null ? [] : props.selectedItems,
-          selectedItems1:props.selectedItems== null ? [] :props.selectedItems,
-          refreshing:props.refreshing
+          selectedItems  :  props.selectedItems.length ==0 ? [] : props.selectedItems,
+          selectedItems1 :  props.selectedItems.length ==0 ? [] :props.selectedItems,
+          refreshing     :  props.refreshing
          
         }
-
-  }
-
-  return null;
-
+ }
+ return null;
 }
 
-//  async componentWillReceiveProps(props){
-    
-
-//     this.setState({
-//       items : [{value:0,label:"Select All"},...props.state],
-//       id : props.id,
-//       selectedItems:props.selectedItems== null ? [] : props.selectedItems,
-//       selectedItems1:props.selectedItems== null ? [] :props.selectedItems,
-//       refreshing:props.refreshing
-//     })
-     
-//       this.ViewData(props.state,props.selectedItems)
-//   }
-
-  
 
   ViewData = async(data,selectedItems)=>{
     
     let arr = [];
-    
+    console.log(data,selectedItems,"DATAAAA")
      let wait = await data.map((ival,i)=>{
       selectedItems.map((jval,j)=>{
 
@@ -98,82 +88,93 @@ static getDerivedStateFromProps(props,state){
       selectedItems : arr
     })
 
-    // console.log(selectedItems,"selectedItems");
-
-    }
+ }
   
-  onSelectedItemsChange = async selectedItems => {
-
-    this.setState({ selectedItems })
-
-     if(selectedItems.length){
-
-        const formData=new FormData();
-
-        formData.append("travel_location",JSON.stringify(selectedItems));
-        
-
-        let result = await UpdateProfileSelect(formData,this.state.id)
-
-        if(result){
-            this.props.HandleSelect(result)
-        }
-    }
-
-    };
 
 
     submit=async()=>{
-      const formData=new FormData();
 
-          formData.append("travel_location",JSON.stringify(this.state.selectedItems1));
+      const { selectedItems1 } = this.state;
+      
+      let arr = [];
+      
+      let wait = await this.state.selectedItems1.map((ival,i)=>{
+            if(ival!=0){
+                arr.push(ival)
+            }
+      })
+
+      await Promise.all(wait)
+
+      if(this.state.selectedItems1[0] == null){
+        return false
+      }
+
+      console.log(arr,"arrr");
+
+          const formData=new FormData();
+
+          formData.append("travel_location",JSON.stringify(arr));
           
   
           let result = await UpdateProfileSelect(formData,this.state.id)
   
           if(result){
-            // console.log(result);
-              this.props.HandleSelect(result)
+            this.props.HandleSelect(result)
           }
     }
 
+
     onSelectionsChange=async(e)=>{
-      // console.log(e);
+
+      const { SelectAll }=this.state;
+
+      console.log(e,"Onselect");
+
         let d = [];
 
         let check_obj = [] ;
 
-        // console.log(Object.keys(check_obj).length,"obj");
-        
         check_obj.push(await e.find(o => o.value === 0 ))
+ 
+        if(check_obj[0] !== undefined && this.state.SelectAll == false ){
 
-        // console.log(check_obj,check_obj.length,"send adata");
+          // console.log(this.state.SelectAll,"this.state.SelectAll");
+              e = this.state.items
+              this.setState({
+              SelectAll : !this.state.SelectAll
+              })
 
-        if(check_obj[0] !== undefined){
+        }else if(check_obj[0] == undefined && this.state.SelectAll == true){
 
-           e = this.state.items.filter((item) => item.value !== 0 );
+          e = []
+
+          this.setState({
+          SelectAll : !this.state.SelectAll
+          })
+        }
+        else{
+
+          e = e
 
         }
 
-        let wait =  e.map((ival,i)=>{
+        
 
-            if(ival.value !=0 ){
-              
-              d.push(ival.value);
-            }
-          })
+        // console.log(e,"eeeee");
 
-          await Promise.all(wait);
+      let wait = await e.map((ival,i)=>{
 
-      
+         d.push(ival.value);
 
-      // console.log(e,"filteredPeople");
+      })
 
-      
-      this.setState({
+      await Promise.all(wait);
+
+        this.setState({
         selectedItems : e,
         selectedItems1: d
-      })
+        })
 
     }
 
@@ -184,6 +185,7 @@ static getDerivedStateFromProps(props,state){
     }
 
     renderLabel = (label, style) => {
+      console.log(label,"label")
       return (
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View style={{marginLeft: 10}}>
@@ -210,16 +212,17 @@ static getDerivedStateFromProps(props,state){
        
          
         <View>
-        <SelectMultiple
+
+        {this.state.items.length ? <SelectMultiple
           style={{height:480}}
           items={this.state.items}
           selectedItems={this.state.selectedItems}
           onSelectionsChange={this.onSelectionsChange} 
-          renderLabel={this.renderLabel}
-          refreshing={this.state.refreshing}
+          // renderLabel={this.renderLabel}
           selectedRowStyle={{ backgroundColor:"lightgreen" ,color:"red" }}
           />
-
+          :
+          null}
         <Button mode="contained" style={styles.button} onPress={this.submit}>Submit</Button>
 
         </View>
@@ -242,7 +245,7 @@ const styles = StyleSheet.create({
       marginTop:10
     },
     multiSelectContainer: {
-      height: 800,
+      height: 900,
       width: '90%'
     },
     ViewStyle:{

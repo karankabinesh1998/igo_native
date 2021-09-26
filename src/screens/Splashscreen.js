@@ -1,6 +1,6 @@
 import React, { Component } from 'react';  
  import { Platform, StyleSheet, View, Text,  
- Image, TouchableOpacity,Animated, Alert,ImageBackground , Dimensions } from 'react-native';
+ Image, TouchableOpacity,Animated, SafeAreaView ,ImageBackground , Dimensions } from 'react-native';
 
  import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -70,7 +70,7 @@ import React, { Component } from 'react';
 
           let Splash_Screen = (
             <View style={ styles.container }>
-            <Image source={require('../assets/main_img.jpg')} style={styles.backgroundImage} />
+            <Image source={require('../assets/main_img1.jpg')} style={styles.backgroundImage} />
             <View style={ styles.loginForm }>
             <Text>TEST</Text>
             </View>
@@ -79,22 +79,14 @@ import React, { Component } from 'react';
 
 
           return(
-            <Animated.View
-            style={{
-              opacity: fadeAnim,
-              backgroundColor: "#ebebeb",
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <View>
-              <Image
-                source={require('../assets/main_img.jpg')}
-                style={{ width: imgWidth, height: imgHeight }}
-              />
-            </View>
-          </Animated.View>
+          <SafeAreaView style={styles.container}>
+          <ImageBackground
+
+          source={require('../assets/main_img1.jpg')}
+            resizeMode="stretch"
+            style={{width:'100%',height:'100%'}}
+          />
+          </SafeAreaView>
           );
           }
           }
@@ -126,7 +118,8 @@ import React, { Component } from 'react';
         flex:1,
     },
     container: {
-      paddingTop: 0,
+      flex: 1,
+      padding: 0,
     },
     tinyLogo: {
       width: 500,

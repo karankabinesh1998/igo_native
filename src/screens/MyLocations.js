@@ -19,12 +19,12 @@ export default  function MyLocations({navigation,route}){
 
     // console.log(route.params.userDetail[0].state,"Mylocation"); 
 
-    const [state,Setstate]=useState(route.params.userDetail[0] ? JSON.parse(route.params.userDetail[0].state) : null )
+    const [state,Setstate]=useState(route.params.userDetail[0] ? JSON.parse(route.params.userDetail[0].state) : [] )
     const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null)
     const [refreshing, setRefreshing] = React.useState(false);
     const [selectedItems,SetselectedItems]=useState(route.params.userDetail[0] ? JSON.parse(route.params.userDetail[0].travel_location) : [] )
 
-    // console.log(state);
+    console.log(state);
 
     useEffect(()=>{
       onRefresh()

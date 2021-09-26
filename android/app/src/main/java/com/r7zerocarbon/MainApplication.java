@@ -9,7 +9,7 @@ import com.ocetnik.timer.BackgroundTimerPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.kishanjvaghela.cardview.RNCardViewPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.reactlibrary.ksquad.readsms.ReadSmsPackage;
+// import com.reactlibrary.ksquad.readsms.ReadSmsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
