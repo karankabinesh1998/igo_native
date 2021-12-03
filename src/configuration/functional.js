@@ -2,7 +2,7 @@
 import { ToastAndroid } from "react-native";
 import Stored from '../configuration/storageDetails';
 import AsyncStorage from "@react-native-community/async-storage";
-import RNBackgroundDownloader from "react-native-background-downloader";
+// import RNBackgroundDownloader from "react-native-background-downloader";
 import RNFS from "react-native-fs";
 import Config from "./config";
 
@@ -283,72 +283,72 @@ import Config from "./config";
 //   }
 // }
 
-export async function RefreshJsons(id){
+export async function RefreshJsons(id) {
 
   let LoginToken = await AsyncStorage.getItem(Stored.login_token);
 
   let URL = Config.ACCESS_POINT + Config.BackGroundRefreshApp + `/${id}/${LoginToken}`;
-    console.log(URL,"Refresh JSOn");
+  console.log(URL, "Refresh JSOn");
   let request = await fetch(URL);
   // console.log(request);
   let requestJson = await request.json();
-   let data = JSON.stringify(requestJson)
-  await AsyncStorage.setItem(Stored.userDetail,data);  
-  AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
+  let data = JSON.stringify(requestJson)
+  await AsyncStorage.setItem(Stored.userDetail, data);
+  AsyncStorage.setItem("Userdetail", JSON.stringify(requestJson))
 
   let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
-  let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : []
+  let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : []
   return data1
 
 }
 
 
-export async function BackGroundRefreshApp(id,token){
+export async function BackGroundRefreshApp(id, token) {
   let URL = Config.ACCESS_POINT + Config.BackGroundRefreshApp + `/${id}/${token}`;
-    console.log(URL,"Refresh JSOn");
+  console.log(URL, "Refresh JSOn");
   let request = await fetch(URL);
   // console.log(request);
   let requestJson = await request.json();
-   let data = JSON.stringify(requestJson)
-  await AsyncStorage.setItem(Stored.userDetail,data);  
-  AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
+  let data = JSON.stringify(requestJson)
+  await AsyncStorage.setItem(Stored.userDetail, data);
+  AsyncStorage.setItem("Userdetail", JSON.stringify(requestJson))
 
   let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
-  let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : []
+  let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : []
   return data1
 
 }
 
 
 
-export async function FetchAnnounce(){
+export async function FetchAnnounce() {
   let URL = Config.ACCESS_POINT + Config.FetchAnnounce;
   // console.log(URL,"Refresh JSOn");
   let request = await fetch(URL);
   // console.log(request);
-  if(request.status == 200){
+  if (request.status == 200) {
     let requestJson = await request.json();
-    await AsyncStorage.setItem(Stored.announcement,JSON.stringify(requestJson));  
-    AsyncStorage.setItem("announcement",JSON.stringify(requestJson))
+    await AsyncStorage.setItem(Stored.announcement, JSON.stringify(requestJson));
+    AsyncStorage.setItem("announcement", JSON.stringify(requestJson))
     return requestJson
-  }else{
+  } else {
     return false
   }
-  
+
 }
 
-export async function TripsJsons(id=null){
-  let URL = Config.ACCESS_POINT + Config.NewTripsJson +`/${id}`;
+export async function TripsJsons(id = null) {
+  let URL = Config.ACCESS_POINT + Config.NewTripsJson + `/${id}`;
   // console.log(URL,"hello"); 
   let request = await fetch(URL);
   let requestJson = await request.json();
- let data = JSON.stringify(requestJson)
-//  console.log(request,"trips json");
-  await AsyncStorage.setItem(Stored.TripsJsob,data);  
-  AsyncStorage.setItem("TripsJsob",JSON.stringify(requestJson))
+  let data = JSON.stringify(requestJson)
+  //  console.log(request,"trips json");
+  await AsyncStorage.setItem(Stored.TripsJsob, data);
+  AsyncStorage.setItem("TripsJsob", JSON.stringify(requestJson))
 
   let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
-  let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : []
+  let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : []
   return data1
 
 }
@@ -356,44 +356,44 @@ export async function TripsJsons(id=null){
 
 
 
-export async function DeleteDriver(id){
-  let formData={}
-  let URL = Config.ACCESS_POINT + Config.DeleteDriver+`/${id}`;
+export async function DeleteDriver(id) {
+  let formData = {}
+  let URL = Config.ACCESS_POINT + Config.DeleteDriver + `/${id}`;
   console.log(URL);
   let request = await fetch(URL);
-    console.log(request);
-        if(request.status == 200){
+  console.log(request);
+  if (request.status == 200) {
 
-          let requestJson = await request.json();
-          
-          return requestJson
+    let requestJson = await request.json();
 
-        }else{
-          return null
-        }
+    return requestJson
+
+  } else {
+    return null
+  }
 }
 
-export async function DeleteCab(id){
-  let formData={}
-  let URL = Config.ACCESS_POINT + Config.DeleteCab+`/${id}`;
+export async function DeleteCab(id) {
+  let formData = {}
+  let URL = Config.ACCESS_POINT + Config.DeleteCab + `/${id}`;
   console.log(URL);
   let request = await fetch(URL);
-    console.log(request);
-        if(request.status == 200){
+  console.log(request);
+  if (request.status == 200) {
 
-          let requestJson = await request.json();
-          
-          return requestJson
+    let requestJson = await request.json();
 
-        }else{
-          return null
-        }
+    return requestJson
+
+  } else {
+    return null
+  }
 }
 
 
 
-export async function UploadProfile(formData,id){
-  let URL = Config.ACCESS_POINT + Config.UploadUserProfile+`/${id}`;
+export async function UploadProfile(formData, id) {
+  let URL = Config.ACCESS_POINT + Config.UploadUserProfile + `/${id}`;
   console.log(URL);
   let request = await fetch(URL, {
     method: "POST",
@@ -402,27 +402,27 @@ export async function UploadProfile(formData,id){
       'Content-Type': 'multipart/form-data'
     },
     body: formData
-        });
+  });
 
-        if(request.status == 200){
+  if (request.status == 200) {
 
-          let requestJson = await request.json();
-          let data = JSON.stringify(requestJson);
+    let requestJson = await request.json();
+    let data = JSON.stringify(requestJson);
 
-          await AsyncStorage.setItem(Stored.userDetail,data);  
-          AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
-        
-          let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
-          let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-          console.log(data1);
-          return data1
+    await AsyncStorage.setItem(Stored.userDetail, data);
+    AsyncStorage.setItem("Userdetail", JSON.stringify(requestJson))
 
-        }
+    let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+    let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+    console.log(data1);
+    return data1
+
+  }
 }
 
 
-export async function UpdateProfileSelect(formData,id){
-  let URL = Config.ACCESS_POINT + Config.UpdateMaster+`tbl_user_web/${id}`;
+export async function UpdateProfileSelect(formData, id) {
+  let URL = Config.ACCESS_POINT + Config.UpdateMaster + `tbl_user_web/${id}`;
   console.log(URL);
   let request = await fetch(URL, {
     method: "PUT",
@@ -431,25 +431,25 @@ export async function UpdateProfileSelect(formData,id){
       'Content-Type': 'multipart/form-data'
     },
     body: formData
-        });
+  });
 
-        if(request.status == 200){
+  if (request.status == 200) {
 
-          let requestJson = await request.json();
-          let data = JSON.stringify(requestJson);
+    let requestJson = await request.json();
+    let data = JSON.stringify(requestJson);
 
-          await AsyncStorage.setItem(Stored.userDetail,data);  
-          AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
-        
-          let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
-          let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-          // console.log(data1);
-          return data1
+    await AsyncStorage.setItem(Stored.userDetail, data);
+    AsyncStorage.setItem("Userdetail", JSON.stringify(requestJson))
 
-        }
+    let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+    let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+    // console.log(data1);
+    return data1
+
+  }
 }
 
-export async function sendOtp(formData){
+export async function sendOtp(formData) {
   let URL = Config.ACCESS_POINT + Config.sendOtp;
   console.log(URL);
   let request = await fetch(URL, {
@@ -459,21 +459,21 @@ export async function sendOtp(formData){
       'Content-Type': 'multipart/form-data'
     },
     body: formData
-        });
-        console.log(request,"OTPSEND");
-        if(request.status == 200){
+  });
+  console.log(request, "OTPSEND");
+  if (request.status == 200) {
 
-          let requestJson = await request.json()
+    let requestJson = await request.json()
 
-         console.log(requestJson,request);
-         
-         return requestJson
+    console.log(requestJson, request);
 
-        }
+    return requestJson
+
+  }
 }
 
 
-export async function CheckOtpandPassword(formData){
+export async function CheckOtpandPassword(formData) {
   let URL = Config.ACCESS_POINT + Config.CheckOtpandPassword;
   console.log(URL);
   let request = await fetch(URL, {
@@ -483,28 +483,28 @@ export async function CheckOtpandPassword(formData){
       'Content-Type': 'multipart/form-data'
     },
     body: formData
-        });
-        console.log(request,"OTPSEND");
-        if(request.status == 200){
+  });
+  console.log(request, "OTPSEND");
+  if (request.status == 200) {
 
-          let requestJson = await request.json()
+    let requestJson = await request.json()
 
-         console.log(requestJson,request);
-         
-         return requestJson
+    console.log(requestJson, request);
 
-        }else{
+    return requestJson
 
-          let requestJson1 = await request.json()
+  } else {
 
-          return requestJson1
+    let requestJson1 = await request.json()
 
-        }
+    return requestJson1
+
+  }
 }
 
 
-export async function CancelTrip(formData,id){
-  let URL = Config.ACCESS_POINT + Config.CancelTrip+`/${id}`;
+export async function CancelTrip(formData, id) {
+  let URL = Config.ACCESS_POINT + Config.CancelTrip + `/${id}`;
   console.log(URL);
   let request = await fetch(URL, {
     method: "POST",
@@ -513,27 +513,27 @@ export async function CancelTrip(formData,id){
       'Content-Type': 'multipart/form-data'
     },
     body: formData
-        });
+  });
 
-        if(request.status == 200){
+  if (request.status == 200) {
 
-          let requestJson = await request.json();
-          // let data = JSON.stringify(requestJson)
+    let requestJson = await request.json();
+    // let data = JSON.stringify(requestJson)
 
-          // await AsyncStorage.setItem(Stored.userDetail,data);  
-          // AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
-        
-          // let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
-          // let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-          // console.log(data1);
-          return requestJson
+    // await AsyncStorage.setItem(Stored.userDetail,data);  
+    // AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
 
-        }
+    // let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+    // let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+    // console.log(data1);
+    return requestJson
+
+  }
 }
 
 
-export async function UpdateToken(formData,id){
-  let URL = Config.ACCESS_POINT + Config.UpdateToken+`/${id}`;
+export async function UpdateToken(formData, id) {
+  let URL = Config.ACCESS_POINT + Config.UpdateToken + `/${id}`;
   console.log(URL);
   let request = await fetch(URL, {
     method: "POST",
@@ -542,28 +542,28 @@ export async function UpdateToken(formData,id){
       'Content-Type': 'multipart/form-data'
     },
     body: formData
-        });
+  });
 
-        if(request.status == 200){
+  if (request.status == 200) {
 
-          let requestJson = await request.json();
-          let data = JSON.stringify(requestJson)
+    let requestJson = await request.json();
+    let data = JSON.stringify(requestJson)
 
-          await AsyncStorage.setItem(Stored.userDetail,data);  
-          AsyncStorage.setItem("Userdetail",JSON.stringify(requestJson))
-        
-          let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
-          let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-          console.log(data1);
-          return data1
+    await AsyncStorage.setItem(Stored.userDetail, data);
+    AsyncStorage.setItem("Userdetail", JSON.stringify(requestJson))
 
-        }
+    let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+    let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+    console.log(data1);
+    return data1
+
+  }
 }
 
 
-export async function VendorUserLogout(formdata,id){
-  let URL = Config.ACCESS_POINT + Config.VendorUserLogout+`/${id}`;
-  console.log(URL,formdata);
+export async function VendorUserLogout(formdata, id) {
+  let URL = Config.ACCESS_POINT + Config.VendorUserLogout + `/${id}`;
+  console.log(URL, formdata);
   let request = await fetch(URL, {
     method: "POST",
     headers: {
@@ -571,25 +571,25 @@ export async function VendorUserLogout(formdata,id){
       'Content-Type': 'multipart/form-data'
     },
     body: formdata
-        });
-        console.log(request);
-        if(request.status == 200){
+  });
+  console.log(request);
+  if (request.status == 200) {
 
-          // let UserDetail = RefreshJsons(vendor_id);
+    // let UserDetail = RefreshJsons(vendor_id);
 
-          // if(UserDetail){
-          //     let requestJson = await request.json();
-             return true
+    // if(UserDetail){
+    //     let requestJson = await request.json();
+    return true
 
-          // }
-         }else{
-           return false
-         }
+    // }
+  } else {
+    return false
+  }
 
 }
 
-export async function StartandEndTrip(formData,id,vendor_id){
-  let URL = Config.ACCESS_POINT + Config.StartandEndTrip+`/${id}`;
+export async function StartandEndTrip(formData, id, vendor_id) {
+  let URL = Config.ACCESS_POINT + Config.StartandEndTrip + `/${id}`;
   console.log(URL);
   let request = await fetch(URL, {
     method: "POST",
@@ -598,34 +598,34 @@ export async function StartandEndTrip(formData,id,vendor_id){
       'Content-Type': 'multipart/form-data'
     },
     body: formData
-        });
+  });
 
-        if(request.status == 200){
+  if (request.status == 200) {
 
-          // let UserDetail = RefreshJsons(vendor_id);
+    // let UserDetail = RefreshJsons(vendor_id);
 
-         
 
-            let requestJson = await request.json();
-            console.log(requestJson,"541");
-            return requestJson
-        }else{
 
-          return false
-        }
+    let requestJson = await request.json();
+    console.log(requestJson, "541");
+    return requestJson
+  } else {
+
+    return false
+  }
 }
 
 
 
 
 
-export async function AddBidTrips(formData,id = null,venid ){
+export async function AddBidTrips(formData, id = null, venid) {
 
-  if(id != null){
+  if (id != null) {
 
     console.log(id);
 
-    let URL = Config.ACCESS_POINT + Config.AddBidTrips+`/${id}/${venid}`;
+    let URL = Config.ACCESS_POINT + Config.AddBidTrips + `/${id}/${venid}`;
 
     console.log(URL);
 
@@ -636,30 +636,30 @@ export async function AddBidTrips(formData,id = null,venid ){
         'Content-Type': 'multipart/form-data'
       },
       body: formData
-          });
+    });
 
 
-          if(request.status == 200){
-  
-            let requestJson = await request.json();
-            let data = JSON.stringify(requestJson);
-  
-            console.log(requestJson);
-  
-            await AsyncStorage.setItem(Stored.TripsJsob,data);  
-            AsyncStorage.setItem("TripsJsob",JSON.stringify(requestJson))
-          
-            let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
-            let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-            console.log(data1);
-            return data1;
-  
-          }
+    if (request.status == 200) {
 
-  }else{
-    let URL = Config.ACCESS_POINT + Config.AddBidTrips +`/0/${venid}`;
+      let requestJson = await request.json();
+      let data = JSON.stringify(requestJson);
+
+      console.log(requestJson);
+
+      await AsyncStorage.setItem(Stored.TripsJsob, data);
+      AsyncStorage.setItem("TripsJsob", JSON.stringify(requestJson))
+
+      let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
+      let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+      console.log(data1);
+      return data1;
+
+    }
+
+  } else {
+    let URL = Config.ACCESS_POINT + Config.AddBidTrips + `/0/${venid}`;
     console.log(URL);
-  
+
     let request = await fetch(URL, {
       method: "POST",
       headers: {
@@ -667,31 +667,31 @@ export async function AddBidTrips(formData,id = null,venid ){
         'Content-Type': 'multipart/form-data'
       },
       body: formData
-          });
-  
-          if(request.status == 200){
-  
-            let requestJson = await request.json();
-            let data = JSON.stringify(requestJson);
-  
-            console.log(requestJson);
-  
-            await AsyncStorage.setItem(Stored.TripsJsob,data);  
-            AsyncStorage.setItem("TripsJsob",JSON.stringify(requestJson))
-          
-            let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
-            let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
-            console.log(data1);
-            return data1
-  
-          }
+    });
+
+    if (request.status == 200) {
+
+      let requestJson = await request.json();
+      let data = JSON.stringify(requestJson);
+
+      console.log(requestJson);
+
+      await AsyncStorage.setItem(Stored.TripsJsob, data);
+      AsyncStorage.setItem("TripsJsob", JSON.stringify(requestJson))
+
+      let Stored_Data = await AsyncStorage.getItem(Stored.TripsJsob);
+      let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+      console.log(data1);
+      return data1
+
+    }
   }
- 
+
 }
 
-export async function AddDriverdata(formData){
+export async function AddDriverdata(formData) {
   let URL = Config.ACCESS_POINT + Config.AddDriverdata;
-    console.log(URL);
+  console.log(URL);
   let request = await fetch(URL, {
     method: "POST",
     headers: {
@@ -699,70 +699,70 @@ export async function AddDriverdata(formData){
       'Content-Type': 'multipart/form-data'
     },
     body: formData
-        });
+  });
 
-        if(request.status == 200){
-          let requestJson = await request.json();
-          return requestJson
+  if (request.status == 200) {
+    let requestJson = await request.json();
+    return requestJson
 
-        }else if(request.status == 400){
+  } else if (request.status == 400) {
 
-          return false
-        }
+    return false
+  }
 
-      }
+}
 
-      
 
-      export async function EditCabdata(formData,id){
-        let URL = Config.ACCESS_POINT+Config.EditCabdata+`/${id}`;
-          console.log(URL);
-        let request = await fetch(URL, {
-          method: "PUT",
-          headers: {
-            // "Accept": "application/json",
-            'Content-Type': 'multipart/form-data'
-          },
-          body: formData
-              });
-              console.log(request,"request 679");
-              if(request.status == 200){
-                let requestJson = await request.json();
-                return requestJson
-      
-              }else if(request.status == 400){
-      
-                return false
-              }
-      
-            }
 
-      export async function EditDriverdata(formData,id){
-        let URL = Config.ACCESS_POINT+Config.AddDriverdata+`/${id}`;
-          console.log(URL);
-        let request = await fetch(URL, {
-          method: "PUT",
-          headers: {
-            // "Accept": "application/json",
-            'Content-Type': 'multipart/form-data'
-          },
-          body: formData
-              });
-              console.log(request,"request 679");
-              if(request.status == 200){
-                let requestJson = await request.json();
-                return requestJson
-      
-              }else if(request.status == 400){
-      
-                return false
-              }
-      
-            }
+export async function EditCabdata(formData, id) {
+  let URL = Config.ACCESS_POINT + Config.EditCabdata + `/${id}`;
+  console.log(URL);
+  let request = await fetch(URL, {
+    method: "PUT",
+    headers: {
+      // "Accept": "application/json",
+      'Content-Type': 'multipart/form-data'
+    },
+    body: formData
+  });
+  console.log(request, "request 679");
+  if (request.status == 200) {
+    let requestJson = await request.json();
+    return requestJson
 
-export async function Addcabs1(formData){
+  } else if (request.status == 400) {
+
+    return false
+  }
+
+}
+
+export async function EditDriverdata(formData, id) {
+  let URL = Config.ACCESS_POINT + Config.AddDriverdata + `/${id}`;
+  console.log(URL);
+  let request = await fetch(URL, {
+    method: "PUT",
+    headers: {
+      // "Accept": "application/json",
+      'Content-Type': 'multipart/form-data'
+    },
+    body: formData
+  });
+  console.log(request, "request 679");
+  if (request.status == 200) {
+    let requestJson = await request.json();
+    return requestJson
+
+  } else if (request.status == 400) {
+
+    return false
+  }
+
+}
+
+export async function Addcabs1(formData) {
   let URL = Config.ACCESS_POINT + Config.Addcabs1;
-    console.log(URL);
+  console.log(URL);
   let request = await fetch(URL, {
     method: "POST",
     headers: {
@@ -770,39 +770,39 @@ export async function Addcabs1(formData){
       'Content-Type': 'multipart/form-data'
     },
     body: formData
-        });
+  });
 
-        if(request.status == 200){
-          let requestJson = await request.json();
-          return requestJson
+  if (request.status == 200) {
+    let requestJson = await request.json();
+    return requestJson
 
-        }
+  }
 
-      }
+}
 
-      export async function ConfirmActiveTrip(formData){
-        let URL = Config.ACCESS_POINT + Config.ConfirmActiveTrip;
-          console.log(URL);
-        let request = await fetch(URL, {
-          method: "POST",
-          headers: {
-            // "Accept": "application/json",
-            'Content-Type': 'multipart/form-data'
-          },
-          body: formData
-              });
-      
-              if(request.status == 200){
-                let requestJson = await request.json();
-                return requestJson
-      
-              }
-      
-            }
+export async function ConfirmActiveTrip(formData) {
+  let URL = Config.ACCESS_POINT + Config.ConfirmActiveTrip;
+  console.log(URL);
+  let request = await fetch(URL, {
+    method: "POST",
+    headers: {
+      // "Accept": "application/json",
+      'Content-Type': 'multipart/form-data'
+    },
+    body: formData
+  });
 
-      
+  if (request.status == 200) {
+    let requestJson = await request.json();
+    return requestJson
 
-export async function UploadAppDocumentUpload(formData){
+  }
+
+}
+
+
+
+export async function UploadAppDocumentUpload(formData) {
   let URL = Config.ACCESS_POINT + Config.AppDocumentUpload;
   console.log(URL);
   let request = await fetch(URL, {
@@ -812,25 +812,19 @@ export async function UploadAppDocumentUpload(formData){
       'Content-Type': 'multipart/form-data'
     },
     body: formData
-        });
+  });
 
-        if(request.status == 200){
+  if (request.status == 200) {
 
-          let requestJson = await request.json();
-          let data = JSON.stringify(requestJson)
+    let requestJson = await request.json();
+    let data = JSON.stringify(requestJson)
 
-          let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
-          let  data1= Stored_Data !== null ? JSON.parse(Stored_Data) : [];
+    let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
+    let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
 
-          data1[0].Documentation = data
+    data1[0].Documentation = data
 
-          console.log(data1,"AsyncStorage");
-          // await AsyncStorage.setItem(Stored.userDetail,JSON.stringify(data1));  
-          // AsyncStorage.setItem("Userdetail",JSON.stringify(data1))
-        
-          
-          // console.log(data1);
-          return requestJson
-
-        }
+    console.log(data1, "AsyncStorage");
+    return requestJson
+  }
 }

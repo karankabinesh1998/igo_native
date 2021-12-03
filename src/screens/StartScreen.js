@@ -20,17 +20,17 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class StartScreen extends Component  {
-  constructor(props){
+export default class StartScreen extends Component {
+  constructor(props) {
     super(props)
     {
-      this.state={
-          spinner : true
-      } 
+      this.state = {
+        spinner: true
+      }
     }
   }
 
- async componentDidMount(){
+  async componentDidMount() {
 
     // await AsyncStorage.getItem(Stored.userDetail)
     // console.log(this.props.navigation);
@@ -40,54 +40,54 @@ export default class StartScreen extends Component  {
     let data = Stored_Data !== null ? JSON.parse(Stored_Data) : []
     // console.log(data);
     let LoginToken = await AsyncStorage.getItem(Stored.login_token);
-    if(data.length && LoginToken != null){
+    if (data.length && LoginToken != null) {
       // console.log("data","DAA","KAARN");
       this.props.navigation.navigate('Dashboard')
-    }else{
-        this.setState({
-          spinner : false
-        })
+    } else {
+      this.setState({
+        spinner: false
+      })
     }
 
   }
 
-  render(){
-  return (
-    <Background>
-      <Logo />
-      
-      { this.state.spinner == false ? <> 
-      
-        <Header>Igotaxy Car Rentals</Header>
-      <Paragraph>
-      The easiest way to start your online travels.
-      </Paragraph>
-      <Button
-        mode="contained"
-        style={{backgroundColor:"#ce3232"}}
-        onPress={() => this.props.navigation.navigate('LoginScreen')}
-      >
-        Login
-      </Button>
-      <Button
-        mode="contained"
-        style={{backgroundColor:"#ce3232"}}
-        onPress={ () => this.props.navigation.navigate('RegisterScreen')}
-      >
-        Sign Up
-      </Button>
+  render() {
+    return (
+      <Background>
+        <Logo />
 
-       </> : 
-       
-       <View style={[styles.container, styles.horizontal]}>
-         <ActivityIndicator size="large" color="#00ff00" />
-      </View>
-       
-       }
-      
-    </Background>
-  )
-  
+        {this.state.spinner == false ? <>
+
+          <Header>Igotaxi Car Rentals</Header>
+          <Paragraph>
+            The easiest way to start your online travels.
+          </Paragraph>
+          <Button
+            mode="contained"
+            style={{ backgroundColor: "#ce3232" }}
+            onPress={() => this.props.navigation.navigate('LoginScreen')}
+          >
+            Login
+          </Button>
+          <Button
+            mode="contained"
+            style={{ backgroundColor: "#ce3232" }}
+            onPress={() => this.props.navigation.navigate('RegisterScreen')}
+          >
+            Sign Up
+          </Button>
+
+        </> :
+
+          <View style={[styles.container, styles.horizontal]}>
+            <ActivityIndicator size="large" color="#00ff00" />
+          </View>
+
+        }
+
+      </Background>
+    )
+
   }
-  
+
 }

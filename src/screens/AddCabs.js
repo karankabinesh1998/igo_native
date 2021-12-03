@@ -1,176 +1,167 @@
-import { View , Text, ScrollView ,TouchableOpacity, Modal ,KeyboardAvoidingView, 
-  RefreshControl,BackHandler,Alert,Keyboard,TouchableWithoutFeedback,Image ,StyleSheet} from 'react-native';
+import {
+  View, Text, ScrollView, TouchableOpacity, Modal, KeyboardAvoidingView,
+  RefreshControl, BackHandler, Alert, Keyboard, TouchableWithoutFeedback, Image, StyleSheet
+} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import React, { useState , useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import CardView from 'react-native-cardview';
-import { Header , Rating} from 'react-native-elements';
+import { Header, Rating } from 'react-native-elements';
 import Header1 from '../components/Header';
-// import Logo from '../components/Logo';
-// import WhatsappandCall from '../components/WhatsappandCall';
-// import AsyncStorage from "@react-native-community/async-storage";
-// import Stored from '../configuration/storageDetails';
 import { DeleteCab, EditCabdata, RefreshJsons } from '../configuration/functional';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import { Addcabs1 } from '../configuration/functional';
-// import  Config from '../configuration/config';
 import DocumentDriverPicker from '../components/DocumentDriverPicker';
-// import AccordionTab from '../components/AccordionTab';
 import { FAB, Portal, Provider } from 'react-native-paper';
 import SpinnerButton from 'react-native-spinner-button';
 import Header_New from '../components/Header_New';
-import Entypo from 'react-native-vector-icons/Entypo'
+import Entypo from 'react-native-vector-icons/Entypo';
 
-export default  function AddCabs({navigation,route}){
+export default function AddCabs({ navigation, route }) {
 
-    const [id,setId]=useState(route.params.userDetail[0].id ? route.params.userDetail[0].id :null);
-    // const [id,setId]=useState(navigation.route.params.userDetail.userDetail[0].id ? navigation.route.params.userDetail.userDetail[0].id :null)
-    const [state, setState] = React.useState({ open: false });
+  const [id, setId] = useState(route.params.userDetail[0].id ? route.params.userDetail[0].id : null);
+  const [state, setState] = React.useState({ open: false });
 
-      const onStateChange = ({ open }) => setState({ open });
+  const onStateChange = ({ open }) => setState({ open });
 
-      const { open } = state;
-    const [vendorCabs,setvendorCabs]=useState(JSON.parse(route.params.userDetail[0].vendorCabs))
-    const [modalVisible, setModalVisible] = useState(false);
-    const [cab_name, setcab_name] = useState({ value: '', error: '' })
-    const [cab_type, setcab_type] = useState({ value: '', error: '' })
-    const [onEditstate, setonEditstate] = useState(false);
-    const [cab_image_front, setcab_image_front] = useState({ value:null, error: '' });
-    const [cab_image_front1, setcab_image_front1] = useState('');
-    const [driverid,setdriverid]=useState(null)
-    const [cab_image_back, setcab_image_back] = useState({ value:null, error: '' });
-    const [cab_image_back1, setcab_image_back1] = useState('');
+  const { open } = state;
+  const [vendorCabs, setvendorCabs] = useState(JSON.parse(route.params.userDetail[0].vendorCabs))
+  const [modalVisible, setModalVisible] = useState(false);
+  const [cab_name, setcab_name] = useState({ value: '', error: '' })
+  const [cab_type, setcab_type] = useState({ value: '', error: '' })
+  const [onEditstate, setonEditstate] = useState(false);
+  const [cab_image_front, setcab_image_front] = useState({ value: null, error: '' });
+  const [cab_image_front1, setcab_image_front1] = useState('');
+  const [driverid, setdriverid] = useState(null)
+  const [cab_image_back, setcab_image_back] = useState({ value: null, error: '' });
+  const [cab_image_back1, setcab_image_back1] = useState('');
 
-    const [cab_image_side, setcab_image_side] = useState({ value:null, error: '' });
-    const [cab_image_side1, setcab_image_side1] = useState('');
+  const [cab_image_side, setcab_image_side] = useState({ value: null, error: '' });
+  const [cab_image_side1, setcab_image_side1] = useState('');
 
-    const [ cab_number , setcab_number ] = useState({value:'',error:''});
+  const [cab_number, setcab_number] = useState({ value: '', error: '' });
 
-    const [cab_rc_book_number,setcab_rc_book_number]=useState({value:'',error:''});
+  const [cab_rc_book_number, setcab_rc_book_number] = useState({ value: '', error: '' });
 
-    const [cab_insurance,setcab_insurance]=useState({value:'',error:''});
+  const [cab_insurance, setcab_insurance] = useState({ value: '', error: '' });
 
-    const [cab_insurance1,setcab_insurance1]=useState(null)
+  const [cab_insurance1, setcab_insurance1] = useState(null)
 
-    const [activeIndicator,setActiveindicator] = useState(false)
-    
-    const [refreshing, setRefreshing] = React.useState(false);
+  const [activeIndicator, setActiveindicator] = useState(false)
 
-    // console.log(vendorDrivers,"AddDreiver");
+  const [refreshing, setRefreshing] = React.useState(false);
 
- useEffect(() => {
+  // console.log(vendorDrivers,"AddDreiver");
+
+  useEffect(() => {
     const backAction = () => {
-        navigation.navigate('Dashboard')
+      navigation.navigate('Dashboard')
       return true;
     };
 
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       backAction
-    ); 
+    );
 
     return () => backHandler.remove();
-  }, []);   
+  }, []);
 
 
 
-  const handleChange=(e)=>{
-    
-    setcab_image_front({value:e,error:''});
+  const handleChange = (e) => {
+
+    setcab_image_front({ value: e, error: '' });
     setcab_image_front1(e.name);
   }
 
 
-  const handleChange1=(e)=>{
-    
-    setcab_image_back({value:e,error:''});
+  const handleChange1 = (e) => {
+
+    setcab_image_back({ value: e, error: '' });
     setcab_image_back1(e.name);
   }
 
-  const handleChange2=(e)=>{
-    
-    setcab_image_side({value:e,error:''});
+  const handleChange2 = (e) => {
+
+    setcab_image_side({ value: e, error: '' });
     setcab_image_side1(e.name);
   }
 
-  const handleChange3 = (e)=>{
-    
-    setcab_insurance({value:e,error:''});
+  const handleChange3 = (e) => {
+
+    setcab_insurance({ value: e, error: '' });
     setcab_insurance1(e.name);
   }
 
 
 
-  const Submit=async()=>{
+  const Submit = async () => {
 
     // setActiveindicator(true)
 
-    if(!cab_name.value){
+    if (!cab_name.value) {
       setcab_name({ ...cab_name, error: "Cab name cannot be emty" })
       return
     }
 
-    const formData=new FormData();
-    formData.append("vendor",id);
-    formData.append("cab_name",cab_name.value);
-    formData.append("cab_type",cab_type.value);
-    formData.append("cab_image_front",cab_image_front1);
-    formData.append("cab_image_back",cab_image_back1);
-    formData.append("cab_image_side",cab_image_side1);
-    formData.append("cab_number",cab_number.value);
-    formData.append("cab_rc_book_number",cab_rc_book_number.value);
-    formData.append("cab_insurance",cab_insurance1);
-    // formData.append("file",JSON.stringify(["file1","file2","file3","file4"]))
-    formData.append("file1",cab_image_front.value);
-    formData.append("file2",cab_image_back.value);
-    formData.append("file3",cab_image_side.value);
-    formData.append("file4",cab_insurance.value)
-
-
-    console.log(formData);
+    const formData = new FormData();
+    formData.append("vendor", id);
+    formData.append("cab_name", cab_name.value);
+    formData.append("cab_type", cab_type.value);
+    formData.append("cab_image_front", cab_image_front1);
+    formData.append("cab_image_back", cab_image_back1);
+    formData.append("cab_image_side", cab_image_side1);
+    formData.append("cab_number", cab_number.value);
+    formData.append("cab_rc_book_number", cab_rc_book_number.value);
+    formData.append("cab_insurance", cab_insurance1);
+    formData.append("file1", cab_image_front.value);
+    formData.append("file2", cab_image_back.value);
+    formData.append("file3", cab_image_side.value);
+    formData.append("file4", cab_insurance.value)
 
     let result = await Addcabs1(formData);
 
-    if(result != false){
+    if (result != false) {
 
-        console.log(result);
+      console.log(result);
 
-        setvendorCabs(result)
-        setActiveindicator(false)
-        setcab_name({ value: '', error: '' })
-        setcab_image_back({ value: '', error: '' })
-        setcab_image_back1(null)
-        setcab_image_front({ value: '', error: '' })
-        setcab_image_front1(null)
-        setcab_image_side({ value: '', error: '' })
-        setcab_image_side1(null)
-        setcab_insurance({ value: '', error: '' })
-        setcab_insurance1(null)
-        setcab_number({ value: '', error: '' })
-        setcab_rc_book_number({ value: '', error: '' })
-        setcab_type({ value: '', error: '' })
-        setModalVisible(false)
+      setvendorCabs(result)
+      setActiveindicator(false)
+      setcab_name({ value: '', error: '' })
+      setcab_image_back({ value: '', error: '' })
+      setcab_image_back1(null)
+      setcab_image_front({ value: '', error: '' })
+      setcab_image_front1(null)
+      setcab_image_side({ value: '', error: '' })
+      setcab_image_side1(null)
+      setcab_insurance({ value: '', error: '' })
+      setcab_insurance1(null)
+      setcab_number({ value: '', error: '' })
+      setcab_rc_book_number({ value: '', error: '' })
+      setcab_type({ value: '', error: '' })
+      setModalVisible(false)
 
-        Alert.alert(
-          "Successfully Added",
-          "The Cab was Added successfully!",
-          [
-           
-            { text: "OK", onPress: () =>  onRefresh() }
-          ]
-        )
+      Alert.alert(
+        "Successfully Added",
+        "The Cab was Added successfully!",
+        [
 
-    }else{
-        Alert.alert(
-          "Already Exists",
-          "The Cab was already Exists!",
-          [
-          
-            { text: "OK", onPress: () =>  setActiveindicator(false)}
-          ]
-        )
+          { text: "OK", onPress: () => onRefresh() }
+        ]
+      )
+
+    } else {
+      Alert.alert(
+        "Already Exists",
+        "The Cab was already Exists!",
+        [
+
+          { text: "OK", onPress: () => setActiveindicator(false) }
+        ]
+      )
     }
-   
+
 
   }
 
@@ -179,19 +170,19 @@ export default  function AddCabs({navigation,route}){
   }
 
 
-  
-  const onRefresh = React.useCallback(async() => {
-  
+
+  const onRefresh = React.useCallback(async () => {
+
     setRefreshing(true);
-  
-   let result = await RefreshJsons(id);
+
+    let result = await RefreshJsons(id);
     setvendorCabs(JSON.parse(result[0].vendorCabs))
     //  console.log(JSON.parse(result[0].vendorCabs),"Refrehjson");
-     route.params.OtherPageRefersh();
+    route.params.OtherPageRefersh();
     wait(5000).then(() => setRefreshing(false));
   }, []);
 
-  const ResetModal =async()=>{
+  const ResetModal = async () => {
     setModalVisible(false)
     setonEditstate(false)
 
@@ -212,7 +203,7 @@ export default  function AddCabs({navigation,route}){
   }
 
 
-  const EditCab =(ival)=>{
+  const EditCab = (ival) => {
     Alert.alert(
       "Are You Sure!!",
       `Do you want to Edit ${ival.cab_name} ?`,
@@ -227,75 +218,63 @@ export default  function AddCabs({navigation,route}){
     );
   }
 
-  const EditCabFromVendor = async(ival)=>{
+  const EditCabFromVendor = async (ival) => {
 
     try {
 
       console.log(ival)
-      
-      setcab_name({ value:ival.cab_name, error: '' })
-      setcab_type({ value:ival.cab_type, error: '' })
-      setonEditstate(true);
-      // const [cab_image_front, setcab_image_front] = useState({ value:null, error: '' });
 
+      setcab_name({ value: ival.cab_name, error: '' })
+      setcab_type({ value: ival.cab_type, error: '' })
+      setonEditstate(true);
       setcab_image_front1(ival.cab_image_front);
 
       setdriverid(ival.id)
-      // const [cab_image_back, setcab_image_back] = useState({ value:null, error: '' });
-
       setcab_image_back1(ival.cab_image_front);
-  
-      // setcab_image_side({ value:null, error: '' });
-
       setcab_image_side1(ival.cab_image_side);
-  
-      setcab_number({value:ival.cab_number,error:''});
-  
-      setcab_rc_book_number({value:ival.cab_rc_book_number,error:''});
-  
-      // const [cab_insurance,setcab_insurance]=useState({value:'',error:''});
-  
+
+      setcab_number({ value: ival.cab_number, error: '' });
+
+      setcab_rc_book_number({ value: ival.cab_rc_book_number, error: '' });
+
       setcab_insurance1(ival.cab_insurance)
 
       setModalVisible(true)
-      
+
     } catch (error) {
       console.log(error)
     }
-      
+
   }
 
-  const Update = async()=>{
-    const formData=new FormData();
-    formData.append("vendor",id);
-    formData.append("cab_name",cab_name.value);
-    formData.append("cab_type",cab_type.value);
-    formData.append("cab_image_front",cab_image_front1);
-    formData.append("cab_image_back",cab_image_back1);
-    formData.append("cab_image_side",cab_image_side1);
-    formData.append("cab_number",cab_number.value);
-    formData.append("cab_rc_book_number",cab_rc_book_number.value);
-    formData.append("cab_insurance",cab_insurance1);
-    // formData.append("file",JSON.stringify(["file1","file2","file3","file4"]))
-    formData.append("file1",cab_image_front.value);
-    formData.append("file2",cab_image_back.value);
-    formData.append("file3",cab_image_side.value);
-    formData.append("file4",cab_insurance.value)
+  const Update = async () => {
+    const formData = new FormData();
+    formData.append("vendor", id);
+    formData.append("cab_name", cab_name.value);
+    formData.append("cab_type", cab_type.value);
+    formData.append("cab_image_front", cab_image_front1);
+    formData.append("cab_image_back", cab_image_back1);
+    formData.append("cab_image_side", cab_image_side1);
+    formData.append("cab_number", cab_number.value);
+    formData.append("cab_rc_book_number", cab_rc_book_number.value);
+    formData.append("cab_insurance", cab_insurance1);
+    formData.append("file1", cab_image_front.value);
+    formData.append("file2", cab_image_back.value);
+    formData.append("file3", cab_image_side.value);
+    formData.append("file4", cab_insurance.value)
 
-
-    console.log(formData);
 
     try {
 
-      let result = await EditCabdata(formData,driverid);
+      let result = await EditCabdata(formData, driverid);
 
-    if(result != false){
+      if (result != false) {
 
         console.log(result);
 
         setModalVisible(false)
         setonEditstate(false)
-    
+
         setcab_name({ value: '', error: '' })
         setcab_image_back({ value: '', error: '' })
         setcab_image_back1(null)
@@ -310,33 +289,33 @@ export default  function AddCabs({navigation,route}){
         setcab_type({ value: '', error: '' })
         setdriverid(null)
         setActiveindicator(false)
-       
+
         Alert.alert(
           "Successfully Updated",
           "The Cab was Updated successfully!",
           [
-           
-            { text: "OK", onPress: () =>  onRefresh() }
+
+            { text: "OK", onPress: () => onRefresh() }
           ]
         )
-    }else{
-      Alert.alert(
-        "Already Exists",
-        "The cAB was already Exists!",
-        [
-         
-          { text: "OK", onPress: () =>  setActiveindicator(false)}
-        ]
-      )
-    }
-      
+      } else {
+        Alert.alert(
+          "Already Exists",
+          "The cAB was already Exists!",
+          [
+
+            { text: "OK", onPress: () => setActiveindicator(false) }
+          ]
+        )
+      }
+
     } catch (error) {
       console.log(error)
     }
-    
+
   }
 
-  const OnDeleteCab = (ival)=>{
+  const OnDeleteCab = (ival) => {
 
     Alert.alert(
       "Are You Sure!!",
@@ -352,563 +331,471 @@ export default  function AddCabs({navigation,route}){
     );
   }
 
-  const DeleteDriverFromCab  = async(ival)=>{
+  const DeleteDriverFromCab = async (ival) => {
 
-    console.log(ival,"fghddfh")
+    console.log(ival, "fghddfh")
 
-  try {
+    try {
 
-    let result = await DeleteCab(ival.id)
+      let result = await DeleteCab(ival.id)
 
-    if(result != null){
-        
+      if (result != null) {
+
         Alert.alert(
           "Driver Deleted",
           "Driver Deleted Successfully!",
           [
-           
-            { text: "OK", onPress: () => onRefresh()}
+
+            { text: "OK", onPress: () => onRefresh() }
           ]
         )
+      }
+
+    } catch (error) {
+      console.log(error);
     }
-    
-  } catch (error) {
-    console.log(error);
   }
-}
 
 
-  const ratingCompleted =(rating)=>{
+  const ratingCompleted = (rating) => {
 
     console.log("Rating is: " + rating)
   }
-   
-return(
-    <SafeAreaProvider style={{backgroundColor:"lightgrey"}}> 
 
-    <Provider>
-<Portal>
-        <FAB.Group
-          open={false}
-          color="white"
-          fabStyle={{backgroundColor:"#ce3232"}}
-          icon={open ? 'plus' : 'plus'}
-          actions={[
-            { icon: 'plus', onPress: () => console.log('Pressed add') },
-            {
-              icon: 'star',
-              label: 'Star',
-              onPress: () => console.log('Pressed star'),
-            },
-            {
-              icon: 'email',
-              label: 'Email',
-              onPress: () => console.log('Pressed email'),
-            },
-            {
-              icon: 'bell',
-              label: 'Remind',
-              onPress: () => console.log('Pressed notifications'),
-              small: false,
-            },
-          ]}
-          style={{position:'relative', top: 350, left: 0}}
-          onStateChange={onStateChange}
-          onPress={() => setModalVisible(!modalVisible)}
-        />
-      </Portal>
+  return (
+    <SafeAreaProvider style={{ backgroundColor: "lightgrey" }}>
 
-      <Modal
-  animationType="fade"
-  transparent={true}
-  visible={modalVisible}
-  onRequestClose={() => ResetModal()}
-  >
+      <Provider>
+        <Portal>
+          <FAB.Group
+            open={false}
+            color="white"
+            fabStyle={{ backgroundColor: "#ce3232" }}
+            icon={open ? 'plus' : 'plus'}
+            actions={[
+              { icon: 'plus', onPress: () => console.log('Pressed add') },
+              {
+                icon: 'star',
+                label: 'Star',
+                onPress: () => console.log('Pressed star'),
+              },
+              {
+                icon: 'email',
+                label: 'Email',
+                onPress: () => console.log('Pressed email'),
+              },
+              {
+                icon: 'bell',
+                label: 'Remind',
+                onPress: () => console.log('Pressed notifications'),
+                small: false,
+              },
+            ]}
+            style={{ position: 'relative', top: 350, left: 0 }}
+            onStateChange={onStateChange}
+            onPress={() => setModalVisible(!modalVisible)}
+          />
+        </Portal>
 
-<View style={styles.centeredView1}>
-  <View style={styles.modalView}>
-  <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
-  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-  <ScrollView showsVerticalScrollIndicator={false}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => ResetModal()}
+        >
 
-  <Header1 style={styles.heading}>{onEditstate==true ? "Update Cab" : "Add Cab"}</Header1>
+          <View style={styles.centeredView1}>
+            <View style={styles.modalView}>
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={styles.container}
+              >
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                  <ScrollView showsVerticalScrollIndicator={false}>
 
-  <TextInput
-        label="Cab Name"
-        returnKeyType="next"
-        container={styles.InputText}
-        value={cab_name.value}
-        onChangeText={(text) => setcab_name({ value: text, error: '' })}
-        error={!!cab_name.error}
-        errorText={cab_name.error}
-        />
+                    <Header1 style={styles.heading}>{onEditstate == true ? "Update Cab" : "Add Cab"}</Header1>
 
-
-        <TextInput
-        label="Cab Varient"
-        returnKeyType="next"
-        container={styles.InputText}
-        value={cab_type.value}
-        onChangeText={(text) => setcab_type({ value: text, error: '' })}
-        error={!!cab_type.error}
-        errorText={cab_type.error}
-        />
-
-    <TextInput
-    label="Cab Number"
-    returnKeyType="next"
-    container={styles.InputText}
-    value={cab_number.value}
-    onChangeText={(text) => setcab_number({ value: text, error: '' })}
-    error={!!cab_number.error}
-    errorText={cab_number.error}
-    />
-
-<TextInput
-    label="Cab RC Number"
-    returnKeyType="next"
-    container={styles.InputText}
-    value={cab_rc_book_number.value}
-    onChangeText={(text) => setcab_rc_book_number({ value: text, error: '' })}
-    error={!!cab_rc_book_number.error}
-    errorText={cab_rc_book_number.error}
-    />
+                    <TextInput
+                      label="Cab Name"
+                      returnKeyType="next"
+                      container={styles.InputText}
+                      value={cab_name.value}
+                      onChangeText={(text) => setcab_name({ value: text, error: '' })}
+                      error={!!cab_name.error}
+                      errorText={cab_name.error}
+                    />
 
 
+                    <TextInput
+                      label="Cab Varient"
+                      returnKeyType="next"
+                      container={styles.InputText}
+                      value={cab_type.value}
+                      onChangeText={(text) => setcab_type({ value: text, error: '' })}
+                      error={!!cab_type.error}
+                      errorText={cab_type.error}
+                    />
 
-<View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Cab Number Plate : </Text>    
-</View>    
+                    <TextInput
+                      label="Cab Number"
+                      returnKeyType="next"
+                      container={styles.InputText}
+                      value={cab_number.value}
+                      onChangeText={(text) => setcab_number({ value: text, error: '' })}
+                      error={!!cab_number.error}
+                      errorText={cab_number.error}
+                    />
 
-<View style={styles.FileUploadView}>
-    <DocumentDriverPicker Profile={cab_image_front} handleChange={handleChange}/>
-<Text style={{margin:6,fontSize:12}}>{cab_image_front1 ? cab_image_front1.substring(0,14) : null } </Text>
-</View>
+                    <TextInput
+                      label="Cab RC Number"
+                      returnKeyType="next"
+                      container={styles.InputText}
+                      value={cab_rc_book_number.value}
+                      onChangeText={(text) => setcab_rc_book_number({ value: text, error: '' })}
+                      error={!!cab_rc_book_number.error}
+                      errorText={cab_rc_book_number.error}
+                    />
 
 
 
-<View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Cab Rc Book : </Text>    
-</View>  
+                    <View style={styles.FileUploadView}>
+                      <Text style={{ fontSize: 16 }}>Cab Number Plate : </Text>
+                    </View>
 
-<View style={styles.FileUploadView}>
-    <DocumentDriverPicker Profile={cab_image_back} handleChange={handleChange1}/>
-<Text style={{margin:6,fontSize:12}}>{cab_image_back1 ? cab_image_back1.substring(0,14) : null } </Text>
-</View>
-
-<View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Pollution Verify Certificate : </Text>    
-</View>  
-
-<View style={styles.FileUploadView}>
-    <DocumentDriverPicker Profile={cab_image_side} handleChange={handleChange2}/>
-<Text style={{margin:6,fontSize:12}}>{cab_image_side1 ? cab_image_side1.substring(0,14) : null } </Text>
-</View>
-
-<View style={styles.FileUploadView}>
-<Text style={{fontSize:16}}>Cab Insurance : </Text>    
-</View>  
-
-<View style={styles.FileUploadView}>
-    <DocumentDriverPicker Profile={cab_insurance} handleChange={handleChange3}/>
-<Text style={{margin:6,fontSize:12}}>{cab_insurance1 ? cab_insurance1.substring(0,14) : null } </Text>
-</View>
+                    <View style={styles.FileUploadView}>
+                      <DocumentDriverPicker Profile={cab_image_front} handleChange={handleChange} />
+                      <Text style={{ margin: 6, fontSize: 12 }}>{cab_image_front1 ? cab_image_front1.substring(0, 14) : null} </Text>
+                    </View>
 
 
-<SpinnerButton
-    buttonStyle={styles.buttonStyle,
-      { backgroundColor: '#ce3232',width:300 }}
-    isLoading={activeIndicator}
-    onPress={onEditstate==true ? Update : Submit}
-    indicatorCount={10}
-    spinnerType='BarIndicator'
-    disabled={false}
-    animateHeight={50}
-    animateWidth={200}
-    animateRadius={10}
-  >
-    <Text style={styles.buttonText}>{onEditstate==true ? "Update Cab" : "Add Cab" }</Text>
-  </SpinnerButton>
 
-    </ScrollView>
-    </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
-    </View>
-    </View>
+                    <View style={styles.FileUploadView}>
+                      <Text style={{ fontSize: 16 }}>Cab Rc Book : </Text>
+                    </View>
 
-  </Modal>
+                    <View style={styles.FileUploadView}>
+                      <DocumentDriverPicker Profile={cab_image_back} handleChange={handleChange1} />
+                      <Text style={{ margin: 6, fontSize: 12 }}>{cab_image_back1 ? cab_image_back1.substring(0, 14) : null} </Text>
+                    </View>
 
-  <Header_New subtitle="Cabs" navigation={navigation} />
+                    <View style={styles.FileUploadView}>
+                      <Text style={{ fontSize: 16 }}>Pollution Verify Certificate : </Text>
+                    </View>
 
-    {/* <Header
-          placement="left"
-          statusBarProps={{ barStyle: 'light-content' }}
-          barStyle="light-content"
-          leftComponent={<Logo STYLE={ { width:110 , height: 100, marginBottom: 8, } } />}
-          centerComponent={{ text: 'Igotaxy', style: { color: '#fff' } }}
-          rightComponent={ <WhatsappandCall/> }
-          containerStyle={{
-              backgroundColor: 'white',
-              justifyContent: 'space-around',
-              width:'100%',
-              height:'15%'
-            }}
-          /> */}
-    
-<View style={styles.MainContainer} >
+                    <View style={styles.FileUploadView}>
+                      <DocumentDriverPicker Profile={cab_image_side} handleChange={handleChange2} />
+                      <Text style={{ margin: 6, fontSize: 12 }}>{cab_image_side1 ? cab_image_side1.substring(0, 14) : null} </Text>
+                    </View>
+
+                    <View style={styles.FileUploadView}>
+                      <Text style={{ fontSize: 16 }}>Cab Insurance : </Text>
+                    </View>
+
+                    <View style={styles.FileUploadView}>
+                      <DocumentDriverPicker Profile={cab_insurance} handleChange={handleChange3} />
+                      <Text style={{ margin: 6, fontSize: 12 }}>{cab_insurance1 ? cab_insurance1.substring(0, 14) : null} </Text>
+                    </View>
 
 
-{/* <ScrollView
-// stickyHeaderIndices={[1]}
-showsVerticalScrollIndicator={false}
-refreshControl={
-<RefreshControl
-refreshing={refreshing}
-onRefresh={onRefresh}
-/>
-}
-> */}
+                    <SpinnerButton
+                      buttonStyle={styles.buttonStyle,
+                        { backgroundColor: '#ce3232', width: 300 }}
+                      isLoading={activeIndicator}
+                      onPress={onEditstate == true ? Update : Submit}
+                      indicatorCount={10}
+                      spinnerType='BarIndicator'
+                      disabled={false}
+                      animateHeight={50}
+                      animateWidth={200}
+                      animateRadius={10}
+                    >
+                      <Text style={styles.buttonText}>{onEditstate == true ? "Update Cab" : "Add Cab"}</Text>
+                    </SpinnerButton>
+
+                  </ScrollView>
+                </TouchableWithoutFeedback>
+              </KeyboardAvoidingView>
+            </View>
+          </View>
+
+        </Modal>
+
+        <Header_New subtitle="Cabs" navigation={navigation} />
+
+        <View style={styles.MainContainer} >
+
+          <CardView
+            cardElevation={5}
+            cardMaxElevation={5}
+            cornerRadius={5}
+            style={styles.cardViewStyle12}>
+
+            <View style={{ fontSize: 10, marginLeft: 20, alignItems: "center" }}>
+              <Text style={{ fontWeight: "bold", fontSize: 20, color: "#ce3232" }}>
+                Cab List
+              </Text>
+            </View>
+
+            <ScrollView
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                />
+              }
+            >
+
+              {vendorCabs.length ? vendorCabs.map((ival, i) => {
+                // console.log(ival,"246");
+
+                if (ival.hide_show == 1) {
+                  return (
+
+                    <CardView
+                      cardElevation={5}
+                      cardMaxElevation={5}
+                      cornerRadius={5}
+                      style={styles.cardViewStyle}
+                      key={ival.id}
+                    >
+
+                      <View>
+
+                        {ival.status == 0 ?
+
+                          <View style={{ backgroundColor: 'yellow', alignItems: "center" }}>
+                            <Text style={{ alignItems: "center", fontSize: 20 }}>
+                              Waiting
+                            </Text>
+                          </View>
+
+                          :
+                          <View style={{ backgroundColor: 'green', alignItems: "center" }}>
+                            <Text style={{ alignItems: "center", fontSize: 20 }}>
+                              Approved
+                            </Text>
+                          </View>}
+
+                        <Rating
+                          type='custom'
+                          ratingCount={5}
+                          imageSize={20}
+                          readonly={true}
+                          startingValue={ival.rating == null ? 0 : ival.rating}
+                          onFinishRating={ratingCompleted}
+                        />
+
+                        <View style={styles.DriverHead}>
+                          <Text style={styles.Driver_driver_name}>
+                            {ival.cab_name}
+                          </Text>
+                        </View>
+
+                        <View style={styles.DriverHead}>
+                          <Text style={styles.DriverText}>
+                            Cab Varient :
+                          </Text>
+                          <Text style={styles.DriverText1}>
+                            {ival.cab_type}
+                          </Text>
+                        </View>
+
+                        <View style={styles.DriverHead}>
+                          <Text style={styles.DriverText}>
+                            Cab Number :
+                          </Text>
+
+                          <Text style={styles.DriverText1}>
+                            {ival.cab_number}
+                          </Text>
+
+                        </View>
+
+                        <View style={styles.DriverHead}>
+                          <Text style={styles.DriverText}>
+                            Cab Rc Number:
+                          </Text>
+
+                          <Text style={styles.DriverText1}>
+                            {ival.cab_rc_book_number}
+                          </Text>
+
+                        </View>
+
+                        <View style={{ flexDirection: "row" }}>
+                          <Button mode="contained" style={styles.buttonstyle} onPress={() => EditCab(ival)} >
+                            Edit
+                          </Button>
+                          <Button mode="contained" style={styles.buttonstyle} onPress={() => OnDeleteCab(ival)} >
+                            Delete
+                          </Button>
+                        </View>
+                      </View>
+                    </CardView>
+                  )
+                }
+              }) : null}
+
+            </ScrollView>
+          </CardView>
+        </View>
 
 
-<CardView
-cardElevation={5}
-cardMaxElevation={5}
-cornerRadius={5}
-style={styles.cardViewStyle12}>
-
-<View style={{fontSize:10,marginLeft:20,alignItems:"center"}}>
-  <Text style={{fontWeight:"bold",fontSize:20,color:"#ce3232"}}>
-    Cab List 
-  </Text>
-</View> 
-
-<ScrollView 
-refreshControl={
-  <RefreshControl
-  refreshing={refreshing}
-  onRefresh={onRefresh}
-  />
-  }
->
-
-{ vendorCabs.length ? vendorCabs.map((ival,i)=>{
-// console.log(ival,"246");
-
-if(ival.hide_show == 1 ){ 
-    return(
-    
-      <CardView 
-      cardElevation={5}
-      cardMaxElevation={5}
-      cornerRadius={5}
-      style={styles.cardViewStyle}
-      key={ival.id}
-      >
-
-      <View>
-
-{ival.status==0 ?  
-
-<View style={{backgroundColor:'yellow',alignItems:"center"}}>
-    <Text style={{alignItems:"center", fontSize:20}}>
-        Waiting
-    </Text>
-</View>
-
-:
- <View style={{backgroundColor:'green',alignItems:"center"}}>
-<Text style={{alignItems:"center", fontSize:20}}>
-    Approved
-</Text>
-</View> }
-
-<Rating
-      type='custom'
-      ratingCount={5}
-      imageSize={20}
-      readonly={true}
-      startingValue={ival.rating==null ? 0 : ival.rating } 
-      onFinishRating={ratingCompleted}
-      />
-
-<View style={styles.DriverHead}>
-    <Text style={styles.Driver_driver_name}>
-     {ival.cab_name}
-    </Text>
-</View>
-
-<View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Cab Varient : 
-    </Text>
-    <Text style={styles.DriverText1}>
-    {ival.cab_type} 
-    </Text>
-</View>
-
-<View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Cab Number : 
-    </Text>
-
-    <Text style={styles.DriverText1}>
-    {ival.cab_number} 
-    </Text>
-   
-</View>
-
-<View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Cab Rc Number: 
-    </Text>
-
-    <Text style={styles.DriverText1}>
-    {ival.cab_rc_book_number} 
-    </Text>
-   
-</View>
-{/* 
-<View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Cab Image Front :  
-    </Text>
-
-    <Image
-style={styles.tinyLogo}
-source={{
-uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_image_front}/${id}`,
-}}
-/>
-   
-</View>
-
-<View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Cab Image Back : 
-    </Text>
-
-    <Image
-style={styles.tinyLogo}
-source={{
-uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_image_back}/${id}`,
-}}
-/>
-  
-</View> */}
-{/* <View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Cab Image Side :
-    </Text>
-
-<Image
-style={styles.tinyLogo}
-source={{
-uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_image_side}/${id}`,
-}}
-/>
-  
-</View> */}
-{/* 
-<View style={styles.DriverHead}>
-    <Text style={styles.DriverText}>
-    Cab Insurance :
-    </Text>
-
-<Image
-style={styles.tinyLogo}
-source={{
-uri: `${Config.ACCESS_POINT}/admin/vendarfile/${ival.cab_insurance}/${id}`,
-}}
-/> 
-  
-</View>*/}
-<View style={{flexDirection:"row"}}>
-        <Button mode="contained" style={styles.buttonstyle} onPress={()=>EditCab(ival)} >
-        Edit
-        </Button>
-        <Button mode="contained" style={styles.buttonstyle} onPress={()=>OnDeleteCab(ival)} >
-        Delete
-        </Button>
+      </Provider>
+      <View style={styles.headerFooterStyle}>
+        <TouchableOpacity style={styles.iconstyle} onPress={() => navigation.navigate('Dashboard')}>
+          <Entypo name="home" color={'#ce3232'} size={22} />
+          <Text style={{ textAlign: "center", fontSize: 10, marginTop: 5, fontWeight: "bold", color: "#ce3232" }}>Home</Text>
+        </TouchableOpacity>
       </View>
- </View>
- </CardView>
-    )
+    </SafeAreaProvider>
+  )
+
 }
-}) :null}
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  FileUploadView: {
+    flexDirection: "row",
+    margin: 5
+  },
+  FileUploadButton: {
+    width: '50%',
+    alignContent: "flex-end"
+  },
+  MainContainer: {
 
-</ScrollView>
-</CardView>
-{/* </ScrollView> */}
+    flex: 1,
+    marginTop: 4,
+    marginLeft: 9,
+    width: '100%',
+    height: '100%',
+  },
+  cardViewStyle12: {
+    width: '96%',
+    height: '93%',
+    flexDirection: "column",
+    marginTop: 9,
+  },
+  cardViewStyle: {
 
-</View>
+    width: '96%',
+    height: 240,
+    flexDirection: "column",
+    marginLeft: 6,
+    alignContent: "center",
+    marginTop: 9,
+  },
 
+  Headings: {
+    backgroundColor: "#008000",
+    alignItems: "center"
+  },
+  Status: {
+    fontSize: 25
+  },
+  HeadData: {
+    margin: 5
+  },
+  TextTrip: {
+    fontSize: 15
+  },
+  DriverHead: {
+    alignItems: "flex-start",
+    margin: 5,
+    marginLeft: 7,
+    flexDirection: "row"
+  },
+  DriverText: {
+    fontSize: 15,
+    fontWeight: "500"
+  },
+  DriverText1: {
+    fontSize: 15,
+    marginLeft: 2,
+    color: "#ce3232"
+  },
+  buttonstyle: {
+    backgroundColor: "#ce3232",
+    width: 150,
+    marginLeft: 12
+  },
+  InputText: {
+    width: '95%',
+    marginVertical: 5,
+    marginLeft: 5,
+    alignContent: "center"
+  },
+  heading: {
+    alignSelf: 'center',
+    fontSize: 30,
+    color: '#ce3232',
+    fontWeight: 'bold',
+  },
+  button: {
+    backgroundColor: "#ce3232",
+    width: "95%",
+    marginLeft: '2%'
 
- </Provider>
- <View style={styles.headerFooterStyle}>
-<TouchableOpacity style={styles.iconstyle} onPress={()=>navigation.navigate('Dashboard')}>
-<Entypo name="home" color={'#ce3232'}  size={22}  />
-<Text style={{textAlign:"center",fontSize:10,marginTop:5,fontWeight:"bold",color:"#ce3232"}}>Home</Text>
-</TouchableOpacity>
-</View>
-</SafeAreaProvider>
-)
+  },
+  tinyLogo: {
+    width: 100,
+    height: 40,
+    marginLeft: 3
+  },
+  centeredView1: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
 
-    }
-    const styles = StyleSheet.create({
-        centeredView: {
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 22,
-          // width:'100%'
-        },
-        FileUploadView:{
-            flexDirection:"row",
-            margin:5
-        },
-        FileUploadButton:{
-            width:'50%',
-            alignContent:"flex-end"
-        },
-        MainContainer: {
-       
-            flex: 1,
-            marginTop:4,
-            marginLeft: 9,
-            width: '100%', 
-            height: '100%' ,
-           },
-           cardViewStyle12:{
-            width: '96%', 
-            height: '93%',
-            flexDirection: "column",
-            // alignContent:"center",
-            marginTop:9,
-           },
-           cardViewStyle:{
-     
-            width: '96%', 
-            height: 240,
-            flexDirection: "column",
-            marginLeft:6,
-            alignContent:"center",
-            marginTop:9,
-            // marginLeft: 9,
-         
-          }, 
-    
-          Headings:{
-              backgroundColor:"#008000",
-              alignItems:"center"
-          },
-          Status:{
-              fontSize:25
-          },
-          HeadData:{
-            margin:5
-          },
-          TextTrip:{
-              fontSize:15
-          },
-          DriverHead:{
-              alignItems:"flex-start",
-              margin:5,
-              marginLeft:7,
-              flexDirection:"row"
-          },
-          DriverText:{
-              fontSize:15,
-              fontWeight:"500"
-          },
-          DriverText1:{
-            fontSize:15,
-            marginLeft:2,
-            color:"#ce3232"
-            // fontWeight:"500"
-          },
-          buttonstyle:{
-            backgroundColor:"#ce3232",
-            width:150,
-            marginLeft:12
-          },
-          InputText:{
-            width: '95%',
-             marginVertical: 5,
-             marginLeft:5,
-            alignContent:"center"
-          },
-          heading:{
-            alignSelf:'center',
-            fontSize:30,
-            color:'#ce3232',
-            fontWeight: 'bold',
-            // position:'absolute'
-      
-          },
-          button:{
-            backgroundColor:"#ce3232",
-            width:"95%",
-            marginLeft:'2%'
-      
-          },
-          tinyLogo:{
-              width:100,
-              height:40,
-              marginLeft:3
-          },
-          centeredView1: {
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: 22,
-            
-          },
-          modalView: {
-            margin: 20,
-            backgroundColor: "#e6e6e6",
-            borderRadius: 20,
-            padding: 15,
-            shadowColor: "#000000",
-            shadowOffset: {
-              width: 5,
-              height: 2
-            },
-            width:330,
-            height:650,
-        
-            shadowOpacity: 0.15,
-            shadowRadius: 10,
-            elevation: 25
-          },
-          buttonText:{
-            fontSize: 15,
-            textAlign: 'center',
-            color: 'white',
-            },
-            Driver_driver_name:{
-              fontSize:20,
-              fontWeight:"bold",
-              marginLeft:2,
-            }
-            ,
-            headerFooterStyle: {
-              width: '100%',
-              height: 45,
-              backgroundColor: '#ffff',
-              position: 'absolute', left: 0, right: 0, bottom: 0
-            },
-            textStyle: {
-              textAlign: 'center',
-              color: '#fff',
-              fontSize: 18,
-              padding: 7,
-            },
-            iconstyle:{
-              alignItems:"center",
-              flexDirection:"column",
-              // flex:1
-            }
-    })
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "#e6e6e6",
+    borderRadius: 20,
+    padding: 15,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 5,
+      height: 2
+    },
+    width: 330,
+    height: 650,
+
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 25
+  },
+  buttonText: {
+    fontSize: 15,
+    textAlign: 'center',
+    color: 'white',
+  },
+  Driver_driver_name: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 2,
+  }
+  ,
+  headerFooterStyle: {
+    width: '100%',
+    height: 45,
+    backgroundColor: '#ffff',
+    position: 'absolute', left: 0, right: 0, bottom: 0
+  },
+  textStyle: {
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 18,
+    padding: 7,
+  },
+  iconstyle: {
+    alignItems: "center",
+    flexDirection: "column",
+  }
+})

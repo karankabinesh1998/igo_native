@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, useWindowDimensions,TouchableOpacity,StyleSheet,Text  } from 'react-native';
+import { View, useWindowDimensions, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Header_New from '../components/Header_New';
@@ -7,10 +7,10 @@ import Header_New from '../components/Header_New';
 import ProfileScreen from './ProfileScreen';
 import DocumentUpload from './DocumentUpload';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {Provider } from 'react-native-paper';
+import { Provider } from 'react-native-paper';
 
 
-export default function NewProfile({ navigation,route }) {
+export default function NewProfile({ navigation, route }) {
   // console.log(route.params.OtherPageRefersh,"katgah");
   const layout = useWindowDimensions();
 
@@ -21,26 +21,26 @@ export default function NewProfile({ navigation,route }) {
   ]);
 
   return (
-    <SafeAreaProvider style={{backgroundColor:"lightgrey"}}> 
-    <Provider>
-    <Header_New subtitle="My Profile" navigation={navigation} />
-    <TabView
-      navigationState={{ index, routes }}
-      renderScene={SceneMap({
-        first:  () => <ProfileScreen userDetail={route.params.userDetail} OtherPageRefersh={route.params.OtherPageRefersh} navigation={navigation}  />, 
-        second: ()=> <DocumentUpload userDetail={route.params.userDetail} OtherPageRefersh={route.params.OtherPageRefersh}  navigation={navigation} />, 
-      })
-    }
-      onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
-    />
-    </Provider>
-    <View style={styles.headerFooterStyle}>
-<TouchableOpacity style={styles.iconstyle} onPress={()=>navigation.navigate('Dashboard')}>
-<Entypo name="home" color={'#ce3232'}  size={22}  />
-<Text style={{textAlign:"center",fontSize:10,marginTop:5,fontWeight:"bold",color:"#ce3232"}}>Home</Text>
-</TouchableOpacity>
-</View>
+    <SafeAreaProvider style={{ backgroundColor: "lightgrey" }}>
+      <Provider>
+        <Header_New subtitle="My Profile" navigation={navigation} />
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={SceneMap({
+            first: () => <ProfileScreen userDetail={route.params.userDetail} OtherPageRefersh={route.params.OtherPageRefersh} navigation={navigation} />,
+            second: () => <DocumentUpload userDetail={route.params.userDetail} OtherPageRefersh={route.params.OtherPageRefersh} navigation={navigation} />,
+          })
+          }
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
+        />
+      </Provider>
+      <View style={styles.headerFooterStyle}>
+        <TouchableOpacity style={styles.iconstyle} onPress={() => navigation.navigate('Dashboard')}>
+          <Entypo name="home" color={'#ce3232'} size={22} />
+          <Text style={{ textAlign: "center", fontSize: 10, marginTop: 5, fontWeight: "bold", color: "#ce3232" }}>Home</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaProvider>
   );
 }
@@ -58,9 +58,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     padding: 7,
   },
-  iconstyle:{
-    alignItems:"center",
-    flexDirection:"column",
+  iconstyle: {
+    alignItems: "center",
+    flexDirection: "column",
     // flex:1
   }
 })

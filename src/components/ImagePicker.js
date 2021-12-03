@@ -1,10 +1,10 @@
 import React, { Component, useState } from 'react';
-import { View, Text ,StyleSheet,Image, TouchableOpacity , PermissionsAndroid , Alert  } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, PermissionsAndroid, Alert } from 'react-native';
 // import { STYLES, COLORS } from '../Styles/Styles';
-import { UploadProfile  } from '../configuration/functional'
+import { UploadProfile } from '../configuration/functional'
 import * as ImagePicker from "react-native-image-picker";
 // import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import  Config from '../configuration/config';
+import Config from '../configuration/config';
 import { Avatar } from 'react-native-paper';
 
 const styles = StyleSheet.create({
@@ -12,40 +12,40 @@ const styles = StyleSheet.create({
     width: 100,
     // marginTop:5,
     height: 100,
-    alignSelf:'center',
+    alignSelf: 'center',
     // position:'absolute'
- },
+  },
 })
 
 export default class SimpleImagePicker extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props)
     {
-      this.state={
-        resourcePath : "",
-        Profile:null,
-        onCamera : false,
-        id:null
+      this.state = {
+        resourcePath: "",
+        Profile: null,
+        onCamera: false,
+        id: null
       }
     }
   }
 
-  async componentDidMount(){
-    console.log(this.props,"31");
+  async componentDidMount() {
+    console.log(this.props, "31");
     try {
 
-      if(this.props.Profile !== null ){
+      if (this.props.Profile !== null) {
         this.setState({
-          Profile : this.props.Profile,
-          id : this.props.id
+          Profile: this.props.Profile,
+          id: this.props.id
         })
-      }else{
+      } else {
         this.setState({
-          id : this.props.id
+          id: this.props.id
         })
       }
-      
+
     } catch (error) {
       console.log(error);
     }
@@ -53,12 +53,12 @@ export default class SimpleImagePicker extends Component {
 
   // const [imageSource, setImageSource] = useState(null);
 
-  ChooseImagorFile = async()=>{
+  ChooseImagorFile = async () => {
     Alert.alert(
       "Profile Image Upload",
       "Do you want to upload Profile Image ? ",
       [
-        
+
         { text: "Cancel", onPress: () => console.log("OK Pressed") },
         {
           text: "Open Gallery",
@@ -74,28 +74,28 @@ export default class SimpleImagePicker extends Component {
   }
 
 
-  ShiftCametoFile = async(e)=>{
+  ShiftCametoFile = async (e) => {
 
-    if(e==1){
+    if (e == 1) {
       this.setState({
-        onCamera : true
+        onCamera: true
       })
-    }else{
+    } else {
       this.setState({
-        onCamera : false
+        onCamera: false
       })
     }
     console.log(e);
-     this.requestCameraPermission()
+    this.requestCameraPermission()
   }
 
-   requestCameraPermission = async () => {
+  requestCameraPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
         {
           title: "App Camera Permission",
-          message:"App needs access to your camera ",
+          message: "App needs access to your camera ",
           buttonNeutral: "Ask Me Later",
           buttonNegative: "Cancel",
           buttonPositive: "OK"
@@ -103,8 +103,8 @@ export default class SimpleImagePicker extends Component {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         console.log("Camera permission given");
-        
-        if(this.state.onCamera==true){
+
+        if (this.state.onCamera == true) {
           ImagePicker.launchCamera(
             {
               includeBase64: false,
@@ -112,35 +112,35 @@ export default class SimpleImagePicker extends Component {
               quality: 0.8,
             },
             async (response) => {
-              console.log(response,"this.response");
+              console.log(response, "this.response");
               if (response.didCancel) {
                 console.log('User cancelled image picker');
               } else if (response.error) {
                 console.log('ImagePicker Error: ', response.error);
               } else {
 
-                const formData=new FormData();
+                const formData = new FormData();
 
-                formData.append("profile_dp",{
+                formData.append("profile_dp", {
                   name: response.fileName,
                   type: response.type,
                   uri: response.uri
                 })
 
-                 let result =await UploadProfile(formData,this.state.id);
+                let result = await UploadProfile(formData, this.state.id);
 
-                 if(result){
+                if (result) {
                   //  console.log(result,"Imagepicker");
-                   this.setState({
-                    Profile : result[0].profile_dp
-                   })
-                   this.props.handleUserDeatils(result)
-                 }
-                
+                  this.setState({
+                    Profile: result[0].profile_dp
+                  })
+                  this.props.handleUserDeatils(result)
+                }
+
               }
             },
           );
-        }else{
+        } else {
 
           ImagePicker.launchImageLibrary(
             {
@@ -149,29 +149,29 @@ export default class SimpleImagePicker extends Component {
               quality: 0.8,
             },
             async (response) => {
-              console.log(response,"Library image");
+              console.log(response, "Library image");
               if (response.didCancel) {
                 console.log('User cancelled image picker');
               } else if (response.error) {
                 console.log('ImagePicker Error: ', response.error);
               } else {
-                      const formData=new FormData();
+                const formData = new FormData();
 
-                      formData.append("profile_dp",{
-                        name: response.fileName,
-                        type: response.type,
-                        uri: response.uri
-                      })
+                formData.append("profile_dp", {
+                  name: response.fileName,
+                  type: response.type,
+                  uri: response.uri
+                })
 
-                       let result =await UploadProfile(formData,this.state.id);
+                let result = await UploadProfile(formData, this.state.id);
 
-                       if(result){
-                        //  console.log(result,"Imagepicker");
-                         this.setState({
-                          Profile : result[0].profile_dp
-                         })
-                         this.props.handleUserDeatils(result)
-                       }
+                if (result) {
+                  //  console.log(result,"Imagepicker");
+                  this.setState({
+                    Profile: result[0].profile_dp
+                  })
+                  this.props.handleUserDeatils(result)
+                }
               }
             },
           );
@@ -186,7 +186,7 @@ export default class SimpleImagePicker extends Component {
     }
   };
 
-   selectImage = () => {
+  selectImage = () => {
     let options = {
       title: 'You can choose one image',
       maxWidth: 256,
@@ -214,34 +214,34 @@ export default class SimpleImagePicker extends Component {
     });
   }
 
-  render(){
-// console.log(`${Config.ACCESS_POINT}/admin/profile/${this.state.Profile}`,"render 187");
-  return (
-    // <View
-    //   style={[
-    //     STYLES.flex,
-    //     STYLES.centerContainer,
-        
-    //   ]}
-    // >
-    //   <Text style={[STYLES.title, { color: COLORS.primaryLight }]}>
-    //     Simple Image Picker
-    //   </Text>
+  render() {
+    // console.log(`${Config.ACCESS_POINT}/admin/profile/${this.state.Profile}`,"render 187");
+    return (
+      // <View
+      //   style={[
+      //     STYLES.flex,
+      //     STYLES.centerContainer,
+
+      //   ]}
+      // >
+      //   <Text style={[STYLES.title, { color: COLORS.primaryLight }]}>
+      //     Simple Image Picker
+      //   </Text>
       <TouchableOpacity
-        onPress={() =>this.ChooseImagorFile()}
+        onPress={() => this.ChooseImagorFile()}
       >
 
-{this.state.Profile == null ? 
-<Image source={require('../assets/profile_img.jpg')} style={styles.tinyLogo} /> :
+        {this.state.Profile == null ?
+          <Image source={require('../assets/profile_img.jpg')} style={styles.tinyLogo} /> :
 
-<Avatar.Image size={100} style={styles.tinyLogo} source={{
-uri: `${Config.ACCESS_POINT}/admin/profile/${this.state.Profile}`,
-}} />
+          <Avatar.Image size={100} style={styles.tinyLogo} source={{
+            uri: `${Config.ACCESS_POINT}/admin/profile/${this.state.Profile}`,
+          }} />
 
 
-}
+        }
 
-{/* <Image
+        {/* <Image
 style={styles.tinyLogo}
 source={{
 uri: `${Config.ACCESS_POINT}/admin/profile/${this.state.Profile}`,
@@ -249,7 +249,7 @@ uri: `${Config.ACCESS_POINT}/admin/profile/${this.state.Profile}`,
 
         {/* <Text style={STYLES.selectButtonTitle}>Pick an image</Text> */}
       </TouchableOpacity>
-    // </View>
-  );
-      }
+      // </View>
+    );
+  }
 }

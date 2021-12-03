@@ -3,7 +3,7 @@ import * as React from 'react';
 import { List } from 'react-native-paper';
 import { Text } from 'react-native';
 
-const AccordionTab = ({title,bodyText}) => {
+const AccordionTab = ({ title, bodyText }) => {
   const [expanded, setExpanded] = React.useState(false);
 
   const handlePress = () => setExpanded(!expanded);
@@ -18,17 +18,17 @@ const AccordionTab = ({title,bodyText}) => {
 
   return (
     // <List.Section title={title}>
-     
-     <List.Accordion
-        title={title}
-        left={props => <List.Icon {...props} icon="folder" />}
-        expanded={expanded}
-        onPress={handlePress}>
-        {
-          bodyText
-        }
-      </List.Accordion>
-   
+
+    <List.Accordion
+      title={title}
+      left={props => <List.Icon {...props} icon="folder" />}
+      expanded={expanded}
+      onPress={handlePress}>
+      {
+        bodyText
+      }
+    </List.Accordion>
+
   );
 };
 
