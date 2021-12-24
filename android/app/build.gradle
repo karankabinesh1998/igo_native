@@ -134,8 +134,8 @@ android {
         applicationId "com.r7zerocarbon"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 10
-        versionName "10.0"
+        versionCode 15
+        versionName "15.0"
     }
     splits {
         abi {

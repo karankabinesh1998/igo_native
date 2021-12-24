@@ -172,7 +172,7 @@ export default function MyBiddings({ navigation, route }) {
     setselectedDriver(JSON.parse(result[0].vendorDrivers))
     setselectedCab(JSON.parse(result[0].vendorCabs));
     route.params.OtherPageRefersh("refresh");
-    wait(5000).then(() => setRefreshing(false));
+    wait(2000).then(() => setRefreshing(false));
   }, []);
 
   return (

@@ -55,7 +55,7 @@ export default function AccountandWallet({ navigation, route }) {
     setWallet(result[0].wallet)
     settableData(JSON.parse(result[0].wallethistory))
     route.params.OtherPageRefersh()
-    wait(5000).then(() => setRefreshing(false));
+    wait(2000).then(() => setRefreshing(false));
   }, []);
 
   const data = [];
@@ -164,7 +164,7 @@ export default function AccountandWallet({ navigation, route }) {
                 >
 
                   <View style={styles.BalanceText}>
-                    <Text style={styles.BalText}>Deposit : Rs.{parseInt(wallet) > 500 ? 500 : 0}</Text>
+                    <Text style={styles.BalText}>Deposit : Rs.{parseInt(wallet) >= 500 ? 500 : 0}</Text>
                   </View>
 
 

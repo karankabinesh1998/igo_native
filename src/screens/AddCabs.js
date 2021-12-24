@@ -98,7 +98,7 @@ export default function AddCabs({ navigation, route }) {
 
   const Submit = async () => {
 
-    // setActiveindicator(true)
+    setActiveindicator(true)
 
     if (!cab_name.value) {
       setcab_name({ ...cab_name, error: "Cab name cannot be emty" })
@@ -122,9 +122,9 @@ export default function AddCabs({ navigation, route }) {
 
     let result = await Addcabs1(formData);
 
-    if (result != false) {
+    // console.log(formData,'==========');
+    if (result != false && result != undefined && result != 'undefined') {
 
-      console.log(result);
 
       setvendorCabs(result)
       setActiveindicator(false)
@@ -152,15 +152,27 @@ export default function AddCabs({ navigation, route }) {
       )
 
     } else {
-      Alert.alert(
-        "Already Exists",
-        "The Cab was already Exists!",
-        [
 
-          { text: "OK", onPress: () => setActiveindicator(false) }
-        ]
-      )
-    }
+      if (result == undefined) {
+        Alert.alert(
+          "Something went wrong",
+          "Please try again later..",
+          [
+
+            { text: "OK", onPress: () => setActiveindicator(false) }
+          ]
+        )
+      } else {
+        Alert.alert(
+          "Already Exists",
+          "The Cab was already Exists!",
+          [
+
+            { text: "OK", onPress: () => setActiveindicator(false) }
+          ]
+        )
+      }
+     }
 
 
   }
@@ -178,8 +190,8 @@ export default function AddCabs({ navigation, route }) {
     let result = await RefreshJsons(id);
     setvendorCabs(JSON.parse(result[0].vendorCabs))
     //  console.log(JSON.parse(result[0].vendorCabs),"Refrehjson");
-    route.params.OtherPageRefersh();
-    wait(5000).then(() => setRefreshing(false));
+    // route.params.OtherPageRefersh();
+    wait(2000).then(() => setRefreshing(false));
   }, []);
 
   const ResetModal = async () => {
@@ -222,7 +234,7 @@ export default function AddCabs({ navigation, route }) {
 
     try {
 
-      console.log(ival)
+      // console.log(ival)
 
       setcab_name({ value: ival.cab_name, error: '' })
       setcab_type({ value: ival.cab_type, error: '' })
@@ -248,6 +260,14 @@ export default function AddCabs({ navigation, route }) {
   }
 
   const Update = async () => {
+
+    if (!cab_name.value) {
+      setcab_name({ ...cab_name, error: "Cab name cannot be emty" })
+      return
+    }
+
+    setActiveindicator(false)
+
     const formData = new FormData();
     formData.append("vendor", id);
     formData.append("cab_name", cab_name.value);
@@ -268,9 +288,9 @@ export default function AddCabs({ navigation, route }) {
 
       let result = await EditCabdata(formData, driverid);
 
-      if (result != false) {
+      // console.log(result,'==============>');
+      if (result != false && result != undefined && result != 'undefined') {
 
-        console.log(result);
 
         setModalVisible(false)
         setonEditstate(false)
@@ -301,7 +321,7 @@ export default function AddCabs({ navigation, route }) {
       } else {
         Alert.alert(
           "Already Exists",
-          "The cAB was already Exists!",
+          "The caB was already Exists!",
           [
 
             { text: "OK", onPress: () => setActiveindicator(false) }
@@ -498,8 +518,7 @@ export default function AddCabs({ navigation, route }) {
 
 
                     <SpinnerButton
-                      buttonStyle={styles.buttonStyle,
-                        { backgroundColor: '#ce3232', width: 300 }}
+                      buttonStyle={styles.buttonstyleSpinner}
                       isLoading={activeIndicator}
                       onPress={onEditstate == true ? Update : Submit}
                       indicatorCount={10}
@@ -545,7 +564,7 @@ export default function AddCabs({ navigation, route }) {
               }
             >
 
-              {vendorCabs.length ? vendorCabs.map((ival, i) => {
+              {vendorCabs !== undefined ? vendorCabs.map((ival, i) => {
                 // console.log(ival,"246");
 
                 if (ival.hide_show == 1) {
@@ -684,7 +703,7 @@ const styles = StyleSheet.create({
   cardViewStyle: {
 
     width: '96%',
-    height: 240,
+    height: 260,
     flexDirection: "column",
     marginLeft: 6,
     alignContent: "center",
@@ -722,6 +741,14 @@ const styles = StyleSheet.create({
   buttonstyle: {
     backgroundColor: "#ce3232",
     width: 150,
+    marginLeft: 12
+  },
+  buttonstyleSpinner:
+  {
+    backgroundColor: '#ce3232',
+    width: 400,
+    // backgroundColor: "#ce3232",
+    // width: 150,
     marginLeft: 12
   },
   InputText: {

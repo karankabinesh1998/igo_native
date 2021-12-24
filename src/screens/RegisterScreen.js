@@ -11,7 +11,7 @@ import { theme } from '../core/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
-import { mobileValidator } from '../helpers/mobileValidator'
+import { mobileValidator } from '../helpers/mobileValidator';
 import { TextInput } from 'react-native-paper';
 
 export default function RegisterScreen({ navigation }) {
@@ -66,22 +66,13 @@ export default function RegisterScreen({ navigation }) {
         if (responseJson) {
           console.log(responseJson, "hello")
           let data = JSON.stringify(responseJson)
-          //  await AsyncStorage.setItem(Stored.userDetail,data);  
-          // AsyncStorage.setItem("Userdetail",JSON.stringify(responseJson))  
-          // this.setState({ button : "Verify OTP" , otpView : true})
-
-          Alert.alert(
+           Alert.alert(
             "Welcome to Igotaxy",
             "Registered Successfully !",
             [
-              // {
-              //   text: "Cancel",
-              //   onPress: () => console.log("Cancel Pressed"),
-              //   style: "cancel"
-              // },
               { text: "OK", onPress: () => console.log("OK Pressed") }
             ]
-          )
+          );
 
           navigation.reset({
             index: 0,
@@ -101,13 +92,7 @@ export default function RegisterScreen({ navigation }) {
         console.log("There is an error in networks", error);
         throw error;
       })
-
-
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [{ name: 'Dashboard' }],
-    // })
-  }
+}
 
   const ShowPassword = () => {
     Setshowpass(!showpass)
@@ -115,8 +100,6 @@ export default function RegisterScreen({ navigation }) {
 
   return (
     <Background>
-      {/* <BackButton goBack={navigation.goBack} /> */}
-
       <Logo />
       <Header>Create Account</Header>
       <TextInput1
@@ -129,9 +112,7 @@ export default function RegisterScreen({ navigation }) {
       />
       <TextInput1
         keyboardType="numeric"
-        // style={[styles.textInput, { width: '100%' }]}
-
-        value={mobile.value}
+         value={mobile.value}
         placeholder='mobile number'
         onChangeText={(value) => setmobile({ value: value, error: '' })}
         error={!!mobile.error}

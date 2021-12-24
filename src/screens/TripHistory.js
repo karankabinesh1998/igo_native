@@ -40,12 +40,8 @@ export default function TripHistory({ navigation, route }) {
             SetActiveTrips(JSON.parse(result[0].TripHistory))
         }
         route.params.OtherPageRefersh();
-        wait(5000).then(() => setRefreshing(false));
+        wait(2000).then(() => setRefreshing(false));
     }, []);
-
-
-
-
 
     return (
 

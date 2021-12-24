@@ -7,7 +7,7 @@ import {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState, useEffect } from 'react';
 import CardView from 'react-native-cardview';
-import { Header, Rating } from 'react-native-elements';
+import { Rating } from 'react-native-elements';
 import Header1 from '../components/Header';
 import { DeleteDriver, EditDriverdata, RefreshJsons } from '../configuration/functional';
 import TextInput from '../components/TextInput';
@@ -226,7 +226,7 @@ export default function AddDriver({ navigation, route }) {
 
     if (result !== false) {
 
-      console.log(result);
+      // console.log(result);
 
       setvendorDrivers(result)
       setActiveindicator(false)
@@ -287,7 +287,7 @@ export default function AddDriver({ navigation, route }) {
     let result = await RefreshJsons(id);
     setvendorDrivers(JSON.parse(result[0].vendorDrivers))
     route.params.OtherPageRefersh();
-    wait(5000).then(() => setRefreshing(false));
+    wait(2000).then(() => setRefreshing(false));
   }, []);
 
 
@@ -564,8 +564,7 @@ export default function AddDriver({ navigation, route }) {
 
 
                     <SpinnerButton
-                      buttonStyle={styles.buttonStyle,
-                        { backgroundColor: '#ce3232', width: 300 }}
+                      buttonStyle={styles.buttonStyle}
                       isLoading={activeIndicator}
                       onPress={onEditstate == true ? Update : Submit}
                       indicatorCount={10}

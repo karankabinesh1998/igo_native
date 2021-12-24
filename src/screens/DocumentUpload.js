@@ -145,7 +145,6 @@ export default function DocumentUpload({ navigation, route, userDetail, OtherPag
     setRefreshing(true);
 
     let result = await RefreshJsons(userDetail1[0].id);
-    console.log(result);
     let Stored_Data = await AsyncStorage.getItem(Stored.userDetail);
     let data1 = Stored_Data !== null ? JSON.parse(Stored_Data) : [];
 
@@ -161,7 +160,7 @@ export default function DocumentUpload({ navigation, route, userDetail, OtherPag
     Setaccount_details(DocumentationArray[0].account_details)
     console.log(DocumentationArray, "Refrehjson");
     OtherPageRefersh("refresh");
-    wait(5000).then(() => setRefreshing(false));
+    wait(2000).then(() => setRefreshing(false));
   }, []);
 
 

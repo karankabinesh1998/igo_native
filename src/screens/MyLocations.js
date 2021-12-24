@@ -45,7 +45,7 @@ export default function MyLocations({ navigation, route }) {
       Setstate(JSON.parse(result[0].state))
     }
     route.params.OtherPageRefersh("refresh");
-    wait(5000).then(() => setRefreshing(false));
+    wait(2000).then(() => setRefreshing(false));
   }, []);
 
   const HandleSelect = async (a) => {

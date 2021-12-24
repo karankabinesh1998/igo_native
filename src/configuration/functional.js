@@ -771,8 +771,9 @@ export async function Addcabs1(formData) {
     },
     body: formData
   });
-
+  console.log(request,'==========>')
   if (request.status == 200) {
+    console.log(request,'==========>')
     let requestJson = await request.json();
     return requestJson
 

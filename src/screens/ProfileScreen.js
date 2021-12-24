@@ -157,7 +157,7 @@ export default function ProfileSCreen({ navigation, userDetail, OtherPageRefersh
     setActiveindicator(false)
     OtherPageRefersh("refresh");
     //  console.log( result,"Refrehjson");
-    wait(5000).then(() => setRefreshing(false));
+    wait(2000).then(() => setRefreshing(false));
   }, []);
 
 

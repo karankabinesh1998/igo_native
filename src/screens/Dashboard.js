@@ -108,7 +108,6 @@ export default class Dashboard extends Component {
         }
 
         let Trip = await TripsJsons(data[0].id);
-        console.log(Trip);
         if (Trip.length) {
           this.setState({
             TripsJson: Trip
